@@ -17,9 +17,7 @@ extern "C"{
 
 int main(int argc, char* argv[])
 {
-    u32 kd;
-
-	gfxInitDefault();
+    gfxInitDefault();
 	consoleInit(GFX_TOP, NULL);
 
     printf("Press START + SELECT to close...");
@@ -30,7 +28,7 @@ int main(int argc, char* argv[])
 		gspWaitForVBlank();
 		gfxSwapBuffers();
 		hidScanInput();
-        kd = hidKeysDown();
+        u32 kd = hidKeysDown();
 
 		// Your code goes here
 
