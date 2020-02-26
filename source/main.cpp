@@ -4,6 +4,10 @@
 
 #include <3ds.h> 
 
+/*
+    The Lua API is built in C.
+    In a C++ program it has to be included like this.
+*/
 extern "C"{
     #include <lua/lua.h>
     #include <lua/lualib.h>
@@ -13,7 +17,7 @@ extern "C"{
 
 int main(int argc, char* argv[])
 {
-    u32 keysDown;
+    u32 kd;
 
 	gfxInitDefault();
 	consoleInit(GFX_TOP, NULL);
@@ -26,11 +30,11 @@ int main(int argc, char* argv[])
 		gspWaitForVBlank();
 		gfxSwapBuffers();
 		hidScanInput();
-        keysDown = hidKeysDown();
+        kd = hidKeysDown();
 
 		// Your code goes here
 
-		if (keysDown & (KEY_START | KEY_SELECT) )
+		if (kd & (KEY_START | KEY_SELECT) )
 			break; // break in order to return to hbmenu
 		
 	}
