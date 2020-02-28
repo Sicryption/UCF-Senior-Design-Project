@@ -9,9 +9,9 @@
     In a C++ program it has to be included like this.
 */
 extern "C"{
-    #include <lua/lua.h>
-    #include <lua/lualib.h>
-    #include <lua/lauxlib.h>
+    #include "lua/lua.h"
+    #include "lua/lualib.h"
+    #include "lua/lauxlib.h"
 }
 
 
