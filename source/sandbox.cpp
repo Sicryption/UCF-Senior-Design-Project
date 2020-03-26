@@ -8,6 +8,7 @@ extern "C"{
     #include "lua/lauxlib.h"
 }
 
+
 /*  Lua Sandbox object
 *   This object will contain the variables and functions 
 *   which interact with a lua_State
@@ -15,8 +16,13 @@ extern "C"{
 class luaSandbox
 {
     private:
-    
-    lua_State * state;
+
+    //  Defined maximum byte size of the Lua memory block
+    unsigned long int memCapacity;
+    //  Current byte size of the Lua memory block
+    unsigned long int memSize;
+
+    lua_State * state;    
 
     //  Lua allocator function
     void * allocator(void *ud, void *ptr, size_t osize, size_t nsize);
@@ -24,11 +30,19 @@ class luaSandbox
     //  Binds API functions to the lua state
     void bindAPI();
 
+
     public:
-    //  Defined maximum byte size of the Lua memory block
-    long int memCapacity;
-    //  Current byte size of the Lua memory block
-    long int memSize;
+
+    luaSandbox()
+    {
+        state = luaL_newstate();
+    }
+
+    unsigned long int getMemCapacity();
+    unsigned long int getMemSize();
+
+    unsigned long int setMemCapacity();
+    unsigned long int setMemSize();
 
     //  Read a global variable from the Lua environment
     void getGlobal(const char* name, int value);
@@ -43,6 +57,8 @@ class luaSandbox
     //  Execute Lua code
     void execute(const char* code);
     void execute(FILE * fp);
+
+    
 
 
 }luaSandbox;
