@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern "C"
-{
+extern "C"{
     #include "lua/lua.h"
     #include "lua/lualib.h"
     #include "lua/lauxlib.h"
@@ -68,8 +67,7 @@ class luaSandbox
 void* allocator(void *ud, void *ptr, size_t osize, size_t nsize)
 {
     (void)ud;  (void)osize;  /* not used */
-    if (nsize == 0)
-	{
+    if (nsize == 0) {
         free(ptr);
         return NULL;
     }
