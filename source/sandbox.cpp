@@ -15,7 +15,12 @@ extern "C"{
 class luaSandbox
 {
     private:
+    
     lua_State * state;
+
+    //  Lua allocator function
+    void * allocator(void *ud, void *ptr, size_t osize, size_t nsize);
+
     //  Binds API functions to the lua state
     void bindAPI();
 
@@ -30,8 +35,27 @@ class luaSandbox
     void getGlobal(const char* name, double value);
     void getGlobal(const char* name, char* value);
 
+    //  Write a global variable from the Lua environment
+    void setGlobal(const char* name, int value);
+    void setGlobal(const char* name, double value);
+    void setGlobal(const char* name, char* value);
+
+    //  Execute Lua code
+    void execute(const char* code);
+    void execute(FILE * fp);
+
+
 }luaSandbox;
 
-
-
+//  TODO: track memory block size
+void* allocator(void *ud, void *ptr, size_t osize, size_t nsize)
+{
+    (void)ud;  (void)osize;  /* not used */
+    if (nsize == 0) {
+        free(ptr);
+        return NULL;
+    }
+    else
+        return realloc(ptr, nsize);
+}
 
