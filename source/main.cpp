@@ -4,9 +4,9 @@
 
 #include <3ds.h>
 #include <m3dia.hpp>
-#include "console.hpp"
+#include "m3diaLibCI/console.hpp"
+#include "m3diaLibCI/text.hpp"
 
-using namespace GZLO;
 using namespace m3d;
 
 /*
@@ -25,30 +25,36 @@ int main(int argc, char* argv[])
 {
     Applet app;
     Screen scr;
-    Text exitText("Press Start and Select to Exit\nPress L and R to open/close Console.");
+    m3dCI::Text exitText("Press Start and Select to Exit\nPress L and R to open/close Console.");
 	exitText.setFontSize(0.5);
 	exitText.setFontWeight(0.5);
-	Console console("Press A or B to write some text.");
+	m3dCI::Console console("Press A or B to write some text.");
 	
 	// Main loop
     while (app.isRunning())
 	{
 		// Your code goes here
-
-        if (buttonPressed(buttons::Button::Start)
+		if (buttonPressed(buttons::Button::Start)
 			&& buttonPressed(buttons::Button::Select))
 			app.exit();
 			
-			
-        if (buttonPressed(buttons::Button::L)
+		if (buttonPressed(buttons::Button::L)
 			&& buttonPressed(buttons::Button::R))
 			console.ToggleState();
+				
+		if(console.isDrawn())
+		{
+			//Console only actions
+			if (buttonPressed(buttons::Button::A))
+				console.print("Some Text.");
 			
-		if (buttonPressed(buttons::Button::A))
-			console.print("Some Text.");
-		
-		if (buttonPressed(buttons::Button::B))
-			console.println("New line!");
+			if (buttonPressed(buttons::Button::B))
+				console.println("New line!");
+		}
+		else
+		{
+			//Actions that require the console to not be shown
+		}
 		
 		scr.drawTop(exitText, RenderContext::Mode::Flat);
 		scr.drawTop(console, RenderContext::Mode::Flat);
