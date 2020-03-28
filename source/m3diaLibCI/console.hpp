@@ -5,14 +5,15 @@
 
 #include <m3dia.hpp>
 #include <string.h>
+#include "text.hpp"
 
-namespace GZLO
+namespace m3dCI
 {
 	class Console : public m3d::Drawable
 	{
 		private:
 			bool toggleState;
-			m3d::Text consoleTextBox;
+			m3dCI::Text consoleTextBox;
 			m3d::Rectangle consoleBlackRectangle;
 		public:
 			Console(std::string defaultText);
@@ -20,6 +21,7 @@ namespace GZLO
 			void print(std::string text);
 			void println(std::string text);
 			void draw(m3d::RenderContext t_context);
+			bool isDrawn();
 	};
-}
+} 
 #endif
