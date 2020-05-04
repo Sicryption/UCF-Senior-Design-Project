@@ -3,3 +3,5 @@ build/*
 *.3dsx
 *.elf
 *.smdh
+*.DS_Store
+source/*.DS_Store
