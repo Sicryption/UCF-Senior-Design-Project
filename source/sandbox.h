@@ -6,6 +6,8 @@
 
 #include "lua/lua.hpp"
 
+#define SANDBOX_MEM_CAPACITY 1024
+
 //typedef std::map<std::string, std::any > LuaTable;
 
 /**  
@@ -49,6 +51,8 @@ public:
     LuaSandbox()
     {
         state = luaL_newstate();
+        memSize = 0;
+        memCapacity = SANDBOX_MEM_CAPACITY;
         memHead = calloc(memCapacity, sizeof(void*) ) ;
         if(memHead == NULL)
         {

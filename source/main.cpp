@@ -10,18 +10,10 @@
 
 #include "lua/lua.hpp"
 
+#include "sandbox.h"
+
 using namespace m3d;
 
-/*
-    The Lua API is built in C.
-    In a C++ program it has to be included like this.
-*/
-extern "C"
-{
-    #include "lua/lua.h"
-    #include "lua/lualib.h"
-    #include "lua/lauxlib.h"
-}
 
 
 int main(int argc, char* argv[])
@@ -33,6 +25,10 @@ int main(int argc, char* argv[])
 	exitText.setFontWeight(0.5);
 	m3dCI::Console console("Press A or B to write some text.");
 	
+    // Create Sandbox
+    LuaSandbox* sandbox = new LuaSandbox();
+    
+
 	// Main loop
     while (app.isRunning())
 	{
@@ -53,6 +49,8 @@ int main(int argc, char* argv[])
 			
 			if (buttonPressed(buttons::Button::B))
 				console.println("New line!");
+            
+
 		}
 		else
 		{
