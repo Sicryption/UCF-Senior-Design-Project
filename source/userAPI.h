@@ -2,11 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern "C"{
-    #include "lua/lua.h"
-    #include "lua/lualib.h"
-    #include "lua/lauxlib.h"
-}
+#include "lua/lua.hpp"
 
 /*  C Closures
 *   Lua only accepts C functions which accept 

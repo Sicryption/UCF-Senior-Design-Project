@@ -3,9 +3,12 @@
 #include <string.h>
 
 #include <3ds.h>
+
 #include <m3dia.hpp>
 #include "m3diaLibCI/console.hpp"
 #include "m3diaLibCI/text.hpp"
+
+#include "lua/lua.hpp"
 
 using namespace m3d;
 
