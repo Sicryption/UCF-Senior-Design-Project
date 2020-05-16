@@ -14,10 +14,19 @@ namespace m3dCI
 	{
 		public:
 			//Creates a Rectangle to take the form of a button and sets the function to be called OnClick
-			Button(int x, int y, int w, int h, m3d::Color color, void (*function)(Button*));
+			Button(int x, int y, int w, int h, m3d::Color color);
 			
-			//The function which is called when the button is clicked.
-			void (*OnClick)(Button*);
+			//The function which is called when the touch event is touched over the button.
+			// Called if a single touch is over the button and the touch happened on the same frame
+			void (*OnTouch)(Button*);
+			
+			//The function which is called when the touch event is released over the button.
+			// Called when a touch is released over a button.
+			void (*OnRelease)(Button*);
+			
+			//The function which is called when the touch event is held over the button.
+			// Called when a touch is over a button, but the initial touch did not happen on the frame being called
+			void (*OnHeld)(Button*);
     };
 }
 

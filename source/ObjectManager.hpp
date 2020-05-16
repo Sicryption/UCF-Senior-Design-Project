@@ -17,6 +17,7 @@ class ObjectManager
 		Screen* scr;
 		//The Utility manager
 		Util* util;
+		int lastFrameTouchX, lastFrameTouchY;
 		//Array of all active buttons
 		std::vector<m3dCI::Button*> arr;
 		
@@ -36,6 +37,6 @@ class ObjectManager
 		void OnUpdate();
 		
 		//Button creation. Adds button to array of active buttons.
-		m3dCI::Button* CreateButton(int x, int y, int w, int h, m3d::Color color, void (*function)(m3dCI::Button*));
+		m3dCI::Button* CreateButton(int x, int y, int w, int h, m3d::Color color);
 };
 #endif

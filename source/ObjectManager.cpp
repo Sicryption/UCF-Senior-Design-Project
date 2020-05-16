@@ -4,6 +4,7 @@
 #include "m3diaLibCI/button.hpp" 
 #include "m3diaLibCI/console.hpp"
 #include "util.hpp"
+#include <3ds.h>
 
 using namespace m3d;
 
@@ -40,12 +41,20 @@ ObjectManager::ObjectManager(Screen* screen)
 {
 	scr = screen;
 	
+	lastFrameTouchX = -1;
+	lastFrameTouchY = -1;
+	
 	util = Util::getInstance(nullptr, nullptr);
 }
 
 //The function which is called on every game frame.
 void ObjectManager::OnUpdate()
 {
+	int touchedThisFrame = hidKeysDown() & KEY_TOUCH,
+		touchReleasedThisFrame = hidKeysUp() & KEY_TOUCH,
+		touchx = m3d::touch::getXPosition(),
+		touchy = m3d::touch::getYPosition();
+	
 	for(uint i = 0; i < arr.size(); i++)
 	{
 		//Draw all buttons
@@ -60,23 +69,33 @@ void ObjectManager::OnUpdate()
 			TODO: This is called once per game frame, resulting in the OnClick function being called multiple times.
 			Should only be called once and OnTouchRelease rather than OnTouch
 		*/
-		
-		int touchx = m3d::touch::getXPosition();
-		int touchy = m3d::touch::getYPosition();
 
-		if(arr[i]->getBoundingBox().intersects(m3d::BoundingBox(touchx, touchy, 1, 1)))
+		
+		if(touchedThisFrame)
 		{
-			//Call OnClick function once it has been touched and the function isn't null.
-			if(arr[i]->OnClick != nullptr)
-				(arr[i]->OnClick)(arr[i]);
+			if(arr[i]->OnTouch != nullptr && arr[i]->getBoundingBox().intersects(m3d::BoundingBox(touchx, touchy, 1, 1)))
+				(arr[i]->OnTouch)(arr[i]);
+		}
+		else if(touchReleasedThisFrame)
+		{
+			if(arr[i]->OnRelease != nullptr && arr[i]->getBoundingBox().intersects(m3d::BoundingBox(lastFrameTouchX, lastFrameTouchY, 1, 1)))
+				(arr[i]->OnRelease)(arr[i]);
+		}
+		else
+		{
+			if(arr[i]->OnHeld != nullptr && arr[i]->getBoundingBox().intersects(m3d::BoundingBox(touchx, touchy, 1, 1)))
+				(arr[i]->OnHeld)(arr[i]);
 		}
 	}
+	
+	lastFrameTouchX = touchx;
+	lastFrameTouchY = touchy;
 }
 
 //Creates a Button and loads the object into the ObjectManager array.
-m3dCI::Button* ObjectManager::CreateButton(int x, int y, int w, int h, m3d::Color color, void (*function)(m3dCI::Button*))
+m3dCI::Button* ObjectManager::CreateButton(int x, int y, int w, int h, m3d::Color color)
 {
-	m3dCI::Button* newButton = new m3dCI::Button(x, y, w, h, color, function);
+	m3dCI::Button* newButton = new m3dCI::Button(x, y, w, h, color);
 	
 	arr.push_back(newButton);
 	

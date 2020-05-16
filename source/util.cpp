@@ -69,13 +69,16 @@ void Util::OnUpdate()
 		//Write some text on a new line
 		if (buttonPressed(buttons::Button::B))
 			this->PrintLine("Some Text.");
+	
+		//Draw the console
+		scr->drawTop(*console, RenderContext::Mode::Flat);
 	}
-	
-	//Draw the console
-	scr->drawTop(*console, RenderContext::Mode::Flat);
-	
-	//Draw the exitText
-	scr->drawTop(*exitText, RenderContext::Mode::Flat);
+	//Everything besides the console
+	else
+	{
+		//Draw the exitText
+		scr->drawTop(*exitText, RenderContext::Mode::Flat);
+	}
 }
 
 //Print some text followed by a new line to the primary console.

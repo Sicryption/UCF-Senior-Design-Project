@@ -21,15 +21,6 @@ extern "C"
     #include "lua/lauxlib.h"
 }
 
-
-//Dummy function for Dummy Button
-void doSomething(m3dCI::Button* buttonClicked)
-{
-	ObjectManager *om = ObjectManager::getInstance(nullptr);
-		
-	om->CreateButton(100,100,20,20,m3d::Color(200,0,0),nullptr);
-}
-
 int main(int argc, char* argv[])
 {
 	//Create default Applet and Screen variables
@@ -39,9 +30,6 @@ int main(int argc, char* argv[])
 	//Create default Singleton instances of Utility class and ObjectManager class
 	Util *util = Util::getInstance(&scr, &app);
 	ObjectManager *om = ObjectManager::getInstance(&scr);
-	
-	//Create Dummy button for testing OnClick
-	om->CreateButton(50,50,20,20,m3d::Color(100,0,0),doSomething);
 		
 	// Main loop
     while (app.isRunning())
@@ -49,7 +37,7 @@ int main(int argc, char* argv[])
 		//Call OnUpdate Function for all Singletons.
 		util->OnUpdate();
 		om->OnUpdate();
-		
+	
 		//Render the game screen
 		scr.render();
 	}

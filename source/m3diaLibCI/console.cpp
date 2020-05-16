@@ -6,7 +6,7 @@ namespace m3dCI
 	Console::Console(std::string defaultText):
 		toggleState(false),
 		consoleTextBox(defaultText),
-		consoleBlackRectangle(0, 0, 1000, 1000, m3d::Color(0,0,0))//black console background needs to be as big as the screen size, 1000, 1000 is good enough for both screens
+		consoleBlackRectangle(0, 0, 1000, 1000, m3d::Color(50,100,200))//black console background needs to be as big as the screen size, 1000, 1000 is good enough for both screens
 	{
 		consoleTextBox.setFontSize(0.5);
 		consoleTextBox.setFontWeight(0.5);
