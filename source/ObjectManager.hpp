@@ -18,6 +18,7 @@ class ObjectManager
 		Screen* scr;
 		//The Utility manager
 		Util* util;
+		//Stored values for TouchEvents. Stores the previous frames x and y touch values
 		int lastFrameTouchX, lastFrameTouchY;
 		//Array of all active buttons
 		std::vector<m3dCI::Button*> arr;

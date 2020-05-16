@@ -1,7 +1,6 @@
 #include "button.hpp"
-#include "../util.hpp"
 
-//Creates a Rectangle to take the form of a button and sets the function to be called OnClick
+//Creates a Rectangle to take the form of a button
 m3dCI::Button::Button(int x, int y, int w, int h, m3d::Color color)
 : m3d::Shape()
 {
@@ -11,6 +10,7 @@ m3dCI::Button::Button(int x, int y, int w, int h, m3d::Color color)
 	buttonType = Rectangle;
 }
 
+//Creates a Circle to take the form of a button
 m3dCI::Button::Button(int x, int y, int radius, m3d::Color color)
 : m3d::Shape()
 {
@@ -20,6 +20,7 @@ m3dCI::Button::Button(int x, int y, int radius, m3d::Color color)
 	buttonType = Circle;
 }
 
+//Determines which shape to draw when called via screen.drawTop
 void m3dCI::Button::draw(m3d::RenderContext t_context)
 {
 	if(buttonType == Rectangle)
@@ -28,6 +29,7 @@ void m3dCI::Button::draw(m3d::RenderContext t_context)
 		return circle->draw(t_context);
 }
 
+//Set the default values for any Button to null, then override them as seen fit
 void m3dCI::Button::SetDefaults()
 {
 	rectangle = nullptr;
@@ -37,6 +39,7 @@ void m3dCI::Button::SetDefaults()
 	OnRelease = nullptr;
 }
 
+//Determine if a point intersects the Button
 bool m3dCI::Button::PointIntersects(int x, int y)
 {
 	if(buttonType == Rectangle)
@@ -51,9 +54,6 @@ bool m3dCI::Button::PointIntersects(int x, int y)
 		
 		if(pow(xDiff, 2) + pow(yDiff, 2) <= pow(getRadius(), 2))
 		{
-			Util *util = Util::getInstance(nullptr, nullptr);
-			util->PrintLine(std::to_string(xDiff) + "|" + std::to_string(yDiff) + "|" + std::to_string(pow(getRadius(), 2)));
-			
 			return true;
 		}
 	}

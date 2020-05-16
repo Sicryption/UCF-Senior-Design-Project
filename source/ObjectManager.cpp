@@ -59,12 +59,6 @@ void ObjectManager::OnUpdate()
 		
 		
 		//Check for touch event on Button
-		/*
-			TODO: This is called once per game frame, resulting in the OnClick function being called multiple times.
-			Should only be called once and OnTouchRelease rather than OnTouch
-		*/
-
-		
 		if(touchedThisFrame)
 		{
 			if(arr[i]->OnTouch != nullptr && arr[i]->PointIntersects(touchx, touchy))
