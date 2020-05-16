@@ -1,12 +1,13 @@
-#ifndef OBJECTMANAGER_H
-#define OBJECTMANAGER_H
-
 #pragma once
 
-#include <m3dia.hpp>
-#include <vector>
-#include "m3diaLibCI/button.hpp"
+#include "m3diaLibCI/button.hpp" 
+#include "m3diaLibCI/console.hpp"
 #include "util.hpp"
+
+#include <3ds.h>
+#include <vector>
+#include <citro2d.h>
+#include <m3dia.hpp>
 
 using namespace m3d;
 
@@ -36,7 +37,9 @@ class ObjectManager
 		//The function which is called on every game frame.
 		void OnUpdate();
 		
-		//Button creation. Adds button to array of active buttons.
+		//Rectangle button creation. Adds button to array of active buttons.
 		m3dCI::Button* CreateButton(int x, int y, int w, int h, m3d::Color color);
+		
+		//Circular button creation. Adds button to array of active buttons.
+		m3dCI::Button* CreateButton(int x, int y, int radius, m3d::Color color);
 };
-#endif

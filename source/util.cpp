@@ -1,7 +1,3 @@
-#include <m3dia.hpp>
-#include "m3diaLibCI/console.hpp"
-#include "m3diaLibCI/text.hpp"
-#include "m3diaLibCI/button.hpp" 
 #include "util.hpp"
 
 using namespace m3d;

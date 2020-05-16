@@ -1,11 +1,10 @@
-#ifndef CONSOLE_H
-#define CONSOLE_H
-
 #pragma once
+
+#include "text.hpp"
 
 #include <m3dia.hpp>
 #include <string.h>
-#include "text.hpp"
+#include <citro2d.h>
 
 namespace m3dCI
 {
@@ -24,4 +23,3 @@ namespace m3dCI
 			bool isDrawn();
 	};
 } 
-#endif

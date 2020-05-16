@@ -1,10 +1,4 @@
-#include <citro2d.h>
-#include <m3dia.hpp>
 #include "ObjectManager.hpp"
-#include "m3diaLibCI/button.hpp" 
-#include "m3diaLibCI/console.hpp"
-#include "util.hpp"
-#include <3ds.h>
 
 using namespace m3d;
 
@@ -73,17 +67,17 @@ void ObjectManager::OnUpdate()
 		
 		if(touchedThisFrame)
 		{
-			if(arr[i]->OnTouch != nullptr && arr[i]->getBoundingBox().intersects(m3d::BoundingBox(touchx, touchy, 1, 1)))
+			if(arr[i]->OnTouch != nullptr && arr[i]->PointIntersects(touchx, touchy))
 				(arr[i]->OnTouch)(arr[i]);
 		}
 		else if(touchReleasedThisFrame)
 		{
-			if(arr[i]->OnRelease != nullptr && arr[i]->getBoundingBox().intersects(m3d::BoundingBox(lastFrameTouchX, lastFrameTouchY, 1, 1)))
+			if(arr[i]->OnRelease != nullptr && arr[i]->PointIntersects(lastFrameTouchX, lastFrameTouchY))
 				(arr[i]->OnRelease)(arr[i]);
 		}
 		else
 		{
-			if(arr[i]->OnHeld != nullptr && arr[i]->getBoundingBox().intersects(m3d::BoundingBox(touchx, touchy, 1, 1)))
+			if(arr[i]->OnHeld != nullptr && arr[i]->PointIntersects(touchx, touchy))
 				(arr[i]->OnHeld)(arr[i]);
 		}
 	}
@@ -92,10 +86,20 @@ void ObjectManager::OnUpdate()
 	lastFrameTouchY = touchy;
 }
 
-//Creates a Button and loads the object into the ObjectManager array.
+//Rectangle button creation. Adds button to array of active buttons.
 m3dCI::Button* ObjectManager::CreateButton(int x, int y, int w, int h, m3d::Color color)
 {
 	m3dCI::Button* newButton = new m3dCI::Button(x, y, w, h, color);
+	
+	arr.push_back(newButton);
+	
+	return newButton;
+}
+
+//Circular button creation. Adds button to array of active buttons.
+m3dCI::Button* ObjectManager::CreateButton(int x, int y, int radius, m3d::Color color)
+{
+	m3dCI::Button* newButton = new m3dCI::Button(x, y, radius, color);
 	
 	arr.push_back(newButton);
 	

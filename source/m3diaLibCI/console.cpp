@@ -1,4 +1,3 @@
-#include <citro2d.h>
 #include "console.hpp"
 
 namespace m3dCI

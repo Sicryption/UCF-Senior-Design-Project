@@ -1,12 +1,10 @@
-#ifndef UTIL_H
-#define UTIL_H
-
 #pragma once
 
-#include <m3dia.hpp>
 #include "m3diaLibCI/console.hpp"
 #include "m3diaLibCI/text.hpp"
 #include "m3diaLibCI/button.hpp" 
+
+#include <m3dia.hpp>
 
 using namespace m3d;
 
@@ -46,4 +44,3 @@ class Util
 	void PrintLine(std::string text);
 	void Print(std::string text);
 };
-#endif
