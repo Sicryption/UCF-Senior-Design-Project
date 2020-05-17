@@ -1,11 +1,11 @@
+#include "util.hpp"
+#include "ObjectManager.hpp"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <3ds.h>
 #include <m3dia.hpp>
-#include "m3diaLibCI/console.hpp"
-#include "m3diaLibCI/text.hpp"
 
 using namespace m3d;
 
@@ -20,45 +20,24 @@ extern "C"
     #include "lua/lauxlib.h"
 }
 
-
 int main(int argc, char* argv[])
 {
+	//Create default Applet and Screen variables
     Applet app;
     Screen scr;
-    m3dCI::Text exitText("Press Start and Select to Exit\nPress L and R to open/close Console.");
-	exitText.setFontSize(0.5);
-	exitText.setFontWeight(0.5);
-	m3dCI::Console console("Press A or B to write some text.");
+	
+	//Create default Singleton instances of Utility class and ObjectManager class
+	Util *util = Util::getInstance(&scr, &app);
+	ObjectManager *om = ObjectManager::getInstance(&scr);
 	
 	// Main loop
     while (app.isRunning())
 	{
-		// Your code goes here
-		if (buttonPressed(buttons::Button::Start)
-			&& buttonPressed(buttons::Button::Select))
-			app.exit();
-			
-		if (buttonPressed(buttons::Button::L)
-			&& buttonPressed(buttons::Button::R))
-			console.ToggleState();
-				
-		if(console.isDrawn())
-		{
-			//Console only actions
-			if (buttonPressed(buttons::Button::A))
-				console.print("Some Text.");
-			
-			if (buttonPressed(buttons::Button::B))
-				console.println("New line!");
-		}
-		else
-		{
-			//Actions that require the console to not be shown
-		}
-		
-		scr.drawTop(exitText, RenderContext::Mode::Flat);
-		scr.drawTop(console, RenderContext::Mode::Flat);
-		
+		//Call OnUpdate Function for all Singletons.
+		util->OnUpdate();
+		om->OnUpdate();
+	
+		//Render the game screen
 		scr.render();
 	}
 	
