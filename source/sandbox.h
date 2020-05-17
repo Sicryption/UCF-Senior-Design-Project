@@ -1,14 +1,19 @@
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <vector>
+#include <math.h>
 //#include <map>
 //#include <any>
 
 #include "lua/lua.hpp"
 
-#define SANDBOX_MEM_CAPACITY 1024
+#define SANDBOX_MEM_CAPACITY 4096
 
 //typedef std::map<std::string, std::any > LuaTable;
+
+
 
 /**  
  *  Lua Sandbox object
@@ -31,7 +36,43 @@ private:
     ///  Lua state object
     lua_State * state;    
 
-    
+public:
+    /**
+     *  Used to track memory blocks which have been allocated
+     */
+    typedef struct allocated_memory_block{
+        void* head;     /// starting address of the memory block
+        size_t size;    /// size of the block in bytes.
+
+        // End of memory block
+        void* end(){ return (void*)((int)head + (int)size);}
+
+
+        friend inline bool operator ==  (allocated_memory_block a, allocated_memory_block b);
+        friend inline bool operator !=  (allocated_memory_block a, allocated_memory_block b);
+        friend inline bool operator <   (allocated_memory_block a, allocated_memory_block b);
+        friend inline bool operator >   (allocated_memory_block a, allocated_memory_block b);
+        friend inline bool operator <=  (allocated_memory_block a, allocated_memory_block b);
+        friend inline bool operator >=  (allocated_memory_block a, allocated_memory_block b);
+
+        allocated_memory_block(void* _ptr,size_t _size)
+        {
+            head = _ptr;
+            size = _size;
+        }
+        
+    }memBlock;
+
+private:
+    /// List of allocateed blocks
+    std::vector<memBlock*> blockList;
+
+    /**
+     *  Sum of all active memory blocks
+     *  @returns number of bytes in use
+     */
+    size_t getTotalMemoryUsed();
+
     /**
      *  Custom Lua memory allocation function
      *  @param ud user defined data object
@@ -42,6 +83,18 @@ private:
      */
     void * allocator(void *ud, void *ptr, size_t osize, size_t nsize);
 
+    /**
+     *  Search the block list for a memory block with the same head pointer
+     *  @param ptr pointer used to identify a block
+     *  @returns allocated memory block if found otherwise NULL
+     */
+    memBlock* searchBlockList(void* );
+    
+    void* findMemSpace(size_t);
+
+
+
+    
     /**  Bind all User API functions to the Lua state */
     void bindAPI();
 
@@ -66,6 +119,8 @@ public:
         free(memHead);
     }
 
+
+    
     /**
      *  @returns memory capacity
      */

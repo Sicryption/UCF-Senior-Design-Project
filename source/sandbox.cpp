@@ -1,19 +1,116 @@
 #include "sandbox.h"
+#include "userAPI.h"
+
+/*
+    Comparison oparations for the memBlock object.
+    all comparisons are dependent on == and <
+*/
+
+std::pair<std::string, lua_CFunction> enabledFunctions[] = {
+    std::make_pair( "println" , UserAPI::print)
+};
+
+inline bool operator ==  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+{
+    return (a.head == b.head) && (a.size == b.size);
+}
+inline bool operator !=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+{
+    return !(a == b);
+}
+inline bool operator <   (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+{
+    return a.head < b.head;
+}
+inline bool operator >   (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+{
+    return b < a;
+}
+inline bool operator <=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+{
+    return !(a>b);
+}
+inline bool operator >=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+{
+    return !(a<b);
+}
 
 void* LuaSandbox::allocator(void *ud, void *ptr, size_t osize, size_t nsize)
 {
-    //  TODO: track memory block size
-    (void)ud;  (void)osize;  /* not used */
-    if (nsize == 0) {
-        free(ptr);
+    memBlock * mem = NULL;
+
+    // Free
+    if(nsize == 0)
+    {
+        // search for the memory block
+        for (unsigned int i = 0; i < blockList.size(); i++)
+        {
+            // block is found
+            if(blockList.at(i)->head == ptr)
+            {
+                // erase block
+                blockList.erase(blockList.begin() + i);
+                break;
+            }
+        }
+
         return NULL;
     }
-    else
-        return realloc(ptr, nsize);
+
+    //  Allocate
+    if( osize == 0)
+    {//  No space allocated, create a new memory block
+        mem = new memBlock(malloc(nsize),nsize);
+    } else 
+    {// Adjust an existing memory block
+        // sum 
+        size_t memTotal = getTotalMemoryUsed();
+
+        if( memTotal < (nsize - osize) && 
+            memTotal + (nsize - osize) < SANDBOX_MEM_CAPACITY)
+        {
+            mem = searchBlockList(ptr);
+            if(mem == NULL){
+                mem = new memBlock(ptr,nsize);
+            }
+            mem->head = realloc(ptr,nsize);
+            mem->size = nsize;
+        }
+        
+    }
+
+    return mem;
 }
+
+LuaSandbox::memBlock* LuaSandbox::searchBlockList(void* ptr)
+{
+    if(ptr == NULL){return NULL;}
+
+        for (unsigned int i = 0; i <blockList.size(); ++i)
+        {
+            LuaSandbox::memBlock* m = blockList.at(i);
+            if(m->head == ptr)
+            {
+                return m;
+            }
+        }
+    return NULL;
+}
+
+size_t LuaSandbox::getTotalMemoryUsed()
+{
+    size_t size = 0;
+    for (unsigned int i = 0; i <blockList.size(); ++i)
+    {
+        size += blockList.at(i)->size;
+    }
+    return size;
+}
+
 
 void LuaSandbox::execute(std::string text)
 {
+//  TODO: Needs a more thorough test
     // Temporary implementation, unprotected
     const char* temp = text.c_str();
     luaL_dostring(state,temp);
@@ -85,4 +182,15 @@ std::string LuaSandbox::tryGetString(std::string id)
     }
     
     return value;
+}
+
+void LuaSandbox::bindAPI()
+{
+    
+    for(std::pair<std::string, lua_CFunction> func : enabledFunctions)
+    {
+        lua_pushcfunction(state, func.second);
+        lua_setglobal(state, func.first.c_str());
+    }
+    
 }

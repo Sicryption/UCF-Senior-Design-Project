@@ -1,19 +1,21 @@
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <iostream>
+#include <utility>
 
 #include "lua/lua.hpp"
 
-/*  C Closures
-*   Lua only accepts C functions which accept 
-*   a lua_State parameter and return an integer
-*/
 
-int print(lua_State* L)
+/**
+ *  A namespace defining the functions bound to a Lua Sandbox
+ *  Any function to become a user functions must be a C Closure, returning an int and accepting a lua_State*.
+ *  enabled functions must be added to the enabledFunctions array manually
+ */
+namespace UserAPI
 {
-    int number;
-    char* string;
+    
+    int print(lua_State* L);  
 
-    printf("");
-    return 0;
+    
 }
