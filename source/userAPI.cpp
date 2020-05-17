@@ -5,7 +5,7 @@
 #include "m3diaLibCI/text.hpp"
 
 /**
- *  User API print funciton
+ *  User API print function
  */
 int UserAPI::print(lua_State* L)
 {
