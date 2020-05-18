@@ -9,14 +9,31 @@ ObjectManager *ObjectManager::instance = 0;
 	This Class is a singleton. 
 	Meaning, only one instance of this class may ever exist.
 	This allows for all classes to access this object through the use of this instance value.
-	An initial instantiation must occur with proper vaules passed into getInstance
+	An initial instantiation must occur with proper values passed into createInstance
 	All further attempts to accesss this class can use dummy values for all parameters of getInstance
 */
-ObjectManager* ObjectManager::getInstance(Screen* screen)
+ObjectManager* ObjectManager::createInstance(Screen* screen)
 {
 	if (instance == 0)
 	{
 		instance = new ObjectManager(screen);
+	}
+	
+	return instance;
+}
+
+/*
+	This Class is a singleton. 
+	Meaning, only one instance of this class may ever exist.
+	This allows for all classes to access this object through the use of this instance value.
+	An initial instantiation must occur with proper values passed into createInstance
+	All further attempts to accesss this class can use dummy values for all parameters of getInstance
+*/
+ObjectManager* ObjectManager::getInstance()
+{
+	if (instance == 0)
+	{
+		return nullptr;
 	}
 	
 	return instance;
@@ -38,7 +55,7 @@ ObjectManager::ObjectManager(Screen* screen)
 	lastFrameTouchX = -1;
 	lastFrameTouchY = -1;
 	
-	util = Util::getInstance(nullptr, nullptr);
+	util = Util::getInstance();
 }
 
 //The function which is called on every game frame.

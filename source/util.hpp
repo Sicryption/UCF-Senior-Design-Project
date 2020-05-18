@@ -38,7 +38,8 @@ class Util
 	//The function which is called on every game frame.
 	void OnUpdate();
 	
-	static Util* getInstance(Screen* screen, Applet* applet);
+	static Util* createInstance(Screen* screen, Applet* applet);
+	static Util* getInstance();
 	
 	//Print statements to write to the primary console.
 	void PrintLine(std::string text);
