@@ -1,14 +1,7 @@
-/**
- * @file text.hpp
- * @brief Defines the text class
- */
-#ifndef TEXTGZLO_H
-#define TEXTGZLO_H
-
 #pragma once
+
 #include <citro2d.h>
 #include <string>
-
 #include <3ds.h>
 #include <m3dia.hpp>
 
@@ -205,7 +198,4 @@ namespace m3dCI {
         C2D_Text m_textObject;
         C2D_TextBuf m_textBuffer;
     };
-} /* m3d */
-
-
-#endif /* end of include guard: TEXT_H */
+}
