@@ -90,11 +90,6 @@ private:
      */
     memBlock* searchBlockList(void* );
     
-    void* findMemSpace(size_t);
-
-
-
-    
     /**  Bind all User API functions to the Lua state */
     void bindAPI();
 

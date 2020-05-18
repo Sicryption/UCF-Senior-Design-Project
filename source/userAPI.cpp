@@ -1,29 +1,29 @@
 
 #include "userAPI.h"
-#include <m3dia.hpp>
-#include "m3diaLibCI/console.hpp"
-#include "m3diaLibCI/text.hpp"
+#include "util.hpp"
 
 /**
  *  User API print function
  */
-int UserAPI::print(lua_State* L)
+int UserAPI::print_line(lua_State* L)
 {
     if(lua_checkstack(L,1) <= 0)
     {
+        // TODO: replace with some instruction, displaying the error to the user
         std::cerr << "parameter error: not enough parameters to perform 'print'\n";
         return 1;
     }
 
-    
+    std:: string data;
     if(lua_isnumber(L, -1) > 0)
     {
         double number = lua_tonumber(L,-1);
-        std::cout<< number << "\n";
-
+        data = std::to_string(number);
+        Util::PrintLine(data);
     }else{
         const char* text = lua_tostring(L,-1);
-        std::cout<< text << "\n";
+        data = std::string(text);
+        Util::PrintLine(data)
     }
 
     return 0;

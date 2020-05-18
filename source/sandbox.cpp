@@ -6,31 +6,36 @@
     all comparisons are dependent on == and <
 */
 
+/// The array of lua accessible user API functions, paired with their lua global name
 std::pair<std::string, lua_CFunction> enabledFunctions[] = {
-    std::make_pair( "println" , UserAPI::print)
+    std::make_pair( "println" , UserAPI::print_line)
 };
 
-inline bool operator ==  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+/*
+    Operator oerloading for memBlock.
+*/
+
+bool operator ==  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
 {
     return (a.head == b.head) && (a.size == b.size);
 }
-inline bool operator !=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+bool operator !=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
 {
     return !(a == b);
 }
-inline bool operator <   (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+bool operator <   (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
 {
     return a.head < b.head;
 }
-inline bool operator >   (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+bool operator >   (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
 {
     return b < a;
 }
-inline bool operator <=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+bool operator <=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
 {
     return !(a>b);
 }
-inline bool operator >=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+bool operator >=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
 {
     return !(a<b);
 }
@@ -84,16 +89,18 @@ void* LuaSandbox::allocator(void *ud, void *ptr, size_t osize, size_t nsize)
 
 LuaSandbox::memBlock* LuaSandbox::searchBlockList(void* ptr)
 {
+    //  If ptr is null skip the search and return null
     if(ptr == NULL){return NULL;}
 
-        for (unsigned int i = 0; i <blockList.size(); ++i)
+    // for each block test if  head == ptr
+    for (unsigned int i = 0; i <blockList.size(); ++i)
+    {
+        LuaSandbox::memBlock* m = blockList.at(i);
+        if(m->head == ptr)
         {
-            LuaSandbox::memBlock* m = blockList.at(i);
-            if(m->head == ptr)
-            {
-                return m;
-            }
+            return m;
         }
+    }
     return NULL;
 }
 
