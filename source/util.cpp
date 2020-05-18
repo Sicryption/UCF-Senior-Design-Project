@@ -7,15 +7,32 @@ Util *Util::instance = 0;
 /*
 	This Class is a singleton. 
 	Meaning, only one instance of this class may ever exist.
-	This allows for all classes to access this object through the use of this instance value.
-	An initial instantiation must occur with proper vaules passed into getInstance
+	This allows for all classes to access this object through the use of an instance value.
+	An initial instantiation must occur with proper values passed into createInstance
 	All further attempts to accesss this class can use dummy values for all parameters of getInstance
 */
-Util* Util::getInstance(Screen* screen, Applet* applet)
+Util* Util::createInstance(Screen* screen, Applet* applet)
 {
 	if (instance == 0)
 	{
 		instance = new Util(screen, applet);
+	}
+	
+	return instance;
+}
+
+/*
+	This Class is a singleton. 
+	Meaning, only one instance of this class may ever exist.
+	This allows for all classes to access this object through the use of this instance value.
+	An initial instantiation must occur with proper values passed into createInstance
+	All further attempts to accesss this class can use dummy values for all parameters of getInstance
+*/
+Util* Util::getInstance()
+{
+	if (instance == 0)
+	{
+		return nullptr;
 	}
 	
 	return instance;
