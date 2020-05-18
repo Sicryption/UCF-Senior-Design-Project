@@ -9,6 +9,7 @@
 
 #include "lua/lua.hpp"
 
+/// Memory capacity of the  sandbox in bytes
 #define SANDBOX_MEM_CAPACITY 4096
 
 //typedef std::map<std::string, std::any > LuaTable;

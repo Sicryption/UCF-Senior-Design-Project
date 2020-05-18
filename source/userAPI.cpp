@@ -19,11 +19,11 @@ int UserAPI::print_line(lua_State* L)
     {
         double number = lua_tonumber(L,-1);
         data = std::to_string(number);
-        Util::PrintLine(data);
+        Util::getInstance()->PrintLine(data);
     }else{
         const char* text = lua_tostring(L,-1);
         data = std::string(text);
-        Util::PrintLine(data)
+        Util::getInstance()->PrintLine(data);
     }
 
     return 0;
