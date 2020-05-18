@@ -33,7 +33,8 @@ class ObjectManager
 		static ObjectManager *instance;
 		ObjectManager(Screen* screen);
 	public:
-		static ObjectManager* getInstance(Screen* screen);
+		static ObjectManager* getInstance();
+		static ObjectManager* createInstance(Screen* screen);
 		
 		//The function which is called on every game frame.
 		void OnUpdate();

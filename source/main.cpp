@@ -22,8 +22,8 @@ int main(int argc, char* argv[])
     Screen scr;
 	
 	//Create default Singleton instances of Utility class and ObjectManager class
-	Util *util = Util::getInstance(&scr, &app);
-	ObjectManager *om = ObjectManager::getInstance(&scr);
+	Util *util = Util::createInstance(&scr, &app);
+	ObjectManager *om = ObjectManager::createInstance(&scr);
 	
     // Create a Sandbox environment (here for testing)
     LuaSandbox* sandbox = new LuaSandbox();
