@@ -1,6 +1,8 @@
 #include "sandbox.h"
 #include "userAPI.h"
 
+#include "util.hpp"
+
 /*
     Comparison oparations for the memBlock object.
     all comparisons are dependent on == and <
@@ -120,7 +122,9 @@ void LuaSandbox::execute(std::string text)
 //  TODO: Needs a more thorough test
     // Temporary implementation, unprotected
     const char* temp = text.c_str();
+    //Util::getInstance()->PrintLine(temp);
     luaL_dostring(state,temp);
+    return;
 }
 
 double LuaSandbox::tryGetDouble(std::string id)
@@ -199,5 +203,11 @@ void LuaSandbox::bindAPI()
         lua_pushcfunction(state, func.second);
         lua_setglobal(state, func.first.c_str());
     }
-    
+    return;
+}
+
+void LuaSandbox::close()
+{
+    lua_close(state);
+    return;
 }

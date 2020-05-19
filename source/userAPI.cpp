@@ -6,25 +6,21 @@
  *  User API print function
  */
 int UserAPI::print_line(lua_State* L)
-{
-    if(lua_checkstack(L,1) <= 0)
+{    
+    const char *s;
+    size_t l;
+
+    //   Convert evaluated parameter to string
+    s = lua_tolstring(L, -1, &l);  
+    if (s == NULL)
     {
-        // TODO: replace with some instruction, displaying the error to the user
-        std::cerr << "parameter error: not enough parameters to perform 'print'\n";
-        return 1;
+        Util::getInstance()->PrintLine("'tostring' must return a string to 'print'");
+        return luaL_error(L, "'tostring' must return a string to 'print'");
     }
 
-    std:: string data;
-    if(lua_isnumber(L, -1) > 0)
-    {
-        double number = lua_tonumber(L,-1);
-        data = std::to_string(number);
-        Util::getInstance()->PrintLine(data);
-    }else{
-        const char* text = lua_tostring(L,-1);
-        data = std::string(text);
-        Util::getInstance()->PrintLine(data);
-    }
+    //  Write to Console
+    Util::getInstance()->PrintLine(s);
 
-    return 0;
+    // Number of results returned
+    return 0; 
 }

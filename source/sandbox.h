@@ -14,7 +14,10 @@
 
 //typedef std::map<std::string, std::any > LuaTable;
 
-
+/*
+    A Sandbox must be initialized, using new LuaSandbox().
+    From there its member values can be used  to execute code 'chunks' and read global values from the environment
+*/
 
 /**  
  *  Lua Sandbox object
@@ -107,6 +110,7 @@ public:
         {
             std::cerr << "Error: memory allocation error, not enough space \n";
         }
+        bindAPI();
     }
 
     ~LuaSandbox()
@@ -161,6 +165,13 @@ public:
     //void tryGetTable( std::string );
 
     /**
+     *  attempts to execute a global function with some parameters
+     *  @returns the number of results returned
+     *  @throw exception if function either does not exist or is execution produced an error
+     */
+    //void executeGlobal( std::string, <params...> );
+
+    /**
      *  Declare or Assign a value in the environment
      *  @param identifier must be unique to avoid overwriting 
      *  @param data to be assigned
@@ -175,6 +186,8 @@ public:
      *  @throw exception if the system runs out of memory while copying the codeblock
      */
     void execute(std::string );
+
+    void close();
 };
 
 
