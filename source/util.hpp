@@ -1,8 +1,6 @@
 #pragma once
 
 #include "m3diaLibCI/console.hpp"
-#include "m3diaLibCI/text.hpp"
-#include "m3diaLibCI/button.hpp" 
 
 #include <m3dia.hpp>
 
@@ -14,9 +12,6 @@ class Util
 	
 	//Default console in which all Util.Prints will print ot to
 	m3dCI::Console* console;
-	//Text which is displayed on Game Load.
-	//Likely to be removed.
-	m3dCI::Text* exitText;
 	
 	//The active Applet object
 	Applet* app;
@@ -44,4 +39,7 @@ class Util
 	//Print statements to write to the primary console.
 	void PrintLine(std::string text);
 	void Print(std::string text);
+	
+	//Function to check the current Console drawn state
+	bool IsConsoleDrawn();
 };

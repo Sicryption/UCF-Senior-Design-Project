@@ -54,9 +54,6 @@ Util::Util(Screen* screen, Applet* applet)
 	app = applet;
 	
 	console = new m3dCI::Console("Press A or B to write some text.");
-	exitText = new m3dCI::Text("Press Start and Select to Exit\nPress L and R to open/close Console.");
-	exitText->setFontSize(0.5);
-	exitText->setFontWeight(0.5);
 }
 
 //The function which is called on every game frame.
@@ -73,7 +70,7 @@ void Util::OnUpdate()
 		this->console->ToggleState();
 	
 	//Console specific actions, Only works when console is on screen
-	if(this->console->isDrawn())
+	if(IsConsoleDrawn())
 	{
 		//Write some text
 		if (buttonPressed(buttons::Button::A))
@@ -85,12 +82,6 @@ void Util::OnUpdate()
 	
 		//Draw the console
 		scr->drawTop(*console, RenderContext::Mode::Flat);
-	}
-	//Everything besides the console
-	else
-	{
-		//Draw the exitText
-		scr->drawTop(*exitText, RenderContext::Mode::Flat);
 	}
 }
 
@@ -104,4 +95,9 @@ void Util::PrintLine(std::string text)
 void Util::Print(std::string text)
 {
 	this->console->print(text);
+}
+
+bool Util::IsConsoleDrawn()
+{
+	return this->console->isDrawn();
 }
