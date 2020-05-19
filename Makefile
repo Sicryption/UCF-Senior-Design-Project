@@ -34,11 +34,11 @@ include $(DEVKITARM)/3ds_rules
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	source	source/lua	source/m3diaLibCI
-DATA		:=	data
+DATA		:=	assets/data
 INCLUDES	:=	include
-GRAPHICS	:=	gfx
+GRAPHICS	:=	assets/gfx
 GFXBUILD	:=	$(BUILD)
-ROMFS		:=	romfs
+ROMFS		:=	assets
 #GFXBUILD	:=	$(ROMFS)/gfx
 APP_TITLE	:= 	GZLO
 APP_DESCRIPTION	:=	learn simple programing principles
