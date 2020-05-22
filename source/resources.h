@@ -1,14 +1,16 @@
 #pragma once
 #include <iostream>
 #include <stdlib.h> 
+#include <exception>
 #include <map>
 
 #include <m3dia.hpp>
 
 #define ROMFS_PATH      "romfs:/"
-#define TEXTURE_PATH    "romfs:/gfx"
-#define AUDIO_PATH      "romfs:/sfx"
+#define TEXTURE_PATH    "romfs:/gfx/"
+#define AUDIO_PATH      "romfs:/sfx/"
 #define TEXTURE_EXT {"png","jpg","bmp"}
+#define SOUND_EXT {"mp3", "wav"}
 
 
 /** @class ResourceManager
@@ -23,11 +25,19 @@ private:
     ~ResourceManager();
     
     static ResourceManager* _instance;
-    static std::map<std::string, void*> _hashmap;
+    static std::map<std::string, void*>* _hashmap;
+    static m3d::Texture * _error;
     
     static ResourceManager* getInstance();
 
+
 public:
+
+    /**
+     *  @brief Initializes the Resource Manager
+     *  This should be called early in the program to load default assets, singleton instance, and hash table
+     */
+    static void initialize();
 
     /**
      *  @brief Reads a File from the ROM file system, but does not load it into the resource manager
@@ -43,7 +53,7 @@ public:
      *  @param path file path relative to the rom file system
      *  @returns pointer to the loaded resource
      */
-    static m3d::Texture* LoadTexture(std::string, std::string);
+    static m3d::Texture* loadTexture(std::string, std::string);
 
     /**
      *  @brief Loads a Sound asset
@@ -52,7 +62,7 @@ public:
      *  @param path file path relative to the rom file system
      *  @returns pointer to the loaded resource
      */
-    static m3d::Sound* LoadSound(std::string, std::string);
+    static m3d::Sound* loadSound(std::string, std::string);
 
     /**
      *  Loads an asset from the ROM file system into the Resource Manager
@@ -60,7 +70,7 @@ public:
      *  @param path file path relative to the rom file system
      *  @returns pointer to the loaded resource
      */
-    static void* Load(std::string, std::string);
+    static void* load(std::string, std::string);
 
     /**
      *  Unloads all assets from the Resource manager
@@ -72,6 +82,10 @@ public:
      *  @param path unique identifier of the asset
      */
     static void Unload(std::string);
+
+
+    static m3d::Texture* getTexture(std::string);
+
 
 
 };
