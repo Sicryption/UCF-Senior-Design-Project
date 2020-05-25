@@ -85,19 +85,41 @@ void Util::OnUpdate()
 	}
 }
 
+void Util::drawTop(Drawable& obj, RenderContext::Mode mode = RenderContext::Mode::Flat, int layer = 0)
+{
+	getInstance();
+	if (instance != 0)
+		instance->scr->drawTop(obj, mode, layer);
+}
+
+void Util::drawBottom(Drawable& obj, RenderContext::Mode mode = RenderContext::Mode::Flat, int layer = 0)
+{
+	getInstance();
+	if (instance != 0)
+		instance->scr->drawBottom(obj, mode, layer);
+}
+
 //Print some text followed by a new line to the primary console.
 void Util::PrintLine(std::string text)
 {
-	this->console->println(text);
+	getInstance();
+	if (instance != 0)
+		instance->console->println(text);
 }
 
 //Print some text to the primary console.
 void Util::Print(std::string text)
 {
-	this->console->print(text);
+	getInstance();
+	if (instance != 0)
+		instance->console->print(text);
 }
 
 bool Util::IsConsoleDrawn()
 {
-	return this->console->isDrawn();
+	getInstance();
+	if (instance != 0)
+		return instance->console->isDrawn();
+
+	return false;
 }

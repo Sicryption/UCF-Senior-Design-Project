@@ -3,7 +3,7 @@
 class MainMenu : public Menu
 {
 	private:
-		m3dCI::Text* exitText;
+		m3dCI::Text* StartupText;
 	public:
 		MainMenu(m3d::Screen* screen);
 		~MainMenu();

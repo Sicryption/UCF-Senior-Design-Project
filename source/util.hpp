@@ -37,9 +37,12 @@ class Util
 	static Util* getInstance();
 	
 	//Print statements to write to the primary console.
-	void PrintLine(std::string text);
-	void Print(std::string text);
+	static void PrintLine(std::string text);
+	static void Print(std::string text);
+	
+	static void drawTop(Drawable& obj, RenderContext::Mode mode, int layer);
+	static void drawBottom(Drawable& obj, RenderContext::Mode mode, int layer);
 	
 	//Function to check the current Console drawn state
-	bool IsConsoleDrawn();
+	static bool IsConsoleDrawn();
 };
