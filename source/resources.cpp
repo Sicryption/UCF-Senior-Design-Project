@@ -27,13 +27,13 @@ void ResourceManager::initialize()
     if(_hashmap != NULL){
         //UnloadAll();
     }
-    _hashmap = new std::map<std::string, void*>();
+    _instance->_hashmap = new std::map<std::string, void*>();
     
     try
     {
-        void* buffer = readAssetFile("gfx/error.bmp");
-        _error = new m3d::Texture();
-        _error->loadFromBuffer(buffer);
+        void* buffer = readAssetFile("gfx/error.png");
+        _instance->_error = new m3d::Texture();
+        _instance->_error->loadFromBuffer(buffer);
         
     }
     catch(const std::exception& e)
@@ -101,22 +101,17 @@ m3d::Texture* ResourceManager::loadTexture(std::string id, std::string path)
         throw std::invalid_argument("could not convert file to Texture");
     }
 
-    _hashmap->insert_or_assign(id,texture);
+    (*_hashmap)[id] = texture;
     return texture;
 
 }
 
+//  TODO: test returns when key is not found
 m3d::Texture* ResourceManager::getTexture(std::string id)
 {
     m3d::Texture* tex;
-    try
-    {
-        tex = _hashmap->at(id);        
-    }
-    catch(const std::out_of_range& e)
-    {
-        tex = NULL;
-    }
+    
+    tex = static_cast<m3d::Texture*>( (*_hashmap)[id] ); 
     
     return tex;
 }
