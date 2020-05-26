@@ -1,5 +1,6 @@
 #include "util.hpp"
 #include "ObjectManager.hpp"
+#include "menus/mainmenu.hpp"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,18 +28,25 @@ int main(int argc, char* argv[])
 	
     //  Create a Sandbox environment (done here for testing)
     LuaSandbox* sandbox = new LuaSandbox();
-    
-
+	MainMenu* menu = new MainMenu(&scr);
 	// Main loop
     while (app.isRunning())
 	{
 		//  Call OnUpdate Function for all Singletons.
 		util->OnUpdate();
 		om->OnUpdate();
+		
+		menu->OnUpdate();
+		
         //  Render the game screen
 		scr.render();
 	}
 	
     sandbox->close();
+	
+	delete (util);
+	delete (om);
+	delete (menu);
+	
 	return 0;
 }

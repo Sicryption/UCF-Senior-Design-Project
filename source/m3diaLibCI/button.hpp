@@ -6,7 +6,7 @@
 #include <string>
 #include <3ds.h>
 #include <m3dia.hpp>
-#include<cmath>
+#include <cmath>
 
 namespace m3dCI 
 {

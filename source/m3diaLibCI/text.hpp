@@ -16,7 +16,7 @@ namespace m3dCI {
          * @brief Initializes the text
          */
         Text(const std::string& t_text = "", m3d::Color t_color = m3d::Color(255, 255, 255));
-
+		virtual ~Text();
         /**
          * @brief Sets the string of the text
          * @param t_text The string of the text
