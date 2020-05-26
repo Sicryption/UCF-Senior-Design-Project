@@ -98,9 +98,9 @@ void ObjectManager::OnUpdate()
 }
 
 //Rectangle button creation. Adds button to array of active buttons.
-m3dCI::Button* ObjectManager::CreateButton(int x, int y, int w, int h, m3d::Color color)
+m3dCI::Button* ObjectManager::CreateButton(int x, int y, int w, int h, m3d::Color color, m3d::Color borderColor, int borderWidth = 3)
 {
-	m3dCI::Button* newButton = new m3dCI::Button(x, y, w, h, color);
+	m3dCI::Button* newButton = new m3dCI::Button(x, y, w, h, color, borderColor, borderWidth);
 	
 	arr.push_back(newButton);
 	
@@ -108,11 +108,31 @@ m3dCI::Button* ObjectManager::CreateButton(int x, int y, int w, int h, m3d::Colo
 }
 
 //Circular button creation. Adds button to array of active buttons.
-m3dCI::Button* ObjectManager::CreateButton(int x, int y, int radius, m3d::Color color)
+m3dCI::Button* ObjectManager::CreateButton(int x, int y, int radius, m3d::Color color, m3d::Color borderColor, int borderWidth = 3)
 {
-	m3dCI::Button* newButton = new m3dCI::Button(x, y, radius, color);
+	m3dCI::Button* newButton = new m3dCI::Button(x, y, radius, color, borderColor, borderWidth);
 	
 	arr.push_back(newButton);
 	
+	return newButton;
+}
+
+//Circular button creation. Adds button to array of active buttons.
+m3dCI::Button* ObjectManager::CreateButton(int x, int y, m3d::Texture& t_texture)
+{
+	m3dCI::Button* newButton = new m3dCI::Button(x, y, t_texture);
+
+	arr.push_back(newButton);
+
+	return newButton;
+}
+
+//Circular button creation. Adds button to array of active buttons.
+m3dCI::Button* ObjectManager::CreateButton(int x, int y, const std::string& t_spriteSheet, int t_imageId = 0)
+{
+	m3dCI::Button* newButton = new m3dCI::Button(x, y, t_spriteSheet, t_imageId);
+
+	arr.push_back(newButton);
+
 	return newButton;
 }
