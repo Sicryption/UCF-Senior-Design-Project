@@ -59,11 +59,9 @@ void* ResourceManager::readFile(std::string path)
 {
     char* buffer;
     
-    std::string fullPath = path;
-    
-    FILE* fp = fopen( fullPath.c_str(), "rb");
+    FILE* fp = fopen( path.c_str(), "rb");
     if(fp == NULL){
-        throw std::invalid_argument("unable to access file '" + fullPath + "'");
+        throw std::invalid_argument("unable to access file '" + path + "'");
     }
 
    
@@ -79,9 +77,25 @@ void* ResourceManager::readFile(std::string path)
     return (void*)buffer;
 }
 
-m3d::Texture* ResourceManager::loadTexture(std::string id, std::string path)
+void* load(std::string id, std::string path)
 {
     void* mem = NULL;
+    try
+    {
+        mem = readFile(id,path);
+    }
+    catch(const std::exception& e)
+    {
+        Util::getInstance()->PrintLine( e.what() );
+        mem = NULL;
+    }
+
+    (*_hashmap)[id] = mem;
+    return mem;
+}
+
+m3d::Texture* ResourceManager::loadTexture(std::string id, std::string path)
+{
     m3d::Texture* texture = new m3d::Texture();
   
     try
@@ -94,7 +108,6 @@ m3d::Texture* ResourceManager::loadTexture(std::string id, std::string path)
     }
     catch(const std::exception& e)
     {
-        // TODO 
         Util::getInstance()->PrintLine(e.what());
         return NULL;
     }
