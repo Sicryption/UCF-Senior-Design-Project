@@ -5,6 +5,7 @@
 #include <map>
 
 #include <m3dia.hpp>
+#include "util.hpp"
 
 #define ROMFS_PATH      "romfs:/"
 #define TEXTURE_PATH    "romfs:/gfx/"
@@ -44,7 +45,7 @@ public:
      *  @param path file path relative to the rom file system
      *  @returns pointer to the retrieved file data
      */
-    static void* readAssetFile(std::string);
+    static void* readFile(std::string);
 
     /**
      *  @brief Loads a Texture Asset

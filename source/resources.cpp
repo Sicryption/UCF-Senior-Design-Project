@@ -31,7 +31,7 @@ void ResourceManager::initialize()
     
     try
     {
-        void* buffer = readAssetFile("gfx/error.png");
+        void* buffer = readFile("gfx/error.png");
         _instance->_error = new m3d::Texture();
         _instance->_error->loadFromBuffer(buffer);
         
@@ -55,11 +55,11 @@ ResourceManager* ResourceManager::getInstance()
     return _instance;
 }
 
-void* ResourceManager::readAssetFile(std::string path)
+void* ResourceManager::readFile(std::string path)
 {
     char* buffer;
     
-    std::string fullPath = ROMFS_PATH + path;
+    std::string fullPath = path;
     
     FILE* fp = fopen( fullPath.c_str(), "rb");
     if(fp == NULL){
@@ -82,23 +82,21 @@ void* ResourceManager::readAssetFile(std::string path)
 m3d::Texture* ResourceManager::loadTexture(std::string id, std::string path)
 {
     void* mem = NULL;
-    bool loaded = false;
     m3d::Texture* texture = new m3d::Texture();
-
+  
     try
     {
-        mem = readAssetFile( TEXTURE_PATH + path);
-        loaded = texture->loadFromBuffer(mem);
+        if( texture->loadFromFile(path) == false)
+        {
+            Util::getInstance()->PrintLine("failed to load from file " + (TEXTURE_PATH + path));
+            return NULL;
+        }
     }
     catch(const std::exception& e)
     {
-        throw e;
-    }
-    
-
-    if(!loaded)
-    {
-        throw std::invalid_argument("could not convert file to Texture");
+        // TODO 
+        Util::getInstance()->PrintLine(e.what());
+        return NULL;
     }
 
     (*_hashmap)[id] = texture;
