@@ -10,7 +10,7 @@
 #include "util.hpp"
 #include "ObjectManager.hpp"
 #include "sandbox.h"
-//#include "resources.h"
+#include "resources.h"
 
 using namespace m3d;
 
@@ -21,21 +21,24 @@ int main(int argc, char* argv[])
     Applet app;
     Screen scr;
 	m3d::Sprite spr;
-    m3d::Texture tex;
+    m3d::Texture * tex_ptr = new m3d::Texture();
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
 	Util *util = Util::createInstance(&scr, &app);
 	ObjectManager *om = ObjectManager::createInstance(&scr);
-    //ResourceManager::initialize();
+    ResourceManager::initialize();
+    
+    std::string id = "error";
+    ResourceManager::loadTexture(tex_ptr,id, "error.png");    
+
+    m3d::Texture * tex2 = ResourceManager::getTexture(id);
+
+    spr.setTexture(*tex2);
+    spr.setXScale(10);
+    spr.setYScale(10);
 
     //  Create a Sandbox environment (done here for testing)
     LuaSandbox* sandbox = new LuaSandbox();
-
-    // load the texture
-    tex.loadFromFile("romfs:/gfx/bean.png");
-
-    // apply the texture
-    //spr.setTexture(tex);
 
 	// Main loop
     while (app.isRunning())
@@ -44,7 +47,7 @@ int main(int argc, char* argv[])
 		util->OnUpdate();
 		om->OnUpdate();
 
-        //scr.drawTop(spr); // draw the sprite
+        scr.drawBottom(spr); // draw the sprite 
 
         //  Render the game screen
 		scr.render();

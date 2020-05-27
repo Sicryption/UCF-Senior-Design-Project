@@ -52,9 +52,9 @@ public:
      *  Loads a Texture asset from the ROM file system into the Resource Manager
      *  @param id unique identifier of the asset
      *  @param path file path relative to the rom file system
-     *  @returns pointer to the loaded resource
+     *  @returns false if the texture couldnt be loaded
      */
-    static m3d::Texture* loadTexture(std::string, std::string);
+    static bool loadTexture(m3d::Texture*,std::string, std::string);
 
     /**
      *  @brief Loads a Sound asset
@@ -86,7 +86,5 @@ public:
 
 
     static m3d::Texture* getTexture(std::string);
-
-
 
 };

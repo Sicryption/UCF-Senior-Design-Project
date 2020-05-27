@@ -27,20 +27,7 @@ void ResourceManager::initialize()
     if(_hashmap != NULL){
         //UnloadAll();
     }
-    _instance->_hashmap = new std::map<std::string, void*>();
-    
-    try
-    {
-        void* buffer = readFile("gfx/error.png");
-        _instance->_error = new m3d::Texture();
-        _instance->_error->loadFromBuffer(buffer);
-        
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    
+    _instance->_hashmap = new std::map<std::string, void*>();   
 
     return;
 
@@ -61,7 +48,7 @@ void* ResourceManager::readFile(std::string path)
     
     FILE* fp = fopen( path.c_str(), "rb");
     if(fp == NULL){
-        throw std::invalid_argument("unable to access file '" + path + "'");
+        Util::getInstance()->PrintLine("unable to access file '" + path + "'");
     }
 
    
@@ -77,12 +64,12 @@ void* ResourceManager::readFile(std::string path)
     return (void*)buffer;
 }
 
-void* load(std::string id, std::string path)
+void* ResourceManager::load(std::string id, std::string path)
 {
     void* mem = NULL;
     try
     {
-        mem = readFile(id,path);
+        mem = readFile(path);
     }
     catch(const std::exception& e)
     {
@@ -94,26 +81,38 @@ void* load(std::string id, std::string path)
     return mem;
 }
 
-m3d::Texture* ResourceManager::loadTexture(std::string id, std::string path)
+bool ResourceManager::loadTexture(m3d::Texture* texture, std::string id, std::string path)
 {
-    m3d::Texture* texture = new m3d::Texture();
   
     try
     {
-        if( texture->loadFromFile(path) == false)
+        std::string fullPath = TEXTURE_PATH;
+        fullPath = fullPath.append(path); 
+
+        if( texture->loadFromFile(fullPath) == false)
         {
             Util::getInstance()->PrintLine("failed to load from file " + (TEXTURE_PATH + path));
-            return NULL;
+            return false;
         }
     }
     catch(const std::exception& e)
     {
         Util::getInstance()->PrintLine(e.what());
-        return NULL;
+        return false;
+    }
+    catch(const std::string& e)
+    {
+        Util::getInstance()->PrintLine(e);
+        return false;
+    }
+    catch(const int& e)
+    {
+        Util::getInstance()->PrintLine("error code: " + e);
+        return false;
     }
 
     (*_hashmap)[id] = texture;
-    return texture;
+    return true;
 
 }
 
