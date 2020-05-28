@@ -4,7 +4,6 @@
  */
 #include <3ds.h>
 
-void* UserAPI::micToBuffer(int time)
-{
+#include "../userAPI.h"
+#include "../util.hpp" 
 
-}
