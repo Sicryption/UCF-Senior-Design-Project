@@ -33,7 +33,7 @@ include $(DEVKITARM)/3ds_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source	source/lua	source/m3diaLibCI
+SOURCES		:=	source	source\UserAPI	source/lua	source/m3diaLibCI
 DATA		:=	data
 INCLUDES	:=	include
 GRAPHICS	:=	gfx
