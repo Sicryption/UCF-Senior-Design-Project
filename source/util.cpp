@@ -63,8 +63,8 @@ Util::Util(Screen* screen, Applet* applet)
 void Util::OnUpdate()
 {	
 	//Check for force close button presses, Close if successful
-	if (buttonPressed(buttons::Button::Start)
-		&& buttonPressed(buttons::Button::Select))
+	if (buttonDown(buttons::Button::Start)
+		&& buttonDown(buttons::Button::Select))
 		this->app->exit();
 	
 	//Check for Console Opening button presses, Open console if successful
