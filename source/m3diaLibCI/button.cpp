@@ -35,6 +35,9 @@ m3dCI::Button::Button(int px, int py, m3d::Texture& t_texture)
 	sprite = new m3dCI::Sprite();
 	sprite->setTexture(t_texture);
 
+	w = sprite->m_sprite.params.pos.w;
+	h = sprite->m_sprite.params.pos.h;
+
 	UpdateShape();
 
 	buttonType = SpriteObject;
@@ -51,6 +54,9 @@ m3dCI::Button::Button(int px, int py, const std::string& t_spriteSheet, int t_im
 
 	sprite = new m3dCI::Sprite(t_spriteSheet, t_imageId);
 
+	w = sprite->m_sprite.params.pos.w;
+	h = sprite->m_sprite.params.pos.h;
+
 	UpdateShape();
 
 	buttonType = SpriteObject;
@@ -65,6 +71,7 @@ m3dCI::Button::Button(int px, int py, int pr, m3d::Color p_innerColor, m3d::Colo
 	x = px;
 	y = py;
 	r = pr;
+	w = r * 2;
 	innerColor = p_innerColor;
 	outerColor = p_borderColor;
 
@@ -88,6 +95,7 @@ m3dCI::Button::~Button()
 	delete(innerCircle);
 	delete(outerCircle);*/
 	delete(sprite);
+	delete(text);
 }
 
 //Function used to recreate the shape of the object based off movements/scaling
@@ -112,6 +120,10 @@ void m3dCI::Button::UpdateShape()
 		outerCircle->setXPosition(x);
 		outerCircle->setYPosition(y);
 		outerCircle->setRadius(r);
+
+		w = r * 2;
+		h = r * 2;
+
 		outerCircle->setColor(outerColor);
 
 		innerCircle->setXPosition(x + (borderWidth * 2));
@@ -122,6 +134,18 @@ void m3dCI::Button::UpdateShape()
 	else if (sprite != nullptr)
 	{
 		sprite->setPosition(x, y);
+	}
+
+	if (text != nullptr)
+	{
+		int textW = text->getWidth();
+		int textH = text->getHeight();
+
+		int centralX = x + (w - textW) / 2;
+		int centralY = y + (h - textH) / 2;
+
+		text->setXPosition(centralX);
+		text->setYPosition(centralY);
 	}
 }
 
@@ -147,6 +171,9 @@ void m3dCI::Button::draw(m3d::RenderContext t_context)
 		if (sprite != nullptr)
 			sprite->draw(t_context);
 	}
+
+	if (text != nullptr)
+		text->draw(t_context);
 }
 
 //Set the default values for any Button to null, then override them as seen fit
@@ -184,6 +211,22 @@ bool m3dCI::Button::PointIntersects(int p_x, int p_y)
 	}
 		
 	return false;
+}
+
+void m3dCI::Button::SetText(std::string txt)
+{
+	if (text == nullptr)
+		text = new m3dCI::Text(txt, m3d::Color(0, 0, 0));
+	else
+		text->setText(txt);
+
+	UpdateShape();
+}
+
+void m3dCI::Button::SetTextColor(m3d::Color color)
+{
+	if (text != nullptr)
+		text->setColor(color);
 }
 			
 /*
@@ -233,6 +276,9 @@ void m3dCI::Button::setWidth (int t_width)
 	if (buttonType == Rectangle)
 		w = t_width;
 
+	if (buttonType == Circle)
+		r = t_width / 2;
+
 	UpdateShape();
 }
 
@@ -245,6 +291,9 @@ void m3dCI::Button::setHeight (int t_height)
 {
 	if (buttonType == Rectangle)
 		h = t_height;
+
+	if (buttonType == Circle)
+		r = t_height / 2;
 
 	UpdateShape();
 }

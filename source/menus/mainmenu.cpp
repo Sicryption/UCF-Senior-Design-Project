@@ -24,6 +24,7 @@ MainMenu::MainMenu(m3d::Screen* screen) :
 	int clickHereToContinueY = ((screenHeight)-(screenHeight*0.3));
 
 	ClickHereToContinue = om->CreateButton(clickHereToContinueX, clickHereToContinueY, (bottomScreenWidth*0.8), (screenHeight*0.2), m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
+	ClickHereToContinue->SetText("Press start to Play!");
 	ClickHereToContinue->OnTouch = &ClickHereToContinue_OnClick;
 }
 
@@ -31,6 +32,9 @@ void MainMenu::OnUpdate()
 {
 	if(!util->IsConsoleDrawn())
 	{
+		if (m3d::buttons::buttonReleased(m3d::buttons::Button::Start))
+			ClickHereToContinue->OnTouch(ClickHereToContinue);
+
 		scr->drawTop(*whiteTopBackground, RenderContext::Mode::Flat);
 		scr->drawBottom(*whiteBottomBackground, RenderContext::Mode::Flat);
 		scr->drawTop(*StartupText, RenderContext::Mode::Flat);

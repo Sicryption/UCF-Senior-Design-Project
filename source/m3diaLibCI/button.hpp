@@ -1,6 +1,7 @@
 #pragma once
 
 #include "sprite.hpp"
+#include "text.hpp"
 
 #include <citro2d.h>
 #include <string>
@@ -23,6 +24,8 @@ namespace m3dCI
 			m3d::Circle* outerCircle;
 
 			m3dCI::Sprite* sprite;
+
+			m3dCI::Text* text;
 
 			m3d::Color innerColor, outerColor;
 
@@ -62,8 +65,9 @@ namespace m3dCI
 			//How to draw the button object
 			void draw(m3d::RenderContext t_context);
 			
-			
-			
+			void SetText(std::string txt);
+			void SetTextColor(m3d::Color color);
+
 			/*
 			
 				The following functions are all child functions of Rectangle/Circle objects which are used here.
