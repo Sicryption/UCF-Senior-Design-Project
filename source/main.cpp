@@ -27,29 +27,29 @@ int main(int argc, char* argv[])
 	Util *util = Util::createInstance(&scr, &app);
 	ObjectManager *om = ObjectManager::createInstance(&scr);
 	MenuHandler *mh = MenuHandler::createInstance(&scr);
-  ResourceManager::initialize();
+	ResourceManager::initialize();
     
-  std::string id = "error";
-  ResourceManager::loadTexture(tex_ptr,id, "error.png");    
+	std::string id = "error";
+	ResourceManager::loadTexture(tex_ptr,id, "error.png");    
 
-  m3d::Texture * tex2 = ResourceManager::getTexture(id);
+	 m3d::Texture * tex2 = ResourceManager::getTexture(id);
 
-  spr.setTexture(*tex2);
-  spr.setXScale(10);
-  spr.setYScale(10);
+	spr.setTexture(*tex2);
+	spr.setXScale(5);
+	spr.setYScale(5);
 
     //  Create a Sandbox environment (done here for testing)
-  LuaSandbox* sandbox = new LuaSandbox();
+	LuaSandbox* sandbox = new LuaSandbox();
   
 	// Main loop
-  while (app.isRunning())
+	while (app.isRunning())
 	{
 		//  Call OnUpdate Function for all Singletons.
 		util->OnUpdate();
 		om->OnUpdate();
 		mh->OnUpdate();
       
-    scr.drawBottom(spr); // draw the sprite 
+		scr.drawTop(spr); // draw the sprite 
     
       //  Render the game screen
 		scr.render();
