@@ -23,6 +23,7 @@ m3dCI::Button::Button(int px, int py, int pw, int ph, m3d::Color p_innerColor, m
 	buttonType = Rectangle;
 }
 
+//Creates a Sprite from a specific texture to take the form of a button
 m3dCI::Button::Button(int px, int py, m3d::Texture& t_texture)
 	: m3d::Drawable()
 {
@@ -39,6 +40,7 @@ m3dCI::Button::Button(int px, int py, m3d::Texture& t_texture)
 	buttonType = SpriteObject;
 }
 
+//Creates a Sprite from a spritesheet to take the form of a button
 m3dCI::Button::Button(int px, int py, const std::string& t_spriteSheet, int t_imageId = 0)
 	: m3d::Drawable()
 {
@@ -76,6 +78,19 @@ m3dCI::Button::Button(int px, int py, int pr, m3d::Color p_innerColor, m3d::Colo
 	buttonType = Circle;
 }
 
+//Default Destructor. Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
+m3dCI::Button::~Button()
+{
+	//The following commented out object don't have deletion support. They *should* be grabbed by the garbage collector. 
+	//Ideally, we would change these objects to support a default virtual deconstructor
+	/*delete(innerRectangle);
+	delete(outerRectangle);
+	delete(innerCircle);
+	delete(outerCircle);*/
+	delete(sprite);
+}
+
+//Function used to recreate the shape of the object based off movements/scaling
 void m3dCI::Button::UpdateShape()
 {
 	if (outerRectangle != nullptr)

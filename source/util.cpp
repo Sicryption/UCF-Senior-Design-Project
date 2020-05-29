@@ -56,6 +56,12 @@ Util::Util(Screen* screen, Applet* applet)
 	console = new m3dCI::Console("Press A or B to write some text.");
 }
 
+//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
+Util::~Util()
+{
+	delete(console);
+}
+
 //The function which is called on every game frame.
 void Util::OnUpdate()
 {	

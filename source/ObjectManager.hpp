@@ -33,6 +33,9 @@ class ObjectManager
 		static ObjectManager *instance;
 		ObjectManager(Screen* screen);
 	public:
+		//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
+		virtual ~ObjectManager();
+
 		static ObjectManager* getInstance();
 		static ObjectManager* createInstance(Screen* screen);
 		

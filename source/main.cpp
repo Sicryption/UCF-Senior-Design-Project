@@ -1,6 +1,6 @@
 #include "util.hpp"
 #include "ObjectManager.hpp"
-#include "menus/mainmenu.hpp"
+#include "MenuHandler.hpp"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,7 +15,6 @@
 
 using namespace m3d;
 
-
 int main(int argc, char* argv[])
 {
 	//  Create default Applet and Screen variables
@@ -25,18 +24,17 @@ int main(int argc, char* argv[])
 	//  Create default Singleton instances of Utility class and ObjectManager class
 	Util *util = Util::createInstance(&scr, &app);
 	ObjectManager *om = ObjectManager::createInstance(&scr);
+	MenuHandler *mh = MenuHandler::createInstance(&scr);
 	
     //  Create a Sandbox environment (done here for testing)
     LuaSandbox* sandbox = new LuaSandbox();
-	MainMenu* menu = new MainMenu(&scr);
 	// Main loop
     while (app.isRunning())
 	{
 		//  Call OnUpdate Function for all Singletons.
 		util->OnUpdate();
 		om->OnUpdate();
-		
-		menu->OnUpdate();
+		mh->OnUpdate();
 		
         //  Render the game screen
 		scr.render();
@@ -46,7 +44,7 @@ int main(int argc, char* argv[])
 	
 	delete (util);
 	delete (om);
-	delete (menu);
+	delete (mh);
 	
 	return 0;
 }

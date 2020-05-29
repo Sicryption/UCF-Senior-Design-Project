@@ -58,6 +58,12 @@ ObjectManager::ObjectManager(Screen* screen)
 	util = Util::getInstance();
 }
 
+//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
+ObjectManager::~ObjectManager()
+{
+
+}
+
 //The function which is called on every game frame.
 void ObjectManager::OnUpdate()
 {
@@ -67,14 +73,7 @@ void ObjectManager::OnUpdate()
 		touchy = m3d::touch::getYPosition();
 	
 	for(uint i = 0; i < arr.size(); i++)
-	{
-		//Draw all buttons
-		/*
-			TODO: Implement ability to change screen based off button configuration
-		*/
-		scr->drawBottom(*arr[i], RenderContext::Mode::Flat);
-		
-		
+	{		
 		//Check for touch event on Button
 		if(touchedThisFrame)
 		{

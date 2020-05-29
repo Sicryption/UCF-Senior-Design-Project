@@ -29,6 +29,8 @@ class Util
 	Util(Screen* screen, Applet* applet);
 	
 	public:
+	//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
+	virtual ~Util();
 	
 	//The function which is called on every game frame.
 	void OnUpdate();

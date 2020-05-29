@@ -14,6 +14,7 @@ namespace m3dCI {
             C2D_TextOptimize(&m_textObject);
         }
 
+	//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
 	Text::~Text()
 	{
 		C2D_TextBufClear(m_textBuffer);

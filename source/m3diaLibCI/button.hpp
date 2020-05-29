@@ -32,6 +32,9 @@ namespace m3dCI
 
 			void UpdateShape();
 		public:
+			//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
+			virtual ~Button();
+
 			//Creates a Rectangle to take the form of a button
 			Button(int px, int py, int pw, int ph, m3d::Color p_innerColor, m3d::Color p_borderColor, int p_borderWidth);
 			

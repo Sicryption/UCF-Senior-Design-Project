@@ -34,6 +34,12 @@ namespace m3dCI {
                 setSpriteSheet(t_spriteSheet, t_imageId);
             }
 
+	//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
+	Sprite::~Sprite()
+	{
+
+	}
+
     void Sprite::setXPosition(int t_x) {
         m_posX = t_x;
         C2D_SpriteSetPos(&m_sprite, m_posX, m_posY);

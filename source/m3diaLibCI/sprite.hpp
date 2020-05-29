@@ -24,6 +24,9 @@ namespace m3dCI {
          */
         Sprite(const std::string& t_spriteSheet, int t_imageId = 0);
 
+		//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
+		virtual ~Sprite();
+
         /**
          * @brief Sets the x position of the sprite
          * @param t_x The x position
