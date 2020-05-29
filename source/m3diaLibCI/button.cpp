@@ -186,6 +186,8 @@ void m3dCI::Button::SetDefaults()
 
 	sprite = nullptr;
 
+	text = nullptr;
+
 	OnTouch = nullptr;
 	OnHeld = nullptr;
 	OnRelease = nullptr;
