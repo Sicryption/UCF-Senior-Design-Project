@@ -128,5 +128,43 @@ int objectAPI::text(lua_State *L)
 
 int objectAPI::up(lua_State *L) 
 {
+    lua_Number luaXchange, luaID;
+    int xchange, id;
 
+    if (lua_isnumber(L,-1) && lua_isnumber(L,-2))
+    {
+        luaID = lua_tonumber(L,-1);
+        luaXchange = lua_tonumber(L,-2);
+
+        id = (int)luaID;
+        xchange = (int)luaXchange;
+
+        /* TODO: Discuss how to connect GameObject class with userAPI to look for Object.
+        */
+
+       m3d::Drawable *object; 
+
+       if (m3d::Rectangle *shape = dynamic_cast<m3d::Rectangle*>(object))
+       {
+           shape->setXPosition(shape->getXPosition() + xchange);
+       }
+
+       else if (m3d::Circle *shape = dynamic_cast<m3d::Circle*>(object))
+       {
+           shape->setXPosition(shape->getXPosition() + xchange);
+       }
+
+       else if (m3d::Triangle *shape = dynamic_cast<m3d::Triangle*>(object))
+       {
+           shape->setX1Pos(shape->getX1Pos() + xchange);
+           shape->setX2Pos(shape->getX2Pos() + xchange);
+           shape->setX3Pos(shape->getX3Pos() + xchange);
+       }
+
+       else if(m3d::Text *shape = dynamic_cast<m3d::Text*>(object))
+       {
+           shape->setXPosition(shape->getXPosition() + xchange);
+       }
+    }
+    
 }       
