@@ -4,6 +4,7 @@
 ResourceManager* ResourceManager::_instance = NULL;
 std::map<std::string, void*>* ResourceManager::_hashmap = NULL;
 m3d::Texture* ResourceManager::_error = NULL;
+std::vector<std::string> _preloadTextures = {};
 
 ResourceManager::ResourceManager()
 {
@@ -64,7 +65,7 @@ void* ResourceManager::readFile(std::string path)
     return (void*)buffer;
 }
 
-void* ResourceManager::load(std::string id, std::string path)
+void* ResourceManager::loadFile(std::string path)
 {
     void* mem = NULL;
     try
@@ -77,51 +78,64 @@ void* ResourceManager::load(std::string id, std::string path)
         mem = NULL;
     }
 
-    (*_hashmap)[id] = mem;
+    (*_hashmap)[path] = mem;
     return mem;
 }
 
-bool ResourceManager::loadTexture(m3d::Texture* texture, std::string id, std::string path)
+m3d::Texture* ResourceManager::loadTexture(std::string path)
 {
-  
+    m3d::Texture* texture = new Texture();
+    //std::string fullPath = TEXTURE_PATH;
+
     try
     {
-        std::string fullPath = TEXTURE_PATH;
-        fullPath = fullPath.append(path); 
+        //fullPath = fullPath.append(path); 
 
-        if( texture->loadFromFile(fullPath) == false)
+        if( texture->loadFromFile(path) == false)
         {
-            Util::getInstance()->PrintLine("failed to load from file " + (TEXTURE_PATH + path));
-            return false;
+            Util::getInstance()->PrintLine("failed to load from file " + (path));
+            return NULL;
         }
     }
     catch(const std::exception& e)
     {
         Util::getInstance()->PrintLine(e.what());
-        return false;
+        return NULL;
     }
     catch(const std::string& e)
     {
         Util::getInstance()->PrintLine(e);
-        return false;
+        return NULL;
     }
     catch(const int& e)
     {
         Util::getInstance()->PrintLine("error code: " + e);
-        return false;
+        return NULL;
     }
 
-    (*_hashmap)[id] = texture;
-    return true;
+    (*_hashmap)[path] = texture;
+    return texture;
 
 }
 
+void ResourceManager::loadTextureBatch(std::vector<std::string> arr)
+{
+    
+    for(std::string path : arr)
+    {
+        loadTexture(path);
+    }
+}
+
 //  TODO: test returns when key is not found
-m3d::Texture* ResourceManager::getTexture(std::string id)
+m3d::Texture* ResourceManager::getTexture(std::string path)
 {
     m3d::Texture* tex;
-    
-    tex = static_cast<m3d::Texture*>( (*_hashmap)[id] ); 
+
+    //std::string fullPath  = TEXTURE_PATH;
+    //fullPath.append(id);
+
+    tex = static_cast<m3d::Texture*>( (*_hashmap)[path] ); 
     
     return tex;
 }
