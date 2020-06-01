@@ -85,15 +85,15 @@ void* ResourceManager::loadFile(std::string path)
 m3d::Texture* ResourceManager::loadTexture(std::string path)
 {
     m3d::Texture* texture = new Texture();
-    //std::string fullPath = TEXTURE_PATH;
+    std::string fullPath = ROMFS_PATH;
+    fullPath = fullPath.append(path); 
 
     try
     {
-        //fullPath = fullPath.append(path); 
 
-        if( texture->loadFromFile(path) == false)
+        if( texture->loadFromFile(fullPath) == false)
         {
-            Util::getInstance()->PrintLine("failed to load from file " + (path));
+            Util::getInstance()->PrintLine("failed to load from file " + (fullPath));
             return NULL;
         }
     }

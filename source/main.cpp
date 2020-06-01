@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     Screen scr;
 	m3d::Sprite spr;
     m3d::Texture * tex_ptr;
-    std::string id = "error.png";
+    std::string id = "gfx/error.png";
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
 	Util *util = Util::createInstance(&scr, &app);
