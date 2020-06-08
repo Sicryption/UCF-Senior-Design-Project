@@ -9,11 +9,11 @@
 
 #include "util.hpp"
 #include "ObjectManager.hpp"
+#include "MenuHandler.hpp"
 #include "sandbox.h"
 #include "resources.h"
 
 using namespace m3d;
-
 
 int main(int argc, char* argv[])
 {
@@ -27,8 +27,9 @@ int main(int argc, char* argv[])
 	//  Create default Singleton instances of Utility class and ObjectManager class
 	Util *util = Util::createInstance(&scr, &app);
 	ObjectManager *om = ObjectManager::createInstance(&scr);
-    ResourceManager::initialize();
-    
+	MenuHandler *mh = MenuHandler::createInstance(&scr);
+	ResourceManager::initialize();
+  
     tex_ptr = ResourceManager::loadTexture(id);  
     tex_ptr = ResourceManager::getTexture(id);  
 
@@ -37,21 +38,27 @@ int main(int argc, char* argv[])
     spr.setYScale(10);
 
     //  Create a Sandbox environment (done here for testing)
-    LuaSandbox* sandbox = new LuaSandbox();
-
+	LuaSandbox* sandbox = new LuaSandbox();
+  
 	// Main loop
-    while (app.isRunning())
+	while (app.isRunning())
 	{
 		//  Call OnUpdate Function for all Singletons.
 		util->OnUpdate();
 		om->OnUpdate();
-
-        scr.drawBottom(spr); // draw the sprite 
-
-        //  Render the game screen
+		mh->OnUpdate();
+      
+		scr.drawTop(spr); // draw the sprite 
+    
+      //  Render the game screen
 		scr.render();
 	}
 	
     sandbox->close();
+	
+	delete (util);
+	delete (om);
+	delete (mh);
+	
 	return 0;
 }
