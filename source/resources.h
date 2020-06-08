@@ -28,7 +28,8 @@ private:
     static ResourceManager* _instance;
     static std::map<std::string, void*>* _hashmap;
     static m3d::Texture * _error;
-    
+    static std::vector<std::string> _preloadTextures;
+
     static ResourceManager* getInstance();
 
 
@@ -50,11 +51,12 @@ public:
     /**
      *  @brief Loads a Texture Asset
      *  Loads a Texture asset from the ROM file system into the Resource Manager
-     *  @param id unique identifier of the asset
      *  @param path file path relative to the rom file system
      *  @returns false if the texture couldnt be loaded
      */
-    static bool loadTexture(m3d::Texture*,std::string, std::string);
+    static m3d::Texture* loadTexture(std::string);
+
+    static void loadTextureBatch(std::vector<std::string> );
 
     /**
      *  @brief Loads a Sound asset
@@ -71,7 +73,7 @@ public:
      *  @param path file path relative to the rom file system
      *  @returns pointer to the loaded resource
      */
-    static void* load(std::string, std::string);
+    static void* loadFile(std::string);
 
     /**
      *  Unloads all assets from the Resource manager

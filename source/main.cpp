@@ -21,22 +21,21 @@ int main(int argc, char* argv[])
     Applet app;
     Screen scr;
 	m3d::Sprite spr;
-    m3d::Texture * tex_ptr = new m3d::Texture();
+    m3d::Texture * tex_ptr;
+    std::string id = "gfx/error.png";
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
 	Util *util = Util::createInstance(&scr, &app);
 	ObjectManager *om = ObjectManager::createInstance(&scr);
 	MenuHandler *mh = MenuHandler::createInstance(&scr);
 	ResourceManager::initialize();
-    
-	std::string id = "error";
-	ResourceManager::loadTexture(tex_ptr,id, "error.png");    
+  
+    tex_ptr = ResourceManager::loadTexture(id);  
+    tex_ptr = ResourceManager::getTexture(id);  
 
-	 m3d::Texture * tex2 = ResourceManager::getTexture(id);
-
-	spr.setTexture(*tex2);
-	spr.setXScale(5);
-	spr.setYScale(5);
+    spr.setTexture(*tex_ptr);
+    spr.setXScale(10);
+    spr.setYScale(10);
 
     //  Create a Sandbox environment (done here for testing)
 	LuaSandbox* sandbox = new LuaSandbox();
