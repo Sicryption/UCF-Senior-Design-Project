@@ -12,23 +12,28 @@
 #include "MenuHandler.hpp"
 #include "sandbox.h"
 #include "resources.h"
+#include "gameManager.hpp"
+#include "gameObjects/testObject.cpp"
 
 using namespace m3d;
 
 int main(int argc, char* argv[])
 {
-	//  Create default Applet and Screen variables
-    Applet app;
-    Screen scr;
+	
+    GameManager::Initialize();
+    Applet *app = GameManager::getApplet();
+    Screen *scr = GameManager::getScreen();
+
 	m3d::Sprite spr;
     m3d::Texture * tex_ptr;
     std::string id = "gfx/error.png";
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
-	Util *util = Util::createInstance(&scr, &app);
-	ObjectManager *om = ObjectManager::createInstance(&scr);
-	MenuHandler *mh = MenuHandler::createInstance(&scr);
+	Util *util = Util::createInstance(scr, app);
+	ObjectManager *om = ObjectManager::createInstance(scr);
+	MenuHandler *mh = MenuHandler::createInstance(scr);
 	ResourceManager::initialize();
+
   
     tex_ptr = ResourceManager::loadTexture(id);  
     tex_ptr = ResourceManager::getTexture(id);  
@@ -39,19 +44,30 @@ int main(int argc, char* argv[])
 
     //  Create a Sandbox environment (done here for testing)
 	LuaSandbox* sandbox = new LuaSandbox();
+
+    TestObject obj;
+    obj.initialize();
+    
+
   
 	// Main loop
-	while (app.isRunning())
+	while (app->isRunning())
 	{
 		//  Call OnUpdate Function for all Singletons.
+        GameManager::Update();
 		util->OnUpdate();
-		om->OnUpdate();
-		mh->OnUpdate();
+		//om->OnUpdate();
+		//mh->OnUpdate();
+
+        
+
+        obj.update();
+
       
-		scr.drawTop(spr); // draw the sprite 
-    
-      //  Render the game screen
-		scr.render();
+		//scr->drawTop(spr); // draw the sprite 
+        obj.draw();
+        //  Render the game screen
+		scr->render(true);
 	}
 	
     sandbox->close();
