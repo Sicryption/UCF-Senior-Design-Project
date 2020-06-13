@@ -12,8 +12,8 @@ class GameManager
 private:
     static GameManager * instance;
     
-    static m3d::Applet *applet;
-    static m3d::Screen *screen;
+    m3d::Applet *applet;
+    m3d::Screen *screen;
 
     time_t lastTime;
     time_t curTime;
@@ -32,22 +32,29 @@ private:
         
     }
 
+    static GameManager* getInstance()
+    {
+        if(instance == NULL){
+            Initialize();
+        }
+
+        return instance;
+    }
+
 public:
     static m3d::BoundingBox* ScreenBoundsTop;
     static m3d::BoundingBox* ScreenBoundsBottom;
+
 
     static void Initialize();
     static void Update();
     static double getDeltaTime()
     {
-        return instance->deltaTime;
+        return (1.0/60.0) ;
     }
 
-    static m3d::Vector2f getScreenOrigin(m3d::RenderContext::ScreenTarget );
-    static m3d::BoundingBox getScreenBounds(m3d::RenderContext::ScreenTarget);
-
-    static m3d::Applet* getApplet(){return applet;}
-    static m3d::Screen* getScreen(){return screen;}
+    static m3d::Applet* getApplet(){return getInstance()->applet;}
+    static m3d::Screen* getScreen(){return getInstance()->screen;}
 
     
 

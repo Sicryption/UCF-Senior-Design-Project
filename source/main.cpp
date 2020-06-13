@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 		//scr->drawTop(spr); // draw the sprite 
         obj.draw();
         //  Render the game screen
-		scr->render(true);
+		scr->render();
 	}
 	
     sandbox->close();
