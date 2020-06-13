@@ -10,31 +10,47 @@
 
 class Scene : public Updateable
 {
-private:
-    std::map<unsigned int,GameObject*> hashmap;
-    unsigned int idCounter;
+
+protected:
+    std::map<unsigned int, GameObject*> m_hashmap;
+    unsigned int m_idCounter;
 
 public:
 
     Scene()
     {
-        hashmap.empty();
-        idCounter = 0;
+        m_hashmap.empty();
+        m_idCounter = 0;
     }
 
     ~Scene()
     {
-        auto it =  hashmap.cbegin();
-        for(;it != hashmap.cend(); it++)
+        auto it =  m_hashmap.cbegin();
+        for(;it != m_hashmap.cend(); it++)
         {
             it->second->destroy();
         }
     }
 
+    virtual void initialize()=0;
+    virtual void load()=0;
+    virtual void unload()=0;
+    virtual void update()=0;
+    virtual void draw()=0;
+
+    virtual void onEnter()=0;
+    
+    virtual void onExit()=0;
+
     unsigned int addObject(GameObject* obj)
     {
-        hashmap[idCounter] = obj;
-        return ++idCounter;
+        m_hashmap[m_idCounter] = obj;
+        return ++m_idCounter;
+    }
+
+    void removeObject(unsigned int t_id)
+    {
+        m_hashmap[t_id] = NULL;
     }
 
 

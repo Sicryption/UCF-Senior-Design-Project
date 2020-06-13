@@ -1,15 +1,13 @@
-#include "gameManager.hpp"
+#pragma once
 #include <math.h>
 
-GameManager* GameManager::instance = NULL;
-//m3d::Applet* GameManager::applet = NULL;
-//m3d::Screen* GameManager::screen = NULL;
+//#include "core.h"
+#include "gameManager.hpp"
+#include "util.hpp"
 
 m3d::BoundingBox* GameManager::ScreenBoundsTop = NULL;
 m3d::BoundingBox* GameManager::ScreenBoundsBottom = NULL;
-
-
-
+GameManager* GameManager::instance = NULL;
 
 void GameManager::Initialize()
 {
@@ -19,7 +17,7 @@ void GameManager::Initialize()
     }
     
     ScreenBoundsTop = new m3d::BoundingBox(0,0,400,240);
-    ScreenBoundsBottom = new m3d::BoundingBox(40,241,320,240);;
+    ScreenBoundsBottom = new m3d::BoundingBox(40,241,320,240);
 }
 
 void GameManager::Update()
