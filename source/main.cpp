@@ -12,15 +12,21 @@
 #include "MenuHandler.hpp"
 #include "sandbox.h"
 #include "resources.h"
+#include "gameManager.hpp"
+#include "sceneManager.hpp"
+#include "gameObjects/testObject.cpp"
+#include "scenes/startScene.cpp"
 #include "inputManager.hpp"
 
 using namespace m3d;
 
 int main(int argc, char* argv[])
 {
-	//  Create default Applet and Screen variables
-    Applet app;
-    Screen scr;
+
+    GameManager::Initialize();
+    Applet *app = GameManager::getApplet();
+    Screen *scr = GameManager::getScreen();
+
 	m3d::Sprite spr;
     m3d::Texture * tex_ptr;
     std::string id = "gfx/error.png";
@@ -44,11 +50,22 @@ int main(int argc, char* argv[])
     spr.setTexture(*tex_ptr);
     spr.setXScale(10);
     spr.setYScale(10);
-  
+
+
+    TestObject obj;
+    obj.initialize();
+
+		startScene *tester;
+		tester->initialize();
+
+		SceneManager::initialize(tester);
+
 	// Main loop
-	while (app.isRunning())
+	while (app->isRunning())
 	{
 		//  Call OnUpdate Function for all Singletons.
+        GameManager::Update();
+				//SceneManager::draw();
 		util->OnUpdate();
 		om->OnUpdate();
 		mh->OnUpdate();
@@ -58,12 +75,12 @@ int main(int argc, char* argv[])
         //  Render the game screen
 		scr.render();
 	}
-	
+
     sandbox->close();
-	
+
 	delete (util);
 	delete (om);
 	delete (mh);
-	
+
 	return 0;
 }
