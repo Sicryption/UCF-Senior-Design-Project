@@ -35,10 +35,10 @@ int main(int argc, char* argv[])
 	LuaSandbox* sandbox = new LuaSandbox();
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
-	Util *util = Util::createInstance(&scr, &app);
-	ObjectManager *om = ObjectManager::createInstance(&scr);
+	Util *util = Util::createInstance(scr, app);
+	ObjectManager *om = ObjectManager::createInstance(scr);
     ResourceManager::initialize();
-    MenuHandler *mh = MenuHandler::createInstance(&scr);
+    MenuHandler *mh = MenuHandler::createInstance(scr);
     Input::initialize();     
   
 
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
     spr.setXScale(10);
     spr.setYScale(10);
 
-
+    /*
     TestObject obj;
     obj.initialize();
 
@@ -59,6 +59,7 @@ int main(int argc, char* argv[])
 		tester->initialize();
 
 		SceneManager::initialize(tester);
+    */
 
 	// Main loop
 	while (app->isRunning())
@@ -70,10 +71,10 @@ int main(int argc, char* argv[])
 		om->OnUpdate();
 		mh->OnUpdate();
       
-		scr.drawTop(spr); // draw the sprite 
+		scr->drawTop(spr); // draw the sprite 
     
         //  Render the game screen
-		scr.render();
+		scr->render();
 	}
 
     sandbox->close();

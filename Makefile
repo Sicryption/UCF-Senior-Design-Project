@@ -40,7 +40,7 @@ GRAPHICS	:=	assets/gfx
 GFXBUILD	:=	$(BUILD)
 ROMFS		:=	assets
 #GFXBUILD	:=	$(ROMFS)/gfx
-APP_TITLE	:= 	GZLO
+APP_TITLE	:= 	Seedlings
 APP_DESCRIPTION	:=	learn simple programing principles
 APP_AUTHOR	:=	Damola Adebayo, Chevron Allen, Kenneth Rosario Rodriguez, Glenn Ruperto, Bryce Vichi
 
