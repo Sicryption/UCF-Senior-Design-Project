@@ -34,9 +34,7 @@ int main(int argc, char* argv[])
     ResourceManager::initialize();
     MenuHandler *mh = MenuHandler::createInstance(&scr);
     Input::initialize();     
-    
-    std::string id = "gfx/error.png";
-    ResourceManager::loadTexture(id);    
+  
 
     ResourceManager::loadTexture(id);  
     ResourceManager::loadFile("lua/init_scene.lua"); 

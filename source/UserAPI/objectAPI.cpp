@@ -142,6 +142,7 @@ int objectAPI::up(lua_State *L)
         /* TODO: Discuss how to connect GameObject class with userAPI to look for Object.
         */
 
+        /*
        m3d::Drawable *object; 
 
        if (m3d::Rectangle *shape = dynamic_cast<m3d::Rectangle*>(object))
@@ -165,6 +166,8 @@ int objectAPI::up(lua_State *L)
        {
            shape->setXPosition(shape->getXPosition() + xchange);
        }
+
+       */
     }
     
 }       
