@@ -23,7 +23,7 @@ private:
     GameManager()
     {
         applet = new m3d::Applet();
-        screen = new m3d::Screen();
+        screen = new m3d::Screen(false);
         lastTime = curTime = time(NULL);
         deltaTime = 0;
     }
