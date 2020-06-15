@@ -13,6 +13,8 @@ class MinigameSelect : public Menu
 	public:
 		MinigameSelect(m3d::Screen* screen);
 		virtual ~MinigameSelect();
+
+		static void SelectFirstMinigame(m3dCI::Button* button);
 		
 		void OnUpdate();
 };

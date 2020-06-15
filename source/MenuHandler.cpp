@@ -3,6 +3,7 @@
 #include "menus/menu.hpp"
 #include "menus/mainMenu.hpp"
 #include "menus/minigameSelect.hpp"
+#include "menus/minigameInGame.hpp"
 
 using namespace m3d;
 
@@ -84,6 +85,17 @@ void MenuHandler::TransitionTo(MenuState state)
 		case MenuState::MinigameSelect:
 		{
 			MinigameSelect* menu = new MinigameSelect(scr);
+
+			if (currentMenu != nullptr)
+				delete(currentMenu);
+
+			currentMenu = menu;
+			break;
+		}
+		case MenuState::MinigameInGameTemplate:
+		{
+			//need to figure out which minigame to switch to and tell it so here
+			MinigameInGame* menu = new MinigameInGame(scr);
 
 			if (currentMenu != nullptr)
 				delete(currentMenu);

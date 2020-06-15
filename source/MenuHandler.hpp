@@ -11,6 +11,7 @@ using namespace m3d;
 class Menu;
 class MainMenu;
 class MinigameSelect;
+class MinigameInGame;
 
 class MenuHandler
 {
@@ -36,6 +37,7 @@ class MenuHandler
 		{
 			MainMenu,
 			MinigameSelect,
+			MinigameInGameTemplate,
 			Testing
 		};
 

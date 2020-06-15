@@ -38,9 +38,13 @@ MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 				w = ButtonWidth,
 				h = ButtonHeight;
 
-			minigameOptions[column + (row * columns)] = new m3dCI::Button(x, y, w, h, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
+			m3dCI::Button* button = new m3dCI::Button(x, y, w, h, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
+
+			minigameOptions[column + (row * columns)] = button;
 		}
 	}
+
+	minigameOptions[0]->OnTouch = SelectFirstMinigame;
 }
 
 void MinigameSelect::OnUpdate()
@@ -59,4 +63,15 @@ void MinigameSelect::OnUpdate()
 MinigameSelect::~MinigameSelect()
 {
 	delete(MinigameSelectTopText);
+	delete(whiteTopBackground);
+	delete(whiteBottomBackground);
+
+	for (int i = 0; i < 6; i++)
+		delete(minigameOptions[i]);
+}
+
+
+void MinigameSelect::SelectFirstMinigame(m3dCI::Button* button)
+{
+	MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameInGameTemplate);
 }
