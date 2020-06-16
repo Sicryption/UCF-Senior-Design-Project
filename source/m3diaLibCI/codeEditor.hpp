@@ -11,23 +11,21 @@
 #include <cmath>
 #include <vector>
 
+#define CELL_HEIGHT 20
+
 namespace m3dCI 
 {
     class CodeEditor: public m3d::Drawable
 	{
 		private:
-
 			m3d::Rectangle *borderRectangle,
 				*innerRectangle;
-			std::vector<CommandObject> commands;
+			std::vector<CommandObject*> commands;
 
-			int x, y, borderWidth, w, h;
+			int x, y, borderWidth, w, h, cellsTall;
 			
-			void refreshCommandList();
+			//void refreshCommandList();
 		public:
-			//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
-			virtual ~CodeEditor();
-
 			//Create the CodeEditor.
 			/*
 			 *  @param px X Coordinate
@@ -38,12 +36,16 @@ namespace m3dCI
 			 *  @returns a Code Editor drawable object
 			*/
 			CodeEditor(int px, int py, int pw, int ph, int p_borderWidth);
-			
-			void addCommand(CommandObject co);
-			void addCommands(std::vector<CommandObject> commands);
 
-			void selectCommand(CommandObject co);
-			void removeCommand(CommandObject co);
+			//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
+			virtual ~CodeEditor();
+			
+			//need a way to insert at specified line
+			void addCommand(std::string command, int position = -1);
+			//void addCommands(std::vector<CommandObject> commands);
+
+			//void selectCommand(CommandObject co);
+			//void removeCommand(CommandObject co);
 
 			void draw(m3d::RenderContext t_context);
 	};

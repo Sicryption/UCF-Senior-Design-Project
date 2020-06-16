@@ -5,6 +5,7 @@
 #include <3ds.h>
 #include <m3dia.hpp>
 #include <cmath>
+#include <algorithm>
 
 namespace m3dCI
 {

@@ -4,8 +4,15 @@
 #include "../ObjectManager.hpp"
 #include "../MenuHandler.hpp"
 #include "../m3diaLibCI/text.hpp"
+#include "../m3diaLibCI/codeEditor.hpp"
+#include "../m3diaLibCI/commandObject.hpp"
 
 #include <m3dia.hpp>
+
+#define TOPSCREEN_WIDTH 400
+#define BOTTOMSCREEN_WIDTH 320
+#define TOPSCREEN_HEIGHT 240
+#define BOTTOMSCREEN_HEIGHT 240
 
 class Menu
 {
