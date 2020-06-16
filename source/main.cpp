@@ -23,9 +23,12 @@ using namespace m3d;
 int main(int argc, char* argv[])
 {
 
-    GameManager::Initialize();
-    Applet *app = GameManager::getApplet();
-    Screen *scr = GameManager::getScreen();
+    Applet *app = new Applet();
+    Screen *scr = new Screen(false);
+    GameManager::Initialize(app, scr);
+    
+    
+    
 
 	m3d::Sprite spr;
     m3d::Texture * tex_ptr;
@@ -40,7 +43,6 @@ int main(int argc, char* argv[])
     ResourceManager::initialize();
     MenuHandler *mh = MenuHandler::createInstance(scr);
     Input::initialize();     
-  
 
     ResourceManager::loadTexture(id);  
     ResourceManager::loadFile("lua/init_scene.lua"); 
@@ -64,12 +66,15 @@ int main(int argc, char* argv[])
 	// Main loop
 	while (app->isRunning())
 	{
+        
 		//  Call OnUpdate Function for all Singletons.
         GameManager::Update();
-				//SceneManager::draw();
+        //SceneManager::draw();
 		util->OnUpdate();
 		om->OnUpdate();
 		mh->OnUpdate();
+        
+        
       
 		scr->drawTop(spr); // draw the sprite 
     
@@ -82,6 +87,6 @@ int main(int argc, char* argv[])
 	delete (util);
 	delete (om);
 	delete (mh);
-
+    
 	return 0;
 }
