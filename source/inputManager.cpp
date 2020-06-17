@@ -37,52 +37,61 @@
         _instance->_audiobuf_pos = 0;
         _instance->_audiobuf = static_cast<u8*>(linearAlloc(_instance->_audiobuf_size));
 
-
-        for (int i = 0; i < TOUCH_SAMPLES; i++)
-        {
-            _instance->_touchState[i]->u = -1;
-            _instance->_touchState[i]->v = -1;
-
-        }
+        _instance->_touchStates[0] = nullptr; 
+        _instance->_touchStates[1] = nullptr; 
+        
     }
 
     void Input::update()
     {
-        touchPosition tp;
-        
-        int cur = _instance->_touchState_pos;
-        hidTouchRead(&tp);
-        _instance->_touchState[cur]->u = tp.px;
-        _instance->_touchState[cur]->v = tp.py;
+        touchPosition tpos;  
+        hidTouchRead(&tpos);
 
 
-        m3d::Vector2f* first = _instance->_touchState[ (_instance->_touchState_pos + 1 ) % TOUCH_SAMPLES];
-        m3d::Vector2f* last  = _instance->_touchState[  _instance->_touchState_pos       % TOUCH_SAMPLES];
 
-        _instance->_touchDragVelocity->u = (last->u - first->u);
-        _instance->_touchDragVelocity->v = (last->v - first->v);
-
-        _instance->_touchState_pos = (_instance->_touchState_pos + 1) % TOUCH_SAMPLES;
+       
 
         if(m3d::buttons::buttonPressed(m3d::buttons::Touch))
         {
-            _instance->_touchDragVelocity = new m3d::Vector2f();
+            if(_instance->_touchStates[0] == nullptr)
+            {
+                _instance->_touchStates[0] = new m3d::Vector2f(); 
+            }
+            _instance->_touchStates[0]->u = tpos.px; 
+            _instance->_touchStates[0]->v = tpos.py;
+
         }
         
         if(m3d::buttons::buttonDown(m3d::buttons::Touch))
         {
-            m3d::Vector2f* first = _instance->_touchState[ (_instance->_touchState_pos + 1 ) % TOUCH_SAMPLES];
-            m3d::Vector2f* last  = _instance->_touchState[  _instance->_touchState_pos       % TOUCH_SAMPLES];
+            if(_instance->_touchStates[1] == nullptr)
+            {
+                _instance->_touchStates[1] = new m3d::Vector2f(); 
+            }
+            _instance->_touchStates[1]->u = tpos.px; 
+            _instance->_touchStates[1]->v = tpos.py;
 
-            _instance->_touchDragVelocity->u = (last->u - first->u);
-            _instance->_touchDragVelocity->v = (last->v - first->v);
+            float dx = _instance->_touchStates[1]->u - _instance->_touchStates[0]->u;
+            float dy = _instance->_touchStates[1]->v - _instance->_touchStates[0]->v;
 
-            _instance->_touchState_pos = (_instance->_touchState_pos + 1) % TOUCH_SAMPLES;
+            if(_instance->_touchIsDragging == false)
+            {
+                _instance->_touchDragDistance= {dx,dy};
+                
+                m3d::Vector2f dist =  {dx,dy};
+                _instance->_touchIsDragging = sqrt( pow(dist.u,2) + pow(dist.v,2)) >= TOUCH_EPSILON;
+            }
+            
+            _instance->_touchDragDistance= {dx,dy};
+
         }
 
         if(m3d::buttons::buttonReleased(m3d::buttons::Touch))
         {   
-            _instance->_touchDragVelocity = NULL;
+            _instance->_touchStates[0] = nullptr;
+            _instance->_touchStates[1] = nullptr;
+
+            _instance->_touchIsDragging = false;
         }
         
     }
@@ -168,8 +177,16 @@
         MICU_StopSampling();
     }
 
-    m3d::Vector2f Input::getDragVelocity()
+    m3d::Vector2f Input::getTouchDragVector()
     {
-        if (getInstance()->_touchDragVelocity == NULL){ return {0,0};}
-        return *(getInstance()->_touchDragVelocity);
+        if (getInstance()->_touchStates[0] == nullptr ||
+            getInstance()->_touchStates[1] == nullptr)
+        { 
+            return {0,0};
+        }
+
+        return {
+            (abs(_instance->_touchDragDistance.u) > TOUCH_EPSILON || _instance->_touchIsDragging) ? _instance->_touchDragDistance.u : 0 , 
+            (abs(_instance->_touchDragDistance.v) > TOUCH_EPSILON || _instance->_touchIsDragging) ? _instance->_touchDragDistance.v : 0
+        };
     }

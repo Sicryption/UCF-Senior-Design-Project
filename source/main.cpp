@@ -75,11 +75,15 @@ int main(int argc, char* argv[])
 		om->OnUpdate();
 		mh->OnUpdate();
 
-        float vx = Input::getDragVelocity().u;
-        float vy = Input::getDragVelocity().v;
-        //if(vx  !=0 && vy !=0 )
-        if(m3d::buttons::buttonDown(m3d::buttons::Touch))
-            Util::PrintLine( "frame ("+ std::to_string(app->getCurrentFrame()) +")dragVel -  x: " + std::to_string(vx) + " y: " +  std::to_string(vy) );
+        if(Input::isTouchDragging())
+        {
+            Vector2f dragDist = Input::getTouchDragVector();
+
+            if(m3d::buttons::buttonDown(m3d::buttons::Touch))
+                Util::PrintLine( "frame ("+ std::to_string(app->getCurrentFrame()) + 
+                                ")drag -  x: " + std::to_string(dragDist.u) + 
+                                        " y: " + std::to_string(dragDist.v) );
+        }
       
 		//scr->drawTop(spr); // draw the sprite 
     
