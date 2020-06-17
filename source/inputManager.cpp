@@ -36,11 +36,55 @@
         _instance->_audiobuf_size = 0x100000;
         _instance->_audiobuf_pos = 0;
         _instance->_audiobuf = static_cast<u8*>(linearAlloc(_instance->_audiobuf_size));
+
+
+        for (int i = 0; i < TOUCH_SAMPLES; i++)
+        {
+            _instance->_touchState[i]->u = -1;
+            _instance->_touchState[i]->v = -1;
+
+        }
     }
 
     void Input::update()
     {
+        touchPosition tp;
+        
+        int cur = _instance->_touchState_pos;
+        hidTouchRead(&tp);
+        _instance->_touchState[cur]->u = tp.px;
+        _instance->_touchState[cur]->v = tp.py;
 
+
+        m3d::Vector2f* first = _instance->_touchState[ (_instance->_touchState_pos + 1 ) % TOUCH_SAMPLES];
+        m3d::Vector2f* last  = _instance->_touchState[  _instance->_touchState_pos       % TOUCH_SAMPLES];
+
+        _instance->_touchDragVelocity->u = (last->u - first->u);
+        _instance->_touchDragVelocity->v = (last->v - first->v);
+
+        _instance->_touchState_pos = (_instance->_touchState_pos + 1) % TOUCH_SAMPLES;
+
+        if(m3d::buttons::buttonPressed(m3d::buttons::Touch))
+        {
+            _instance->_touchDragVelocity = new m3d::Vector2f();
+        }
+        
+        if(m3d::buttons::buttonDown(m3d::buttons::Touch))
+        {
+            m3d::Vector2f* first = _instance->_touchState[ (_instance->_touchState_pos + 1 ) % TOUCH_SAMPLES];
+            m3d::Vector2f* last  = _instance->_touchState[  _instance->_touchState_pos       % TOUCH_SAMPLES];
+
+            _instance->_touchDragVelocity->u = (last->u - first->u);
+            _instance->_touchDragVelocity->v = (last->v - first->v);
+
+            _instance->_touchState_pos = (_instance->_touchState_pos + 1) % TOUCH_SAMPLES;
+        }
+
+        if(m3d::buttons::buttonReleased(m3d::buttons::Touch))
+        {   
+            _instance->_touchDragVelocity = NULL;
+        }
+        
     }
     
     bool Input::btn(m3d::buttons::Button b) { return m3d::buttons::buttonDown(b); }
@@ -122,4 +166,10 @@
         }
 
         MICU_StopSampling();
+    }
+
+    m3d::Vector2f Input::getDragVelocity()
+    {
+        if (getInstance()->_touchDragVelocity == NULL){ return {0,0};}
+        return *(getInstance()->_touchDragVelocity);
     }

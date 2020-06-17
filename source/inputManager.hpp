@@ -7,7 +7,7 @@
 #include "3ds.h"
 #include <m3dia.hpp>
 
-
+#define TOUCH_SAMPLES 10
 
 class Input
 {
@@ -25,6 +25,9 @@ private:
     u32 _audiobuf_pos;
     u8* _audiobuf;
 
+    unsigned int _touchState_pos;
+    m3d::Vector2f* _touchState[TOUCH_SAMPLES];
+    m3d::Vector2f* _touchDragVelocity;
 
     static Input* _instance;
     static Input* getInstance()
@@ -32,7 +35,10 @@ private:
         if(_instance != NULL)
         {
             return _instance;
-        }else{initialize();}
+        }else
+        {
+            initialize();
+        }
     }
     Input(){}
     ~Input(){}
@@ -112,6 +118,11 @@ public:
      */
     static m3d::Vector3f* getAccelerometer();
 
+    /**
+     *  @brief 
+     *  @returns 
+     */
+    static m3d::Vector2f getDragVelocity();
     
 
 

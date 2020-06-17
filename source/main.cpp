@@ -70,13 +70,18 @@ int main(int argc, char* argv[])
 		//  Call OnUpdate Function for all Singletons.
         GameManager::Update();
         //SceneManager::draw();
+        Input::update();
 		util->OnUpdate();
 		om->OnUpdate();
 		mh->OnUpdate();
-        
-        
+
+        float vx = Input::getDragVelocity().u;
+        float vy = Input::getDragVelocity().v;
+        //if(vx  !=0 && vy !=0 )
+        if(m3d::buttons::buttonDown(m3d::buttons::Touch))
+            Util::PrintLine( "frame ("+ std::to_string(app->getCurrentFrame()) +")dragVel -  x: " + std::to_string(vx) + " y: " +  std::to_string(vy) );
       
-		scr->drawTop(spr); // draw the sprite 
+		//scr->drawTop(spr); // draw the sprite 
     
         //  Render the game screen
 		scr->render();
