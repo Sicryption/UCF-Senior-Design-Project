@@ -60,7 +60,7 @@ void MinigameSelect::OnUpdate()
 MinigameSelect::~MinigameSelect()
 {
 	for (int i = 0; i < MinigameCount; i++)
-		delete(minigameOptions[i]);
+		om->DeleteButton(minigameOptions[i]);
 	delete(whiteBackground);
 	delete(MinigameSelectTopText);
 }

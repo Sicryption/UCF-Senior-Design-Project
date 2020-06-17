@@ -22,9 +22,14 @@ namespace m3dCI
 				*innerRectangle;
 			std::vector<CommandObject*> commands;
 
+			CommandObject* currentSelectedCommand = nullptr;
 			int x, y, borderWidth, w, h, cellsTall;
 			
-			//void refreshCommandList();
+			void refreshCommandList();
+
+			int GetSelectedCommandIndex();
+
+			void SelectCommand(int index);
 		public:
 			//Create the CodeEditor.
 			/*
@@ -42,11 +47,12 @@ namespace m3dCI
 			
 			//need a way to insert at specified line
 			void addCommand(std::string command, int position = -1);
-			//void addCommands(std::vector<CommandObject> commands);
 
-			//void selectCommand(CommandObject co);
-			//void removeCommand(CommandObject co);
+			void SelectCommand(int px, int py);
+			void removeCommand(int position = -1);
 
 			void draw(m3d::RenderContext t_context);
+
+			bool isPointInside(int px, int py);
 	};
 }

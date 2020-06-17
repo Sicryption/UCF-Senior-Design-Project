@@ -72,23 +72,32 @@ void ObjectManager::OnUpdate()
 		touchx = m3d::touch::getXPosition(),
 		touchy = m3d::touch::getYPosition();
 	
-	for(uint i = 0; i < arr.size(); i++)
+	for(unsigned int i = 0; i < buttons.size(); i++)
 	{		
 		//Check for touch event on Button
 		if(touchedThisFrame)
 		{
-			if(arr[i]->OnTouch != nullptr && arr[i]->PointIntersects(touchx, touchy))
-				(arr[i]->OnTouch)(arr[i]);
+			if(buttons[i]->OnTouch != nullptr && buttons[i]->PointIntersects(touchx, touchy))
+				(buttons[i]->OnTouch)(buttons[i]);
 		}
 		else if(touchReleasedThisFrame)
 		{
-			if(arr[i]->OnRelease != nullptr && arr[i]->PointIntersects(lastFrameTouchX, lastFrameTouchY))
-				(arr[i]->OnRelease)(arr[i]);
+			if(buttons[i]->OnRelease != nullptr && buttons[i]->PointIntersects(lastFrameTouchX, lastFrameTouchY))
+				(buttons[i]->OnRelease)(buttons[i]);
 		}
 		else
 		{
-			if(arr[i]->OnHeld != nullptr && arr[i]->PointIntersects(touchx, touchy))
-				(arr[i]->OnHeld)(arr[i]);
+			if(buttons[i]->OnHeld != nullptr && buttons[i]->PointIntersects(touchx, touchy))
+				(buttons[i]->OnHeld)(buttons[i]);
+		}
+	}
+
+	if (touchedThisFrame)
+	{
+		for (unsigned int i = 0; i < codeEditors.size(); i++)
+		{
+			//only fires if point is actually inside the code editor
+			codeEditors[i]->SelectCommand(touchx, touchy);
 		}
 	}
 	
@@ -101,7 +110,7 @@ m3dCI::Button* ObjectManager::CreateButton(int x, int y, int w, int h, m3d::Colo
 {
 	m3dCI::Button* newButton = new m3dCI::Button(x, y, w, h, color, borderColor, borderWidth);
 	
-	arr.push_back(newButton);
+	buttons.push_back(newButton);
 	
 	return newButton;
 }
@@ -111,7 +120,7 @@ m3dCI::Button* ObjectManager::CreateButton(int x, int y, int radius, m3d::Color 
 {
 	m3dCI::Button* newButton = new m3dCI::Button(x, y, radius, color, borderColor, borderWidth);
 	
-	arr.push_back(newButton);
+	buttons.push_back(newButton);
 	
 	return newButton;
 }
@@ -121,7 +130,7 @@ m3dCI::Button* ObjectManager::CreateButton(int x, int y, m3d::Texture& t_texture
 {
 	m3dCI::Button* newButton = new m3dCI::Button(x, y, t_texture);
 
-	arr.push_back(newButton);
+	buttons.push_back(newButton);
 
 	return newButton;
 }
@@ -131,7 +140,46 @@ m3dCI::Button* ObjectManager::CreateButton(int x, int y, const std::string& t_sp
 {
 	m3dCI::Button* newButton = new m3dCI::Button(x, y, t_spriteSheet, t_imageId);
 
-	arr.push_back(newButton);
+	buttons.push_back(newButton);
 
 	return newButton;
+}
+
+void ObjectManager::DeleteButton(m3dCI::Button* button)
+{
+	int index = -1;
+
+	for (unsigned int i = 0; i < buttons.size(); i++)
+		if (buttons[i] == button)
+			index = i;
+
+	if (index != -1)
+	{
+		delete(buttons[index]);
+		buttons.erase(buttons.begin() + index);
+	}
+}
+
+m3dCI::CodeEditor* ObjectManager::CreateCodeEditor(int x, int y, int w, int h, int borderWidth)
+{
+	m3dCI::CodeEditor* ce = new m3dCI::CodeEditor(x, y, w, h, borderWidth);
+
+	codeEditors.push_back(ce);
+
+	return ce;
+}
+
+void ObjectManager::DeleteCodeEditor(m3dCI::CodeEditor* ce)
+{
+	int index = -1;
+
+	for (unsigned int i = 0; i < codeEditors.size(); i++)
+		if (codeEditors[i] == ce)
+			index = i;
+
+	if (index != -1)
+	{
+		delete(codeEditors[index]);
+		codeEditors.erase(codeEditors.begin() + index);
+	}
 }

@@ -86,6 +86,7 @@ void MenuHandler::TransitionTo(MenuState state)
 				delete(currentMenu);
 
 			currentMenu = menu;
+			currentState = state;
 			break;
 		}
 		case MenuState::MinigameSelect:
@@ -97,6 +98,7 @@ void MenuHandler::TransitionTo(MenuState state)
 				delete(currentMenu);
 
 			currentMenu = menu;
+			currentState = state;
 			break;
 		}
 		case MenuState::MinigameTemplateMenu:
@@ -109,6 +111,7 @@ void MenuHandler::TransitionTo(MenuState state)
 				delete(currentMenu);
 
 			currentMenu = menu;
+			currentState = state;
 			break;
 		}
 		case MenuState::Testing:
@@ -124,4 +127,30 @@ void MenuHandler::TransitionTo(MenuState state)
 	}
 
 	util->PrintLine("Transition complete.");
+}
+
+void MenuHandler::AddCommandObject(m3dCI::Button* button)
+{
+	MenuHandler* mh = getInstance();
+
+	if (mh == 0)
+		return;
+
+	if (mh->currentState == MenuState::MinigameTemplateMenu)
+	{
+		((MinigameTemplateMenu*)mh->currentMenu)->AddButton_OnClick(button);
+	}
+}
+
+void MenuHandler::RemoveCommandObject(m3dCI::Button* button)
+{
+	MenuHandler* mh = getInstance();
+
+	if (mh == 0)
+		return;
+
+	if (mh->currentState == MenuState::MinigameTemplateMenu)
+	{
+		((MinigameTemplateMenu*)mh->currentMenu)->DeleteButton_OnClick(button);
+	}
 }

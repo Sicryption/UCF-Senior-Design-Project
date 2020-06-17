@@ -20,5 +20,7 @@ namespace m3dCI
 		~CommandObject();
 
 		void draw(m3d::RenderContext t_context);
+		void setBackgroundColor(m3d::Color color);
+		void setPosition(int x, int y);
 	};
 }

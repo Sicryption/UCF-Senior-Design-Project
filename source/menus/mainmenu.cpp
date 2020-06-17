@@ -49,7 +49,7 @@ MainMenu::~MainMenu()
 	//Ideally, we would change these objects to support a default virtual deconstructor
 	//delete(whiteBackground);
 	//delete(whiteBottomBackground);
-	delete(ClickHereToContinue);
+	om->DeleteButton(ClickHereToContinue);
 }
 
 void MainMenu::ClickHereToContinue_OnClick(m3dCI::Button* button)

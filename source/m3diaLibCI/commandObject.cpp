@@ -25,4 +25,15 @@ namespace m3dCI
 		backgroundRectangle->draw(t_context);
 		commandTextObject->draw(t_context);
 	}
+
+	void CommandObject::setBackgroundColor(m3d::Color color)
+	{
+		backgroundRectangle->setColor(color);
+	}
+
+	void CommandObject::setPosition(int x, int y)
+	{
+		commandTextObject->setPosition(x + 2, y);//+2 for buffer from left edge
+		backgroundRectangle->setPosition(x, y);
+	}
 }

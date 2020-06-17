@@ -57,8 +57,8 @@ int main(int argc, char* argv[])
     sandbox->close();
 	
 	delete (util);
-	delete (om);
 	delete (mh);
+	delete (om);
 	
 	return 0;
 }
