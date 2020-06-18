@@ -14,8 +14,9 @@
 #include "resources.h"
 #include "gameManager.hpp"
 #include "sceneManager.hpp"
-#include "gameObjects/testObject.cpp"
+//#include "gameObjects/wall.cpp"
 #include "scenes/startScene.cpp"
+#include "scenes/MazeScene.cpp"
 #include "inputManager.hpp"
 
 using namespace m3d;
@@ -28,7 +29,7 @@ int main(int argc, char* argv[])
     Screen *scr = GameManager::getScreen();
 
 	m3d::Sprite spr;
-    m3d::Texture * tex_ptr;
+    //m3d::Texture * tex_ptr;
     std::string id = "gfx/error.png";
 
     //  Create a Sandbox environment (done here for testing)
@@ -36,30 +37,33 @@ int main(int argc, char* argv[])
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
 	Util *util = Util::createInstance(scr, app);
-	ObjectManager *om = ObjectManager::createInstance(scr);
+	//ObjectManager *om = ObjectManager::createInstance(scr);
     ResourceManager::initialize();
-    MenuHandler *mh = MenuHandler::createInstance(scr);
-    Input::initialize();     
-  
+    //MenuHandler *mh = MenuHandler::createInstance(scr);
+    //Input::initialize();
 
-    ResourceManager::loadTexture(id);  
-    ResourceManager::loadFile("lua/init_scene.lua"); 
-    
-    tex_ptr = ResourceManager::getTexture(id);  
+
+    ResourceManager::loadTexture(id);
+    ResourceManager::loadFile("lua/init_scene.lua");
+    /*
+    tex_ptr = ResourceManager::getTexture(id);
 
     spr.setTexture(*tex_ptr);
     spr.setXScale(10);
     spr.setYScale(10);
 
-    /*
+
     TestObject obj;
     obj.initialize();
-
-		startScene *tester;
-		tester->initialize();
-
-		SceneManager::initialize(tester);
     */
+		MazeScene *tester;
+    tester = new MazeScene();
+		tester->initialize();
+    //WallObject *tester;
+    //tester = new WallObject();
+    //tester->initialize();
+		//SceneManager::initialize(tester);
+
 
 	// Main loop
 	while (app->isRunning())
@@ -68,11 +72,11 @@ int main(int argc, char* argv[])
         GameManager::Update();
 				//SceneManager::draw();
 		util->OnUpdate();
-		om->OnUpdate();
-		mh->OnUpdate();
-      
-		scr->drawTop(spr); // draw the sprite 
-    
+		//om->OnUpdate();
+		//mh->OnUpdate();
+
+		//scr->drawTop(spr); // draw the sprite
+    tester->draw();
         //  Render the game screen
 		scr->render();
 	}
@@ -80,8 +84,8 @@ int main(int argc, char* argv[])
     sandbox->close();
 
 	delete (util);
-	delete (om);
-	delete (mh);
+	//delete (om);
+//	delete (mh);
 
 	return 0;
 }
