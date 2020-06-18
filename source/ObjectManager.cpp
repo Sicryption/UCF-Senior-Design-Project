@@ -71,26 +71,6 @@ void ObjectManager::OnUpdate()
 		touchReleasedThisFrame = hidKeysUp() & KEY_TOUCH,
 		touchx = m3d::touch::getXPosition(),
 		touchy = m3d::touch::getYPosition();
-	
-	for(unsigned int i = 0; i < buttons.size(); i++)
-	{		
-		//Check for touch event on Button
-		if(touchedThisFrame)
-		{
-			if(buttons[i]->OnTouch != nullptr && buttons[i]->PointIntersects(touchx, touchy))
-				(buttons[i]->OnTouch)(buttons[i]);
-		}
-		else if(touchReleasedThisFrame)
-		{
-			if(buttons[i]->OnRelease != nullptr && buttons[i]->PointIntersects(lastFrameTouchX, lastFrameTouchY))
-				(buttons[i]->OnRelease)(buttons[i]);
-		}
-		else
-		{
-			if(buttons[i]->OnHeld != nullptr && buttons[i]->PointIntersects(touchx, touchy))
-				(buttons[i]->OnHeld)(buttons[i]);
-		}
-	}
 
 	if (touchedThisFrame)
 	{
@@ -98,6 +78,38 @@ void ObjectManager::OnUpdate()
 		{
 			//only fires if point is actually inside the code editor
 			codeEditors[i]->SelectCommand(touchx, touchy);
+		}
+	}
+
+	if (touchReleasedThisFrame)
+	{
+		for (unsigned int i = 0; i < commandListers.size(); i++)
+		{
+			//only fires if point is actually inside the command lister
+			commandListers[i]->SelectPoint(lastFrameTouchX, lastFrameTouchY);
+		}
+	}
+	
+	for (unsigned int i = 0; i < buttons.size(); i++)
+	{
+		if (buttons[i] == nullptr)
+			continue;
+
+		//Check for touch event on Button
+		if (touchedThisFrame)
+		{
+			if (buttons[i]->OnTouch != nullptr && buttons[i]->PointIntersects(touchx, touchy))
+				(buttons[i]->OnTouch)(buttons[i]);
+		}
+		else if (touchReleasedThisFrame)
+		{
+			if (buttons[i]->OnRelease != nullptr && buttons[i]->PointIntersects(lastFrameTouchX, lastFrameTouchY))
+				(buttons[i]->OnRelease)(buttons[i]);
+		}
+		else
+		{
+			if (buttons[i]->OnHeld != nullptr && buttons[i]->PointIntersects(touchx, touchy))
+				(buttons[i]->OnHeld)(buttons[i]);
 		}
 	}
 	
@@ -181,5 +193,29 @@ void ObjectManager::DeleteCodeEditor(m3dCI::CodeEditor* ce)
 	{
 		delete(codeEditors[index]);
 		codeEditors.erase(codeEditors.begin() + index);
+	}
+}
+
+m3dCI::CommandLister* ObjectManager::CreateCommandLister()
+{
+	m3dCI::CommandLister* cl = new m3dCI::CommandLister();
+
+	commandListers.push_back(cl);
+
+	return cl;
+}
+
+void ObjectManager::DeleteCommandLister(m3dCI::CommandLister* cl)
+{
+	int index = -1;
+
+	for (unsigned int i = 0; i < commandListers.size(); i++)
+		if (commandListers[i] == cl)
+			index = i;
+
+	if (index != -1)
+	{
+		delete(commandListers[index]);
+		commandListers.erase(commandListers.begin() + index);
 	}
 }

@@ -154,3 +154,16 @@ void MenuHandler::RemoveCommandObject(m3dCI::Button* button)
 		((MinigameTemplateMenu*)mh->currentMenu)->DeleteButton_OnClick(button);
 	}
 }
+
+void MenuHandler::AddCommand(std::string command)
+{
+	MenuHandler* mh = getInstance();
+
+	if (mh == 0)
+		return;
+
+	if (mh->currentState == MenuState::MinigameTemplateMenu)
+	{
+		((MinigameTemplateMenu*)mh->currentMenu)->AddCommand(command);
+	}
+}

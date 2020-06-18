@@ -9,6 +9,7 @@ namespace m3dCI
 		std::transform(command.begin(), command.end(), command.begin(), ::toupper);
 
 		commandTextObject = new m3dCI::Text(command);
+		commandTextObject->setColor(m3d::Color(0, 0, 0));
 		commandTextObject->setPosition(x + 2, y);//+2 for buffer from left edge
 		commandTextObject->setFontSize(0.75);
 		commandTextObject->setFontWeight(0.68);

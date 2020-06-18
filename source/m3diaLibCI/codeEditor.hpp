@@ -10,6 +10,7 @@
 #include <m3dia.hpp>
 #include <cmath>
 #include <vector>
+#include <m3dia.hpp>
 
 #define CELL_HEIGHT 20
 
@@ -24,6 +25,7 @@ namespace m3dCI
 
 			CommandObject* currentSelectedCommand = nullptr;
 			int x, y, borderWidth, w, h, cellsTall;
+			bool active = false;
 			
 			void refreshCommandList();
 
@@ -54,5 +56,6 @@ namespace m3dCI
 			void draw(m3d::RenderContext t_context);
 
 			bool isPointInside(int px, int py);
+			void SetActive(bool state);
 	};
 }

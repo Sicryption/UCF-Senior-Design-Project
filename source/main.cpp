@@ -20,23 +20,13 @@ int main(int argc, char* argv[])
 	//  Create default Applet and Screen variables
     Applet app;
     Screen scr;
-	m3d::Sprite spr;
-    m3d::Texture * tex_ptr;
-    std::string id = "gfx/error.png";
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
 	Util *util = Util::createInstance(&scr, &app);
 	ObjectManager *om = ObjectManager::createInstance(&scr);
 	MenuHandler *mh = MenuHandler::createInstance(&scr);
 	ResourceManager::initialize();
-  
-    tex_ptr = ResourceManager::loadTexture(id);  
-    tex_ptr = ResourceManager::getTexture(id);  
-
-    spr.setTexture(*tex_ptr);
-    spr.setXScale(10);
-    spr.setYScale(10);
-
+	
     //  Create a Sandbox environment (done here for testing)
 	LuaSandbox* sandbox = new LuaSandbox();
   
@@ -47,8 +37,6 @@ int main(int argc, char* argv[])
 		util->OnUpdate();
 		om->OnUpdate();
 		mh->OnUpdate();
-      
-		scr.drawTop(spr); // draw the sprite 
     
       //  Render the game screen
 		scr.render();

@@ -1,5 +1,4 @@
 #include "codeEditor.hpp"
-#include "../util.hpp"
 
 namespace m3dCI
 {
@@ -21,6 +20,8 @@ namespace m3dCI
 
 		borderRectangle = new m3d::Rectangle(px, py, pw, ph, m3d::Color(0, 0, 0));
 		innerRectangle = new m3d::Rectangle(px + p_borderWidth, py + p_borderWidth, pw - (p_borderWidth * 2), ph - (p_borderWidth * 2), m3d::Color(255, 255, 255));
+
+		addCommand("");
 	}
 
 	CodeEditor::~CodeEditor()
@@ -52,6 +53,9 @@ namespace m3dCI
 	{
 		m3dCI::CommandObject* obj = new m3dCI::CommandObject(x + borderWidth, y + CELL_HEIGHT * commands.size(), w - (borderWidth * 2), CELL_HEIGHT, command, false);
 
+		if (currentSelectedCommand == nullptr)
+			SelectCommand(commands.size() - 1);
+
 		if (position < 0)
 		{
 			if (currentSelectedCommand != nullptr)
@@ -59,7 +63,12 @@ namespace m3dCI
 				commands.insert(commands.begin() + GetSelectedCommandIndex(), obj);
 			}
 			else
-				commands.push_back(obj);
+			{
+				if (commands.size() == 0)
+					commands.push_back(obj);
+				else
+					commands.insert(commands.begin() + commands.size() - 1, obj);
+			}
 		}
 		else
 			commands.insert(commands.begin() + position, obj);
@@ -74,7 +83,7 @@ namespace m3dCI
 
 		int commandToRemoveIndex = position == -1? GetSelectedCommandIndex():position;
 
-		if (commandToRemoveIndex >= 0 && commandToRemoveIndex <= (int)commands.size())
+		if (commandToRemoveIndex >= 0 && commandToRemoveIndex < (int)commands.size() - 1)//dont allow deletion of last slot. hence the - 1
 		{
 			if (currentSelectedCommand == commands[commandToRemoveIndex])
 				currentSelectedCommand = nullptr;
@@ -85,7 +94,7 @@ namespace m3dCI
 
 		refreshCommandList();
 		
-		SelectCommand(commandToRemoveIndex == commands.size()?commandToRemoveIndex - 1:commandToRemoveIndex);
+		SelectCommand(commandToRemoveIndex == (int)commands.size()?commandToRemoveIndex - 1:commandToRemoveIndex-1);
 	}
 
 	bool CodeEditor::isPointInside(int px, int py)
@@ -95,7 +104,7 @@ namespace m3dCI
 
 	void CodeEditor::SelectCommand(int px, int py)
 	{
-		if (!isPointInside(px, py))
+		if (!active || !isPointInside(px, py))
 			return;
 
 		int commandIndexToSelect = -1;
@@ -113,6 +122,9 @@ namespace m3dCI
 
 	void CodeEditor::SelectCommand(int index)
 	{
+		if (!active)
+			return;
+
 		if (index == -1 || index >= (int)commands.size())
 			currentSelectedCommand = nullptr;
 		else
@@ -129,7 +141,7 @@ namespace m3dCI
 				continue;
 
 			if (commands[i] == currentSelectedCommand)
-				commands[i]->setBackgroundColor(m3d::Color(0, 255, 0));
+				commands[i]->setBackgroundColor(m3d::Color(34,177,76));
 			else
 			{
 				commands[i]->setBackgroundColor(i % 2 ? m3d::Color(211, 211, 211) : m3d::Color(169, 169, 169));
@@ -148,5 +160,10 @@ namespace m3dCI
 				index = i;
 
 		return index;
+	}
+
+	void CodeEditor::SetActive(bool state)
+	{
+		active = state;
 	}
 }
