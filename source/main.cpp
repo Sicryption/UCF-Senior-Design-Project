@@ -31,21 +31,12 @@ int main(int argc, char* argv[])
 	LuaSandbox* sandbox = new LuaSandbox();
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
-	Util *util = Util::createInstance(&scr, &app);
-	ObjectManager *om = ObjectManager::createInstance(&scr);
-	MenuHandler *mh = MenuHandler::createInstance(&scr);
-	ResourceManager::initialize();
-	
-    //  Create a Sandbox environment (done here for testing)
-	LuaSandbox* sandbox = new LuaSandbox();
-  
 	Util *util = Util::createInstance(scr, app);
 	ObjectManager *om = ObjectManager::createInstance(scr);
-    ResourceManager::initialize();
-    MenuHandler *mh = MenuHandler::createInstance(scr);
+	MenuHandler *mh = MenuHandler::createInstance(scr);
+	ResourceManager::initialize();
     Input::initialize();     
-
-    ResourceManager::loadTexture(id);  
+	
     ResourceManager::loadFile("lua/init_scene.lua"); 
 	// Main loop
 	while (app->isRunning())
