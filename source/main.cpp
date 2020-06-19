@@ -14,7 +14,7 @@
 #include "resources.h"
 #include "gameManager.hpp"
 #include "sceneManager.hpp"
-//#include "gameObjects/wall.cpp"
+#include "gameObjects/wall.cpp"
 #include "scenes/startScene.cpp"
 #include "scenes/MazeScene.cpp"
 #include "inputManager.hpp"
@@ -59,8 +59,8 @@ int main(int argc, char* argv[])
 		MazeScene *tester;
     tester = new MazeScene();
 		tester->initialize();
-    //WallObject *tester;
-    //tester = new WallObject();
+    //TerminalObject *tester;
+    //tester = new TerminalObject();
     //tester->initialize();
 		//SceneManager::initialize(tester);
 
@@ -76,6 +76,7 @@ int main(int argc, char* argv[])
 		//mh->OnUpdate();
 
 		//scr->drawTop(spr); // draw the sprite
+    tester->update();
     tester->draw();
         //  Render the game screen
 		scr->render();

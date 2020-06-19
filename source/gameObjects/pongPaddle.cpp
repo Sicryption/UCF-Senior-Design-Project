@@ -19,7 +19,7 @@ public:
     void initialize() {
         color = new m3d::Color(0,100,0);
         PongRec = new m3d::Rectangle((int)x,(int)y,50,10,*color);
-        paddlebox = PongRec->getBoundingBox();
+        //paddlebox = PongRec->getBoundingBox();
     }
 
     void update() {
@@ -42,7 +42,7 @@ public:
     void moveTo(double _x, double _y) {
         PongRec->setYPosition(y + (int)(_y + 0.5));
     }
-    
+
 
 
 };

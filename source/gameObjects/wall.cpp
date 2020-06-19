@@ -2,7 +2,7 @@
 #include "../gameManager.hpp"
 #include "../resources.h"
 
-class TestObject : public GameObject
+class TerminalObject : public GameObject
 {
 
 private:
@@ -10,16 +10,16 @@ private:
     m3d::Sprite *sprite;
 
 public:
-    TestObject()
+    TerminalObject()
     {
-        x = 50;
-        y = 200;
-        xScale = 2;
-        yScale = 2;
+        x = 10;
+        y = 0;
+        xScale = 1;
+        yScale = 1;
         angle = 0;
     }
 
-    ~TestObject()
+    ~TerminalObject()
     {
         texture = NULL;
         //delete(sprite);
@@ -28,64 +28,72 @@ public:
     void initialize()
     {
 
-        texture = ResourceManager::getTexture("gfx/error.png");
+        texture = ResourceManager::loadTexture("gfx/Terminal.png");
         sprite = new m3d::Sprite();
         sprite->setTexture(*texture);
-        sprite->setCenter(10,10);
+        //sprite->setSpriteSheet("gfx/Terminal.png",1);
+        //sprite->setCenter(10,10);
         sprite->setScale(xScale,yScale);
+        sprite->setPosition(x,y);
     }
 
     void update() {
 
-        if(m3d::buttons::buttonDown(m3d::buttons::L))
+        if(m3d::buttons::buttonPressed(m3d::buttons::Right))
         {
-            angle -= 90 * GameManager::getDeltaTime();
+            x += 10;
         }
-        if(m3d::buttons::buttonDown(m3d::buttons::R))
+        if(m3d::buttons::buttonPressed(m3d::buttons::Left))
         {
-            angle += 90 * GameManager::getDeltaTime();
+            x -= 10;
         }
+        if(m3d::buttons::buttonPressed(m3d::buttons::Up))
+        {
+            y -= 10;
+            if(y<0)
+            {
+              y=0;
+            }
+        }
+        if(m3d::buttons::buttonPressed(m3d::buttons::Down))
+        {
+            y += 10;
+            if(y>230)
+            {
+              y=230;
+            }
 
-        if(m3d::buttons::buttonDown(m3d::buttons::X))
-        {
-            xScale += 2 * GameManager::getDeltaTime();
-        }
-        if(m3d::buttons::buttonDown(m3d::buttons::Y))
-        {
-            yScale += 2 * GameManager::getDeltaTime();
-        }
-
+        }/*
         if(m3d::buttons::buttonDown(m3d::buttons::Right))
         {
-            x += 40 * GameManager::getDeltaTime();
+            x += 1 * GameManager::getDeltaTime();
         }
         if(m3d::buttons::buttonDown(m3d::buttons::Left))
         {
-            x -= 40 * GameManager::getDeltaTime();
+            x -= 1 * GameManager::getDeltaTime();
         }
         if(m3d::buttons::buttonDown(m3d::buttons::Up))
         {
-            y -= 40 * GameManager::getDeltaTime();
+            y -= 1 * GameManager::getDeltaTime();
         }
         if(m3d::buttons::buttonDown(m3d::buttons::Down))
         {
-            y += 40 * GameManager::getDeltaTime();
-        }
+            y += 1 * GameManager::getDeltaTime();
+        }*/
         sprite->setPosition(x,y);
-        sprite->setRotation(angle);
-        sprite->setScale(xScale,yScale);
+
     };
 
     void draw()
     {
         m3d::Screen * screen = GameManager::getScreen();
 
-        sprite->setPosition(x,y);
+        //sprite->setPosition(x,y);
         screen->drawTop(*sprite);
 
     }
 
-    void destroy(){ this->~TestObject(); }
+    void destroy(){ this->~TerminalObject(); }
     void moveTo(double x,double y){};
     void Rotate(double deg){};
 };
@@ -187,7 +195,7 @@ public:
         wall13 = new m3d::Rectangle(258,45,90,3, *colorWall);
         wall13b = wall13->getBoundingBox();
         wallsb->push_back(wall13b);
-        walls->push_back(wall13);/*
+        walls->push_back(wall13);
         wall = new m3d::Rectangle(x,y,xpos,ypos, *colorWall);
         wall = new m3d::Rectangle(x,y,xpos,ypos, *colorWall);
         wall = new m3d::Rectangle(x,y,xpos,ypos, *colorWall);
@@ -223,7 +231,7 @@ public:
         for(i = walls->begin();i != walls->end();i++)
         {
           printer = *i;
-          screen->drawTop(*printer);/*
+          screen->drawTop(*printer);
           screen->drawTop(*wall2);
           screen->drawTop(*wall3);
           screen->drawTop(*wall4);
