@@ -19,19 +19,18 @@ ResourceManager::~ResourceManager()
 void ResourceManager::initialize()
 {
     //  If no instance exists, construct one
-    if(_instance == NULL)
-    {
-        _instance = new ResourceManager();
-    }
+    getInstance();
 
     //  set all fields and stores;
-    if(_hashmap != NULL){
+    if(_hashmap != NULL)
+    {
         //UnloadAll();
+    }else
+    {
+        _hashmap = new std::map<std::string, void*>();   
     }
-    _instance->_hashmap = new std::map<std::string, void*>();   
 
     return;
-
 }
 
 ResourceManager* ResourceManager::getInstance()
@@ -45,9 +44,9 @@ ResourceManager* ResourceManager::getInstance()
 
 void* ResourceManager::readFile(std::string path)
 {
-    char* buffer;
-    
+    char* buffer = NULL;
     FILE* fp = fopen( path.c_str(), "rb");
+
     if(fp == NULL){
         Util::getInstance()->PrintLine("unable to access file '" + path + "'");
     }
@@ -57,10 +56,11 @@ void* ResourceManager::readFile(std::string path)
     size_t size = ftell(fp);
     rewind(fp);
 
-    buffer = (char*)calloc(size, sizeof(char));
+    buffer = (char*)calloc(size+1, sizeof(char));
     fread(buffer,sizeof(char),size,fp);
+    /*
+    */
     fclose(fp);
-
 
     return (void*)buffer;
 }
@@ -68,9 +68,12 @@ void* ResourceManager::readFile(std::string path)
 void* ResourceManager::loadFile(std::string path)
 {
     void* mem = NULL;
+    std::string fullpath = ROMFS_PATH;
+    fullpath.append(path);
+
     try
     {
-        mem = readFile(path);
+        mem = readFile(fullpath);
     }
     catch(const std::exception& e)
     {
@@ -97,7 +100,7 @@ m3d::Texture* ResourceManager::loadTexture(std::string path)
             return NULL;
         }
     }
-    catch(const std::exception& e)
+    catch(const std::exception& e) 
     {
         Util::getInstance()->PrintLine(e.what());
         return NULL;

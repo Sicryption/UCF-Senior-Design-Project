@@ -33,14 +33,14 @@ include $(DEVKITARM)/3ds_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source	source/lua	source/m3diaLibCI	source/menus
+SOURCES		:=	source	source/lua	source/m3diaLibCI	source/menus	source/UserAPI	source/gameObjects 
 DATA		:=	assets/data
 INCLUDES	:=	include
 GRAPHICS	:=	assets/gfx
 GFXBUILD	:=	$(BUILD)
 ROMFS		:=	assets
 #GFXBUILD	:=	$(ROMFS)/gfx
-APP_TITLE	:= 	GZLO
+APP_TITLE	:= 	Seedlings
 APP_DESCRIPTION	:=	learn simple programing principles
 APP_AUTHOR	:=	Damola Adebayo, Chevron Allen, Kenneth Rosario Rodriguez, Glenn Ruperto, Bryce Vichi
 
