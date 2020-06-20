@@ -127,8 +127,27 @@ public:
      */
     static m3d::Vector2f getTouchDragVector();
 
+    /**
+     *  @brief 
+     *  @returns 
+     */
     static bool isTouchDragging(){ return _instance->_touchIsDragging;}
     
+    /**
+     *  @brief 
+     *  @returns 
+     */
+    static m3d::Vector2f* getDragOrigin()
+    {
+        m3d::Vector2f* states = getInstance()->_touchStates;
+
+        if(states[0] == NULL)
+        {
+            return nullptr;
+        }
+
+        return states[0];
+    }
 
 
 };
