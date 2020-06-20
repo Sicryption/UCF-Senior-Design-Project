@@ -1,10 +1,10 @@
 #include "inputManager.hpp"
 
-    Input* Input::_instance = NULL;
+    Input* Input::_instance = nullptr;
     
     void Input::initialize()
     {
-        if(_instance == NULL)
+        if(_instance == nullptr)
         {
             _instance = new Input();
         }
@@ -189,4 +189,18 @@
             (abs(_instance->_touchDragDistance.u) > TOUCH_EPSILON || _instance->_touchIsDragging) ? _instance->_touchDragDistance.u : 0 , 
             (abs(_instance->_touchDragDistance.v) > TOUCH_EPSILON || _instance->_touchIsDragging) ? _instance->_touchDragDistance.v : 0
         };
+    }
+
+    m3d::Vector2f* Input::getTouchDragOrigin()
+    {
+        m3d::Vector2f** states = getInstance()->_touchStates;
+
+        if(states[0] == NULL)
+        {
+            return nullptr;
+        }
+
+        m3d::Vector2f * origin = new m3d::Vector2f(*(states[0]));
+
+        return origin;
     }

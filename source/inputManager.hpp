@@ -35,13 +35,11 @@ private:
     static Input* _instance;
     static Input* getInstance()
     {
-        if(_instance != NULL)
-        {
-            return _instance;
-        }else
+        if(_instance == nullptr)
         {
             initialize();
         }
+        return _instance;
     }
     Input(){}
     ~Input(){}
@@ -137,17 +135,8 @@ public:
      *  @brief 
      *  @returns 
      */
-    static m3d::Vector2f* getDragOrigin()
-    {
-        m3d::Vector2f* states = getInstance()->_touchStates;
-
-        if(states[0] == NULL)
-        {
-            return nullptr;
-        }
-
-        return states[0];
-    }
+    static m3d::Vector2f* getTouchDragOrigin();
+    
 
 
 };
