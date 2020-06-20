@@ -132,8 +132,7 @@ public:
     static bool isTouchDragging(){ return _instance->_touchIsDragging;}
     
     /**
-     *  @brief 
-     *  @returns 
+     *  @returns if touch is dragging, returns a Vector2f pointer. Otherwise returns nullptr.
      */
     static m3d::Vector2f* getTouchDragOrigin();
     
