@@ -33,42 +33,6 @@ namespace m3dCI
     class CommandLister : public m3d::Drawable
 	{
 		private:
-
-			class Command()
-			{
-				string name;
-				int paramCount;
-				string params[]
-
-				Command(string n, int p)
-				{
-					name = n;
-					paramCount = p;
-					params = new string[paramCount];
-				}
-
-				string ToString()
-				{
-					string ParamString = "";
-
-					for (int i = 0; i < params; i++)
-					{
-						ParamString + = " " + params[i];
-					}
-
-					return name + ParamString + "\n";
-				}
-			}
-
-			Command listOfCommandsByTab[NUM_TABS][NUM_COMMANDS_PER_TAB] =
-			{
-				{ new Command("Rectangle", 2),"Rectangle","Triangle","Text", "Select", "Delete", "", "" },
-				{ "Red","Orange","Yellow","Green", "Blue", "Indigo", "Violet", "" },
-				{ "Up","Down","Left","Right", "Scale", "Scale_X", "Scale_Y", "Rotate" },
-				{ "var","Delete_var","get_x","get_y", "get_angle", "get_scale_x", "get_scale_y", "get_speed" },
-				{ "if","loop","while","end", "label", "goto", "", "" }
-			};
-
 			std::string listOfCommandsByTab[NUM_TABS][NUM_COMMANDS_PER_TAB] =
 			{
 				{ "Circle","Rectangle","Triangle","Text", "Select", "Delete", "", "" },
