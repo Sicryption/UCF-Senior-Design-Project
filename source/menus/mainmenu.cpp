@@ -1,4 +1,4 @@
-#include "menus/mainMenu.hpp"
+#include "mainMenu.hpp"
 
 MainMenu::MainMenu(m3d::Screen* screen) :
 	Menu(screen)

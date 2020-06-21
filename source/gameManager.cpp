@@ -2,7 +2,7 @@
 
 //#include "core.h"
 #include "managers/gameManager.hpp"
-#include "managers/util.hpp"
+#include "util.hpp"
 
 m3d::BoundingBox* GameManager::ScreenBoundsTop = NULL;
 m3d::BoundingBox* GameManager::ScreenBoundsBottom = NULL;

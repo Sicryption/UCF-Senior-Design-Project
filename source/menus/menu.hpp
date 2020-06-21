@@ -1,9 +1,9 @@
 #pragma once
 
-#include "managers/util.hpp"
-#include "managers/ObjectManager.hpp"
-#include "menus/MenuHandler.hpp"
-#include "m3diaLibCI/text.hpp"
+#include "../util.hpp"
+#include "../ObjectManager.hpp"
+#include "../MenuHandler.hpp"
+#include "../m3diaLibCI/text.hpp"
 
 #include <m3dia.hpp>
 
