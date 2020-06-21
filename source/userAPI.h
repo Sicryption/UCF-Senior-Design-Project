@@ -23,11 +23,5 @@ namespace UserAPI
      */
     int print_line(lua_State* L);  
 
-    int create_rectangle(lua_State* L);
-    int create_circle(lua_State* L);
-    int create_paddle(lua_State* L);
-    int create_avatar(lua_State* L);
-
-    //void request_user_input(char* buffer,int* status,unsigned int flags);
     
 }

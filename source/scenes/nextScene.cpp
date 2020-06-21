@@ -1,7 +1,7 @@
-#include "managers/gameManager.hpp"
-#include "managers/sceneManager.hpp"
-#include "scenes/scene.hpp"
-#include "../resources.h"
+#include "gameManager.hpp"
+#include "sceneManager.hpp"
+#include "scene.hpp"
+#include "resources.h"
 
 
 //using namespace m3d;

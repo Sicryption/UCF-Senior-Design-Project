@@ -12,8 +12,8 @@
 #include "MenuHandler.hpp"
 #include "sandbox.h"
 #include "resources.h"
-#include "managers/gameManager.hpp"
-#include "managers/sceneManager.hpp"
+#include "gameManager.hpp"
+#include "sceneManager.hpp"
 #include "gameObjects/testObject.cpp"
 #include "scenes/startScene.cpp"
 #include "inputManager.hpp"
@@ -26,20 +26,19 @@ int main(int argc, char* argv[])
     Applet *app = new Applet();
     Screen *scr = new Screen(false);
 	
+    GameManager::Initialize(app, scr);
     //  Create a Sandbox environment (done here for testing)
 	LuaSandbox* sandbox = new LuaSandbox();
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
-    GameManager::Initialize(app, scr);
-    SceneManager::initialize();
 	Util *util = Util::createInstance(scr, app);
 	ObjectManager *om = ObjectManager::createInstance(scr);
 	MenuHandler *mh = MenuHandler::createInstance(scr);
 	ResourceManager::initialize();
     Input::initialize();
 	
-    sandbox->executeFile("sandbox_init.lua"); 
-    
+    //sandbox->executeFile("sandbox_init.lua"); 
+	
 	// Main loop
 	while (app->isRunning())
 	{
@@ -51,14 +50,11 @@ int main(int argc, char* argv[])
 		util->OnUpdate();
 		om->OnUpdate();
 		mh->OnUpdate();
-		
-        sandbox->executeString("tick()");
-		
         //  Render the game screen
 		scr->render();
 	}
 
-    sandbox->close(); 
+    sandbox->close();
 
 	delete (util);
 	delete (mh);
