@@ -4,6 +4,6 @@
  */
 #include <3ds.h>
 
-#include "../userAPI.h"
+#include "userAPI.h"
 #include "../util.hpp" 
 

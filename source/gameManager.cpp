@@ -1,8 +1,7 @@
-#pragma once
-#include <math.h>
+
 
 //#include "core.h"
-#include "gameManager.hpp"
+#include "managers/gameManager.hpp"
 #include "util.hpp"
 
 m3d::BoundingBox* GameManager::ScreenBoundsTop = NULL;
