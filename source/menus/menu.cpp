@@ -1,4 +1,4 @@
-#include "menu.hpp"
+#include "menus/menu.hpp"
 
 Menu::Menu(Screen* screen)
 {

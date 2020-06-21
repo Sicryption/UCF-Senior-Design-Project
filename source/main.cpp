@@ -7,16 +7,16 @@
 #include <png.h>
 #include "lua/lua.hpp"
 
-#include "util.hpp"
-#include "ObjectManager.hpp"
-#include "MenuHandler.hpp"
+#include "menus/MenuHandler.hpp"
 #include "sandbox.h"
-#include "resources.h"
+#include "managers/resources.h"
+#include "managers/util.hpp"
+#include "managers/ObjectManager.hpp"
 #include "managers/gameManager.hpp"
 #include "managers/sceneManager.hpp"
+#include "managers/inputManager.hpp"
 #include "gameObjects/testObject.cpp"
 #include "scenes/startScene.cpp"
-#include "inputManager.hpp"
 
 using namespace m3d;
 

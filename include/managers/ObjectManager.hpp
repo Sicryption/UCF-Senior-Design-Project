@@ -2,7 +2,7 @@
 
 #include "m3diaLibCI/button.hpp" 
 #include "m3diaLibCI/console.hpp"
-#include "util.hpp"
+#include "managers/util.hpp"
 
 #include <3ds.h>
 #include <vector>

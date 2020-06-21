@@ -1,6 +1,6 @@
 #include "objects/gameObject.hpp"
 #include "managers/gameManager.hpp"
-#include "../resources.h"
+#include "managers/resources.h"
 
 class TestObject : public GameObject
 {

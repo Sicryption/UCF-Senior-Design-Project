@@ -1,4 +1,4 @@
-#include "MenuHandler.hpp"
+#include "menus/MenuHandler.hpp"
 
 #include "menus/menu.hpp"
 #include "menus/mainMenu.hpp"
