@@ -6,7 +6,7 @@
 #include <memory>
 
 
-#include "objects/gameObject.hpp"
+#include "gameObject.hpp"
 
 class Scene : public Updateable
 {
@@ -45,7 +45,7 @@ public:
     unsigned int addObject(GameObject* obj)
     {
         m_hashmap[m_idCounter] = obj;
-        return m_idCounter++;
+        return ++m_idCounter;
     }
 
     void removeObject(unsigned int t_id)

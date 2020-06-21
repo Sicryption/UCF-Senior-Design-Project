@@ -1,5 +1,5 @@
 #pragma once
-#include "scenes/scene.hpp"
+#include "scene.hpp"
 
 class SceneManager
 {

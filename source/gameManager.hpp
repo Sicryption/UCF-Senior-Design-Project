@@ -1,11 +1,10 @@
 #pragma once
 #include "time.h"
-#include <math.h>
 
 #include <3ds.h>
 #include <m3dia.hpp>
 
-#include "scenes/scene.hpp"
+#include "scene.hpp"
 
 
 

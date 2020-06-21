@@ -1,9 +1,9 @@
-#include "managers/sceneManager.hpp"
+#include "sceneManager.hpp"
 #include "scenes/startScene.cpp"
 
 
-SceneManager*  SceneManager::m_instance = nullptr;
-Scene*  SceneManager::m_currentScene = nullptr; 
+SceneManager * m_instance = nullptr;
+
 
 Scene* SceneManager::getScene()
 {
@@ -12,7 +12,7 @@ Scene* SceneManager::getScene()
         return nullptr;
     }
 
-    return m_currentScene;
+    return m_instance->m_currentScene;
 }
 
 void  SceneManager::transitionTo(Scene* t_next)

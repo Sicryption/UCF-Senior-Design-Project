@@ -1,4 +1,4 @@
-#include "objects/gameObject.hpp"
+#include "../gameObject.hpp"
 
 class PongPaddle : public GameObject
 {

@@ -1,9 +1,6 @@
 #pragma once
 #include "IUpdateable.hpp"
 
-#define DEFAULT_OBJECT_SIZE
-#define DEFAULT_OBJECT_COLOR m3d::Color(255,0,0,255)
-
 class GameObject : public Updateable
 {
 protected:
@@ -30,23 +27,21 @@ public:
     virtual void moveTo(double x,double y)=0;
     virtual void Rotate(double deg)=0;
 
-    virtual void setAngle(double _angle)
+    void setAngle(double _angle)
     {
         angle = _angle;
     }
-
-    virtual double getAngle()
+    double getAngle()
     {
         return angle;
     }
 
-    virtual void setScale(double _x, double _y)
+    void setScale(double _x, double _y)
     {
         x = _x;
         y = _y;
     }
-
-    virtual m3d::Vector2f getScale()
+    m3d::Vector2f getScale()
     {
         m3d::Vector2f scale;
         scale.u = xScale;
@@ -54,13 +49,12 @@ public:
         return scale;
     }
 
-    virtual void setPosition(double _x, double _y)
+    void setPosition(double _x, double _y)
     {
         x = _x;
         y = _y;
     }
-
-    virtual m3d::Vector2f getPosition()
+    m3d::Vector2f getPosition()
     {
         m3d::Vector2f pos;
         pos.u = x;

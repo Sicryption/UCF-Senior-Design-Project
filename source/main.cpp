@@ -12,8 +12,8 @@
 #include "MenuHandler.hpp"
 #include "sandbox.h"
 #include "resources.h"
-#include "managers/gameManager.hpp"
-#include "managers/sceneManager.hpp"
+#include "gameManager.hpp"
+#include "sceneManager.hpp"
 #include "gameObjects/testObject.cpp"
 #include "scenes/startScene.cpp"
 #include "inputManager.hpp"
@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
 
     Applet *app = new Applet();
     Screen *scr = new Screen(false);
+    GameManager::Initialize(app, scr);
     
     
     
@@ -37,8 +38,6 @@ int main(int argc, char* argv[])
 	LuaSandbox* sandbox = new LuaSandbox();
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
-    GameManager::Initialize(app, scr);
-    SceneManager::initialize();
 	Util *util = Util::createInstance(scr, app);
 	ObjectManager *om = ObjectManager::createInstance(scr);
     ResourceManager::initialize();
@@ -46,15 +45,24 @@ int main(int argc, char* argv[])
     Input::initialize();     
 
     ResourceManager::loadTexture(id);  
-    sandbox->executeFile("sandbox_init.lua"); 
+    ResourceManager::loadFile("lua/init_scene.lua"); 
     
     tex_ptr = ResourceManager::getTexture(id);  
 
     spr.setTexture(*tex_ptr);
     spr.setXScale(10);
-    spr.setYScale(10);  
+    spr.setYScale(10);
 
-  
+    /*
+    TestObject obj;
+    obj.initialize();
+
+		startScene *tester;
+		tester->initialize();
+
+		SceneManager::initialize(tester);
+    */
+
 	// Main loop
 	while (app->isRunning())
 	{
@@ -67,8 +75,15 @@ int main(int argc, char* argv[])
 		om->OnUpdate();
 		mh->OnUpdate();
 
-        sandbox->executeString("tick()");
-        
+        if(Input::isTouchDragging())
+        {
+            Vector2f dragDist = Input::getTouchDragVector();
+
+            if(m3d::buttons::buttonDown(m3d::buttons::Touch))
+                Util::PrintLine( "frame ("+ std::to_string(app->getCurrentFrame()) + 
+                                ")drag -  x: " + std::to_string(dragDist.u) + 
+                                        " y: " + std::to_string(dragDist.v) );
+        }
       
 		//scr->drawTop(spr); // draw the sprite 
     
@@ -76,7 +91,7 @@ int main(int argc, char* argv[])
 		scr->render();
 	}
 
-    sandbox->close(); 
+    sandbox->close();
 
 	delete (util);
 	delete (om);
