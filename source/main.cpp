@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
         sandbox->executeString("tick()");
         
       
-		//scr->drawTop(spr); // draw the sprite 
+		
     
         //  Render the game screen
 		scr->render();
