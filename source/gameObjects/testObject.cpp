@@ -1,5 +1,5 @@
-#include "../gameObject.hpp"
-#include "../gameManager.hpp"
+#include "objects/gameObject.hpp"
+#include "managers/gameManager.hpp"
 #include "../resources.h"
 
 class TestObject : public GameObject

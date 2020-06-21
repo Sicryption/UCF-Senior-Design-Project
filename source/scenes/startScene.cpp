@@ -1,6 +1,6 @@
-#include "../gameManager.hpp"
-#include "../sceneManager.hpp"
-#include "../scene.hpp"
+#include "managers/gameManager.hpp"
+#include "managers/sceneManager.hpp"
+#include "scenes/scene.hpp"
 #include "../resources.h"
 
 class startScene : public Scene

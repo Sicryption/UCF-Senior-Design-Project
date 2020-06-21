@@ -3,6 +3,8 @@
 
 #include "util.hpp"
 
+
+
 /*
     Comparison oparations for the memBlock object.
     all comparisons are dependent on == and <
@@ -10,7 +12,8 @@
 
 /// The array of lua accessible user API functions, paired with their lua global name
 std::pair<std::string, lua_CFunction> enabledFunctions[] = {
-    std::make_pair( "println" , UserAPI::print_line)
+    std::make_pair( "println" , UserAPI::print_line),
+    std::make_pair( "make_rectangle" , UserAPI::create_rectangle)
 };
 
 /*
@@ -124,6 +127,43 @@ void LuaSandbox::executeString(std::string text)
     const char* temp = text.c_str();
     //Util::getInstance()->PrintLine(temp);
     luaL_dostring(state,temp);
+    return;
+}
+
+void LuaSandbox::executeFile(std::string t_path)
+{
+    char* buffer;
+    size_t bufferSize;
+
+    std::string filepath = LUA_DIR;
+    filepath.append(t_path);
+
+    FILE* fp = fopen(filepath.c_str(),"r");
+    
+    if(fp == NULL)
+    {
+        // TODO: file not found error
+        Util::PrintLine("couldnt find file " + filepath);
+        return;
+    }
+    
+    fseek(fp,0L, SEEK_END);
+    bufferSize = ftell(fp) + 1;
+    rewind(fp);
+
+    buffer = (char*)calloc(bufferSize, sizeof(char));
+
+    fread(buffer,sizeof(char),bufferSize-1,fp);
+    
+    if(luaL_dostring(state, buffer))
+    {
+        // error
+        Util::PrintLine("Failed to execute "+ filepath);
+    }
+    
+    fclose(fp);
+
+    //luaL_dofile(state,filepath.c_str());
     return;
 }
 
