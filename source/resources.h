@@ -6,7 +6,7 @@
 #include <map>
 
 #include <m3dia.hpp>
-#include "managers/util.hpp"
+#include "util.hpp"
 
 #define ROMFS_PATH      "romfs:/"
 #define TEXTURE_PATH    "romfs:/gfx/"

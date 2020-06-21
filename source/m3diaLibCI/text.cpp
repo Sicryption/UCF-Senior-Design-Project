@@ -1,4 +1,4 @@
-#include "m3diaLibCI/text.hpp"
+#include "text.hpp"
 
 namespace m3dCI {
     Text::Text(const std::string& t_text, m3d::Color t_color) :

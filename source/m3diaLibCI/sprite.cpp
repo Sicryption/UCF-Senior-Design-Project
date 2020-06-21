@@ -1,5 +1,5 @@
-#include "m3diaLibCI/sprite.hpp"
-#include "managers/util.hpp"
+#include "sprite.hpp"
+#include "../util.hpp"
 
 namespace m3dCI {
     Sprite::Sprite() :

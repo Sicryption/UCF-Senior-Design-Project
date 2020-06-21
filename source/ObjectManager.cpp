@@ -1,4 +1,4 @@
-#include "managers/ObjectManager.hpp"
+#include "ObjectManager.hpp"
 
 using namespace m3d;
 

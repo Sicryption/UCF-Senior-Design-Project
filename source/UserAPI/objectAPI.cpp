@@ -4,8 +4,8 @@
 #include "managers/sceneManager.hpp"
 #include "objects/objects.h"
 #include "scenes/scene.hpp"
-#include "managers/util.hpp"   
-#include "m3diaLibCI/text.hpp"
+#include "../util.hpp"   
+#include "../m3diaLibCI/text.hpp"
 
 
 /**
@@ -22,7 +22,7 @@ int UserAPI::create_rectangle(lua_State* L)
     }
     
     RectangleObject* rect = new RectangleObject();
-    unsigned int id = curr->addObject(rect);
+    unsigned int id = curr->addObject(rect); // TODO: Fix memory error
     lua_pushinteger(L,id);
 
     return 1;

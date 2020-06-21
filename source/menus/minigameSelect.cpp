@@ -1,4 +1,4 @@
-#include "menus/minigameSelect.hpp"
+#include "minigameSelect.hpp"
 
 MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 	Menu(screen)
