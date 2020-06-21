@@ -12,8 +12,6 @@
 #include <vector>
 #include <m3dia.hpp>
 
-#define CELL_HEIGHT 20
-
 namespace m3dCI 
 {
     class CodeEditor: public m3d::Drawable
@@ -24,7 +22,9 @@ namespace m3dCI
 			std::vector<CommandObject*> commands;
 
 			CommandObject* currentSelectedCommand = nullptr;
-			int x, y, borderWidth, w, h, cellsTall;
+			int x, y, borderWidth, w, h;
+
+			double scrollY = 0;
 			bool active = false;
 			
 			void refreshCommandList();
@@ -42,7 +42,7 @@ namespace m3dCI
 			 *  @param p_borderWidth Width of Border
 			 *  @returns a Code Editor drawable object
 			*/
-			CodeEditor(int px, int py, int pw, int ph, int p_borderWidth);
+			CodeEditor(int px, int pw, int p_borderWidth);
 
 			//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
 			virtual ~CodeEditor();
@@ -58,6 +58,8 @@ namespace m3dCI
 
 			bool isPointInside(int px, int py);
 			void SetActive(bool state);
+
+			void DoDrag(m3d::Vector2f dragVector);
 
 			void ShiftToTop();
 			void ShiftToBottom();

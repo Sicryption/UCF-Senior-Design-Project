@@ -5,6 +5,7 @@
 #include "m3diaLibCI/codeEditor.hpp" 
 #include "m3diaLibCI/commandLister.hpp" 
 #include "util.hpp"
+#include "inputManager.hpp"
 
 #include <3ds.h>
 #include <vector>
@@ -62,7 +63,7 @@ class ObjectManager
 
 		void DeleteButton(m3dCI::Button* button);
 
-		m3dCI::CodeEditor* CreateCodeEditor(int x, int y, int w, int h, int borderWidth);
+		m3dCI::CodeEditor* CreateCodeEditor(int x, int w, int borderWidth);
 
 		void DeleteCodeEditor(m3dCI::CodeEditor* ce);
 

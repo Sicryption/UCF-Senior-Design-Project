@@ -5,7 +5,7 @@ MinigameTemplateMenu::MinigameTemplateMenu(m3d::Screen* screen) :
 {
 	int margin = 5;
 
-	codeEditor = om->CreateCodeEditor(margin, margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), BOTTOMSCREEN_HEIGHT - (margin * 2), 1);
+	codeEditor = om->CreateCodeEditor(margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), 1);
 
 	codeEditor->addCommand("Circle MyCircle");
 	codeEditor->addCommand("Red");

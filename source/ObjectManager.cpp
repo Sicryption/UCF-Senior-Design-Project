@@ -72,44 +72,62 @@ void ObjectManager::OnUpdate()
 		touchx = m3d::touch::getXPosition(),
 		touchy = m3d::touch::getYPosition();
 
-	if (touchedThisFrame)
+	std::vector<m3dCI::Button*> buttonsClone(buttons);
+	std::vector<m3dCI::CodeEditor*> codeEditorsClone(codeEditors);
+	std::vector<m3dCI::CommandLister*> commandListersClone(commandListers);
+
+	for (unsigned int i = 0; i < codeEditorsClone.size(); i++)
 	{
-		for (unsigned int i = 0; i < codeEditors.size(); i++)
+		if (codeEditorsClone[i] == nullptr)
+			continue;
+
+		//only fires if point is actually inside the code editor
+
+		if (touchReleasedThisFrame && !Input::isTouchDragging())
+			codeEditorsClone[i]->SelectCommand(lastFrameTouchX, lastFrameTouchY);
+
+		if (Input::isTouchDragging())
 		{
-			//only fires if point is actually inside the code editor
-			codeEditors[i]->SelectCommand(touchx, touchy);
+			int tX = Input::getTouchDragOrigin()->u;
+			int tY = Input::getTouchDragOrigin()->v;
+
+			if (codeEditorsClone[i]->isPointInside(tX, tY))
+				codeEditorsClone[i]->DoDrag(Input::getTouchDragVector());
 		}
 	}
 
 	if (touchReleasedThisFrame)
 	{
-		for (unsigned int i = 0; i < commandListers.size(); i++)
+		for (unsigned int i = 0; i < commandListersClone.size(); i++)
 		{
+			if (commandListersClone[i] == nullptr)
+				continue;
+
 			//only fires if point is actually inside the command lister
-			commandListers[i]->SelectPoint(lastFrameTouchX, lastFrameTouchY);
+			commandListersClone[i]->SelectPoint(lastFrameTouchX, lastFrameTouchY);
 		}
 	}
 	
-	for (unsigned int i = 0; i < buttons.size(); i++)
+	for (unsigned int i = 0; i < buttonsClone.size(); i++)
 	{
-		if (buttons[i] == nullptr || !buttons[i]->GetEnabledState())
+		if (buttonsClone[i] == nullptr || !buttonsClone[i]->GetEnabledState())
 			continue;
 
 		//Check for touch event on Button
 		if (touchedThisFrame)
 		{
-			if (buttons[i]->OnTouch != nullptr && buttons[i]->PointIntersects(touchx, touchy))
-				(buttons[i]->OnTouch)(buttons[i]);
+			if (buttonsClone[i]->OnTouch != nullptr && buttonsClone[i]->PointIntersects(touchx, touchy))
+				(buttonsClone[i]->OnTouch)(buttonsClone[i]);
 		}
 		else if (touchReleasedThisFrame)
 		{
-			if (buttons[i]->OnRelease != nullptr && buttons[i]->PointIntersects(lastFrameTouchX, lastFrameTouchY))
-				(buttons[i]->OnRelease)(buttons[i]);
+			if (buttonsClone[i]->OnRelease != nullptr && buttonsClone[i]->PointIntersects(lastFrameTouchX, lastFrameTouchY))
+				(buttonsClone[i]->OnRelease)(buttonsClone[i]);
 		}
 		else
 		{
-			if (buttons[i]->OnHeld != nullptr && buttons[i]->PointIntersects(touchx, touchy))
-				(buttons[i]->OnHeld)(buttons[i]);
+			if (buttonsClone[i]->OnHeld != nullptr && buttonsClone[i]->PointIntersects(touchx, touchy))
+				(buttonsClone[i]->OnHeld)(buttonsClone[i]);
 		}
 	}
 	
@@ -172,9 +190,9 @@ void ObjectManager::DeleteButton(m3dCI::Button* button)
 	}
 }
 
-m3dCI::CodeEditor* ObjectManager::CreateCodeEditor(int x, int y, int w, int h, int borderWidth)
+m3dCI::CodeEditor* ObjectManager::CreateCodeEditor(int x, int w, int borderWidth)
 {
-	m3dCI::CodeEditor* ce = new m3dCI::CodeEditor(x, y, w, h, borderWidth);
+	m3dCI::CodeEditor* ce = new m3dCI::CodeEditor(x, w, borderWidth);
 
 	codeEditors.push_back(ce);
 
