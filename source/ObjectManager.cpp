@@ -92,7 +92,7 @@ void ObjectManager::OnUpdate()
 	
 	for (unsigned int i = 0; i < buttons.size(); i++)
 	{
-		if (buttons[i] == nullptr)
+		if (buttons[i] == nullptr || !buttons[i]->GetEnabledState())
 			continue;
 
 		//Check for touch event on Button

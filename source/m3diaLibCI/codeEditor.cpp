@@ -35,6 +35,28 @@ namespace m3dCI
 		}
 	}
 
+	void CodeEditor::ShiftToTop()
+	{
+		int change = (TOPSCREEN_WIDTH - BOTTOMSCREEN_WIDTH) / 2;
+		x += change;
+
+		innerRectangle->setXPosition(innerRectangle->getXPosition() + change);
+		borderRectangle->setXPosition(borderRectangle->getXPosition() + change);
+
+		refreshCommandList();
+	}
+
+	void CodeEditor::ShiftToBottom()
+	{
+		int change = (TOPSCREEN_WIDTH - BOTTOMSCREEN_WIDTH) / 2;
+		x -= change;
+
+		innerRectangle->setXPosition(innerRectangle->getXPosition() - change);
+		borderRectangle->setXPosition(borderRectangle->getXPosition() - change);
+
+		refreshCommandList();
+	}
+
 	void CodeEditor::draw(m3d::RenderContext t_context)
 	{
 		if(borderRectangle != nullptr)
@@ -165,5 +187,15 @@ namespace m3dCI
 	void CodeEditor::SetActive(bool state)
 	{
 		active = state;
+	}
+
+	bool CodeEditor::IsBlankCommandSelected()
+	{
+		int index = GetSelectedCommandIndex();
+
+		if (index == -1)
+			return false;
+
+		return GetSelectedCommandIndex() == (int)commands.size() - 1;
 	}
 }

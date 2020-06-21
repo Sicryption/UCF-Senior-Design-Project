@@ -30,8 +30,16 @@ void MinigameTemplateMenu::OnUpdate()
 	if (util->IsConsoleDrawn())
 		return;
 
-	if(codeEditor != nullptr && !showCommandLister)
-		scr->drawBottom(*codeEditor);
+	if (codeEditor != nullptr)
+	{
+		if(showCommandLister)
+			scr->drawTop(*codeEditor);
+		else
+		{
+			scr->drawBottom(*codeEditor);
+			RemoveButton->SetEnabledState(!codeEditor->IsBlankCommandSelected());
+		}
+	}
 
 	if(commandLister != nullptr && showCommandLister)
 		scr->drawBottom(*commandLister);
@@ -56,6 +64,10 @@ void MinigameTemplateMenu::AddButton_OnClick(m3dCI::Button* button)
 	showCommandLister = true;
 	commandLister->SetActive(true);
 	codeEditor->SetActive(false);
+	AddButton->SetEnabledState(false);
+	RemoveButton->SetEnabledState(false);
+
+	codeEditor->ShiftToTop();
 }
 
 void MinigameTemplateMenu::DeleteButton_OnClick(m3dCI::Button* button)
@@ -68,6 +80,11 @@ void MinigameTemplateMenu::AddCommand(std::string command)
 	codeEditor->addCommand(command);
 	commandLister->SetActive(false);
 	codeEditor->SetActive(true);
+	codeEditor->ShiftToBottom();
+	AddButton->SetEnabledState(true);
+	RemoveButton->SetEnabledState(true);
+
+	scr->clear();
 
 	showCommandLister = false;
 }

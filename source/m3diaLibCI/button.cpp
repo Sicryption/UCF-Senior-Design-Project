@@ -9,6 +9,7 @@ m3dCI::Button::Button(int px, int py, int pw, int ph, m3d::Color p_innerColor, m
 	w = pw;
 	h = ph;
 	innerColor = p_innerColor;
+	disabledColor = new m3d::Color(p_innerColor.getRed() - 60, p_innerColor.getGreen() - 60, p_innerColor.getBlue() - 60);
 	outerColor = p_borderColor;
 
 	borderWidth = p_borderWidth;
@@ -86,6 +87,8 @@ m3dCI::Button::~Button()
 	delete(outerRectangle);
 	delete(innerCircle);
 	delete(outerCircle);*/
+	if(disabledColor != nullptr)
+		delete(disabledColor);
 	delete(sprite);
 	delete(text);
 }
@@ -204,6 +207,19 @@ void m3dCI::Button::SetTextColor(m3d::Color color)
 {
 	if (text != nullptr)
 		text->setColor(color);
+}
+
+void m3dCI::Button::SetEnabledState(bool state)
+{
+	if(buttonType == ButtonType::Rectangle)
+		innerRectangle->setColor(state ? innerColor : *disabledColor);
+
+	enabled = state;
+}
+
+bool m3dCI::Button::GetEnabledState()
+{
+	return enabled;
 }
 			
 /*

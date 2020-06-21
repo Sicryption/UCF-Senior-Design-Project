@@ -49,13 +49,17 @@ namespace m3dCI
 			
 			//need a way to insert at specified line
 			void addCommand(std::string command, int position = -1);
-
 			void SelectCommand(int px, int py);
 			void removeCommand(int position = -1);
+
+			bool IsBlankCommandSelected();
 
 			void draw(m3d::RenderContext t_context);
 
 			bool isPointInside(int px, int py);
 			void SetActive(bool state);
+
+			void ShiftToTop();
+			void ShiftToBottom();
 	};
 }

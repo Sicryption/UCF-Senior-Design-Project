@@ -27,9 +27,11 @@ namespace m3dCI
 
 			m3dCI::Text* text = nullptr;
 
-			m3d::Color innerColor, outerColor;
+			m3d::Color innerColor, outerColor, *disabledColor = nullptr;
 
 			int x, y, borderWidth, w, h, r;
+
+			bool enabled = true;
 
 			void UpdateShape();
 		public:
@@ -65,6 +67,9 @@ namespace m3dCI
 			
 			void SetText(std::string txt);
 			void SetTextColor(m3d::Color color);
+
+			bool GetEnabledState();
+			void SetEnabledState(bool state);
 
 			/*
 			
