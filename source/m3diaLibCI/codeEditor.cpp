@@ -205,7 +205,7 @@ namespace m3dCI
 		int index = GetSelectedCommandIndex();
 
 		if (index == -1)
-			return false;
+			return true;
 
 		return GetSelectedCommandIndex() == (int)commands.size() - 1;
 	}
