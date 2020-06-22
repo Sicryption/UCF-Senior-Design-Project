@@ -17,7 +17,7 @@ class nextScene : public Scene
 	public:
 		nextScene()
 		{
-
+			
 		}
 		void initialize()
 		{
@@ -49,4 +49,3 @@ class nextScene : public Scene
 
 
 };
-

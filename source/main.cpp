@@ -14,8 +14,9 @@
 #include "resources.h"
 #include "gameManager.hpp"
 #include "sceneManager.hpp"
-#include "gameObjects/testObject.cpp"
+#include "gameObjects/wall.cpp"
 #include "scenes/startScene.cpp"
+#include "scenes/MazeScene.cpp"
 #include "inputManager.hpp"
 
 using namespace m3d;
