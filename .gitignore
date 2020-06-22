@@ -6,5 +6,6 @@ source/.vs/*
 *.elf
 *.smdh
 *.DS_Store
-*.t3x
 source/*.DS_Store
+Debug/
+*.t3x
