@@ -46,19 +46,20 @@ namespace m3dCI
 			std::vector<m3dCI::Sprite*> tabs;
 			std::vector<std::vector<CommandObject*>> commands;
 
-			m3dCI::Sprite* currentlySelectedTab = nullptr;
+			int currentlySelectedTab = -1;
 			CommandObject* currentSelectedCommand = nullptr;
 
 			bool active = false;
 			int x, y, w, h;
 
-			std::string getTabTextureStringID(int index, bool selected);
-			m3d::Texture* getTabTexture(int index, bool selected);
+			std::string getTabSpriteStringID(int index, bool selected);
+			m3dCI::Sprite* getTabSprite(int index, bool selected);
 
 			int getCurrentlySelectedTab();
 
 			void CreateTabCommandObjects(int index);
 
+			void SelectTab(int tabIndex);
 			void SelectTab(int px, int py);
 			void SelectCommand(int px, int py);
 		public:

@@ -12,17 +12,15 @@ namespace m3dCI
 
 		int tabWidthAndHeight = (TOPSCREEN_HEIGHT / NUM_TABS);
 
-		backgroundRectangle = new m3d::Rectangle(x, y, tabWidthAndHeight, h, m3d::Color(255, 255, 255));
-		
+		backgroundRectangle = new m3d::Rectangle(x, y, tabWidthAndHeight + BOTTOMSCREEN_WIDTH * 0.5, h, m3d::Color(255, 255, 255));
+
+		ResourceManager::loadSpritesheet("gfx/menuSprites");
 		
 		for (int i = 0; i < NUM_TABS; i++)
 		{
-			m3dCI::Sprite* tab = new m3dCI::Sprite();
+			getTabSprite(i, true)->setPosition(0, i * tabWidthAndHeight);//set the selected sprites position ahead of time
 
-			ResourceManager::loadTexture(getTabTextureStringID(i, false));
-			ResourceManager::loadTexture(getTabTextureStringID(i, true));
-
-			tab->setTexture(*getTabTexture(i, false));
+			m3dCI::Sprite* tab = getTabSprite(i, false);//new m3dCI::Sprite(*getTabSprite(1, false));
 
 			tab->setPosition(0, i * tabWidthAndHeight);
 
@@ -30,6 +28,8 @@ namespace m3dCI
 
 			CreateTabCommandObjects(i);
 		}
+
+		SelectTab(0);
 	}
 
 	CommandLister::~CommandLister()
@@ -69,14 +69,14 @@ namespace m3dCI
 		commands.push_back(objects);
 	}
 
-	std::string CommandLister::getTabTextureStringID(int index, bool selected = false)
+	std::string CommandLister::getTabSpriteStringID(int index, bool selected = false)
 	{
-		return "gfx/tab" + std::to_string(index + 1) + (selected?"selected":"") + ".png";
+		return "tab" + std::to_string(index + 1) + (selected?"selected":"") + ".png";
 	}
 
-	m3d::Texture* CommandLister::getTabTexture(int index, bool selected = false)
+	m3dCI::Sprite* CommandLister::getTabSprite(int index, bool selected = false)
 	{
-		return ResourceManager::getTexture(getTabTextureStringID(index, selected));
+		return ResourceManager::getSprite(getTabSpriteStringID(index, selected));
 	}
 
 	void CommandLister::draw(m3d::RenderContext t_context)
@@ -102,16 +102,7 @@ namespace m3dCI
 
 	int CommandLister::getCurrentlySelectedTab()
 	{
-		if (currentlySelectedTab == nullptr)
-			return -1;
-
-		int selectedIndex = -1;
-
-		for (unsigned int i = 0; i < tabs.size(); i++)
-			if (tabs[i] == currentlySelectedTab)
-				selectedIndex = i;
-
-		return selectedIndex;
+		return currentlySelectedTab;
 	}
 
 	void CommandLister::SelectPoint(int px, int py)
@@ -150,24 +141,24 @@ namespace m3dCI
 		int tabWidthAndHeight = (TOPSCREEN_HEIGHT / NUM_TABS);
 		int tabIndex = py / tabWidthAndHeight;
 
+		SelectTab(tabIndex);
+	}
+
+	void CommandLister::SelectTab(int tabIndex)
+	{
+		int tabWidthAndHeight = (TOPSCREEN_HEIGHT / NUM_TABS);
 		m3dCI::Sprite* spriteToChange = tabs[tabIndex];
-			
-		int selectedIndex = getCurrentlySelectedTab();
-		if (selectedIndex != -1)
-			currentlySelectedTab->setTexture(*getTabTexture(selectedIndex, false));
 
-		if (currentlySelectedTab != spriteToChange)
+		//selected sprite other than current selection
+		// - deselect old
+		// - select new
+		// - replace selectedIndex
+		if (currentlySelectedTab != tabIndex)
 		{
-			spriteToChange->setTexture(*getTabTexture(tabIndex, true));
+			tabs[currentlySelectedTab] = getTabSprite(currentlySelectedTab, false);
+			tabs[tabIndex] = getTabSprite(tabIndex, true);
 
-			currentlySelectedTab = spriteToChange;
-
-			backgroundRectangle->setWidth(tabWidthAndHeight + BOTTOMSCREEN_WIDTH * 0.5);
-		}
-		else
-		{
-			currentlySelectedTab = nullptr;
-			backgroundRectangle->setWidth(tabWidthAndHeight);
+			currentlySelectedTab = tabIndex;
 		}
 	}
 
