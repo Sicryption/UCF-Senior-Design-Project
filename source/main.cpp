@@ -42,7 +42,6 @@ int main(int argc, char* argv[])
 	// Main loop
 	while (app->isRunning())
 	{
-        
 		//  Call OnUpdate Function for all Singletons.
         GameManager::Update();
         //SceneManager::draw();
