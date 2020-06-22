@@ -8,7 +8,6 @@ class MazeScene : public Scene
 	private:
 		m3d::Sprite *wallpaper;
 		m3d::Texture *texture;
-		//m3d::Rectangle *wallpaper;
 		m3d::Rectangle *bwallpaper;
 		m3d::Color *colorRec;
 		m3d::Color *colorText;
@@ -40,22 +39,26 @@ class MazeScene : public Scene
             { 1, 0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  1,  0,  0,  1},
             { 1, 0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  1,  0,  0,  1},
             { 1, 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  1}};
-
+            //2d array acting as map of array
 	public:
 		MazeScene()
 		{
-			x = 1.0;
+      //array traversers
+      x = 1.0;
 			y = 0.0;
 		}
 		void initialize(){
+      //loads and gets maze texture
        texture = ResourceManager::loadTexture("gfx/Maze.png");
 			 texture = ResourceManager::getTexture("gfx/Maze.png");
+       //initialize playable character
        runner = new TerminalObject();
        runner->initialize();
+       //Load text and bottom screen background color
 			 colorRec = new m3d::Color(150,150,150);
 			 colorText = new m3d::Color(0,0,0);
+       //initializes text and bottom screen background
 			 bwallpaper = new m3d::Rectangle(0,0,320,240,*colorRec);
-			 //wallpaper = new m3d::Rectangle(0,0,400,240,*colorRec);
 			 prompt = new m3d::Text("Maze",*colorText);
 			 prompt->setPosition(160,120);
 			 wallpaper = new m3d::Sprite();
@@ -108,35 +111,7 @@ class MazeScene : public Scene
             y++;
           runner->update();
         }
-      }/*
-      if(m3d::buttons::buttonDown(m3d::buttons::Right))
-      {
-          if(walls[y][x+1] == 0){
-            x += 1 * GameManager::getDeltaTime();
-            runner->update();
-          }
       }
-      if(m3d::buttons::buttonDown(m3d::buttons::Left))
-      {
-        if(walls[y][x-1] == 0){
-          x -= 1 * GameManager::getDeltaTime();
-          runner->update();
-        }
-      }
-      if(m3d::buttons::buttonDown(m3d::buttons::Up))
-      {
-        if(walls[y-1][x] == 0){
-          y -= 1 * GameManager::getDeltaTime();
-          runner->update();
-        }
-      }
-      if(m3d::buttons::buttonDown(m3d::buttons::Down))
-      {
-        if(walls[y+1][x] == 0){
-          y += 1 * GameManager::getDeltaTime();
-          runner->update();
-        }
-      }*/
     };
     void onEnter(){};
     void onExit(){};

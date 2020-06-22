@@ -4,11 +4,7 @@
 #include <string.h>
 #include <map>
 #include <memory>
-
-
 #include "gameObject.hpp"
-
-//#include "gameObjects/wall.cpp"
 
 class Scene : public Updateable
 {
