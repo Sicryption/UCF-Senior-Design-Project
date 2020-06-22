@@ -7,3 +7,4 @@ source/.vs/*
 *.smdh
 *.DS_Store
 source/*.DS_Store
+Debug/
