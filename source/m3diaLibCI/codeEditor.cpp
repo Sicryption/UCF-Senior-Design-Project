@@ -212,7 +212,10 @@ namespace m3dCI
 
 	void CodeEditor::DoDrag(m3d::Vector2f dragVector)
 	{
-		scrollY += dragVector.v / 30;
+		double change = dragVector.v - thisScrollChange;
+
+		thisScrollChange = dragVector.v;
+		scrollY -= change;
 		
 		//mus
 		int maxScroll = (commands.size() - LEAST_CELLS_ON_SCREEN) * CELL_HEIGHT;
@@ -224,5 +227,10 @@ namespace m3dCI
 
 		
 		refreshCommandList();
+	}
+
+	void CodeEditor::DragComplete()
+	{
+		thisScrollChange = 0;
 	}
 }

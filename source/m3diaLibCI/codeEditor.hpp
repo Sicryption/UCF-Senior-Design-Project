@@ -25,6 +25,7 @@ namespace m3dCI
 			int x, y, borderWidth, w, h;
 
 			double scrollY = 0;
+			double thisScrollChange = 0;
 			bool active = false;
 			
 			void refreshCommandList();
@@ -60,6 +61,7 @@ namespace m3dCI
 			void SetActive(bool state);
 
 			void DoDrag(m3d::Vector2f dragVector);
+			void DragComplete();
 
 			void ShiftToTop();
 			void ShiftToBottom();

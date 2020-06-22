@@ -86,6 +86,9 @@ void ObjectManager::OnUpdate()
 		if (touchReleasedThisFrame && !Input::isTouchDragging())
 			codeEditorsClone[i]->SelectCommand(lastFrameTouchX, lastFrameTouchY);
 
+		if (draggedLastFrame && touchReleasedThisFrame && codeEditorsClone[i]->isPointInside(lastFrameTouchX, lastFrameTouchY))
+			codeEditorsClone[i]->DragComplete();
+
 		if (Input::isTouchDragging())
 		{
 			int tX = Input::getTouchDragOrigin()->u;
