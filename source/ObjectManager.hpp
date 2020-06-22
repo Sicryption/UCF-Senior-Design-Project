@@ -23,6 +23,7 @@ class ObjectManager
 		Util* util;
 		//Stored values for TouchEvents. Stores the previous frames x and y touch values
 		int lastFrameTouchX, lastFrameTouchY;
+		bool draggedLastFrame = false;
 		//Array of all active buttons
 		std::vector<m3dCI::Button*> buttons;
 
