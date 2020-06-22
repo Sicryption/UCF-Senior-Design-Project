@@ -23,61 +23,54 @@ using namespace m3d;
 
 int main(int argc, char* argv[])
 {
-
-    GameManager::Initialize();
-    Applet *app = GameManager::getApplet();
-    Screen *scr = GameManager::getScreen();
-
-	m3d::Sprite spr;
-    //m3d::Texture * tex_ptr;
-    std::string id = "gfx/error.png";
-
+	//  Create default Applet and Screen variables
+    Applet *app = new Applet();
+    Screen *scr = new Screen(false);
+	
+    GameManager::Initialize(app, scr);
     //  Create a Sandbox environment (done here for testing)
 	LuaSandbox* sandbox = new LuaSandbox();
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
 	Util *util = Util::createInstance(scr, app);
-	//ObjectManager *om = ObjectManager::createInstance(scr);
-    ResourceManager::initialize();
-    //MenuHandler *mh = MenuHandler::createInstance(scr);
-    //Input::initialize();
+	ObjectManager *om = ObjectManager::createInstance(scr);
+	MenuHandler *mh = MenuHandler::createInstance(scr);
+	ResourceManager::initialize();
+    Input::initialize();
+	
+    ResourceManager::loadSpritesheet("gfx/menuSprites");
 
+    m3dCI::Sprite* test1= ResourceManager::getSprite("tab1.png");
+    m3dCI::Sprite* test2= ResourceManager::getSprite("tab2.png");
+    m3dCI::Sprite* test3= ResourceManager::getSprite("tab3.png");
+    m3dCI::Sprite* test4= ResourceManager::getSprite("tab4.png");
+    m3dCI::Sprite* test5= ResourceManager::getSprite("tab5.png");
 
-    ResourceManager::loadTexture(id);
-    ResourceManager::loadFile("lua/init_scene.lua");
-    /*
-    tex_ptr = ResourceManager::getTexture(id);
-
-    spr.setTexture(*tex_ptr);
-    spr.setXScale(10);
-    spr.setYScale(10);
-
-
-    TestObject obj;
-    obj.initialize();
-    */
-		MazeScene *tester;
-    tester = new MazeScene();
-		tester->initialize();
-    //TerminalObject *tester;
-    //tester = new TerminalObject();
-    //tester->initialize();
-		//SceneManager::initialize(tester);
-
-
+    test1->setXPosition(48*0);
+    test2->setXPosition(48*1);
+    test3->setXPosition(48*2);
+    test4->setXPosition(48*3);
+    test5->setXPosition(48*4);
+	
 	// Main loop
 	while (app->isRunning())
 	{
+        
 		//  Call OnUpdate Function for all Singletons.
         GameManager::Update();
-				//SceneManager::draw();
+        //SceneManager::draw();
+        Input::update();
 		util->OnUpdate();
-		//om->OnUpdate();
-		//mh->OnUpdate();
+		om->OnUpdate();
+		mh->OnUpdate();
 
-		//scr->drawTop(spr); // draw the sprite
-    tester->update();
-    tester->draw();
+
+        scr->drawTop(*test1);
+        scr->drawTop(*test2);
+        scr->drawTop(*test3);
+        scr->drawTop(*test4);
+        scr->drawTop(*test5);
+
         //  Render the game screen
 		scr->render();
 	}
@@ -85,8 +78,7 @@ int main(int argc, char* argv[])
     sandbox->close();
 
 	delete (util);
-	//delete (om);
-//	delete (mh);
-
+	delete (mh);
+	delete (om);
 	return 0;
 }

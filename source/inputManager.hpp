@@ -3,11 +3,13 @@
 #include <stdio.h>
 #include <iostream>
 #include <malloc.h>
+#include <math.h>
 
 #include "3ds.h"
 #include <m3dia.hpp>
 
-
+#define TOUCH_SAMPLES 10
+#define TOUCH_EPSILON 5
 
 class Input
 {
@@ -25,14 +27,19 @@ private:
     u32 _audiobuf_pos;
     u8* _audiobuf;
 
+    m3d::Vector2f* _touchStates[2];
+    m3d::Vector2f _touchDragDistance;
+    bool _touchIsDragging;
+
 
     static Input* _instance;
     static Input* getInstance()
     {
-        if(_instance != NULL)
+        if(_instance == nullptr)
         {
-            return _instance;
-        }else{initialize();}
+            initialize();
+        }
+        return _instance;
     }
     Input(){}
     ~Input(){}
@@ -112,6 +119,22 @@ public:
      */
     static m3d::Vector3f* getAccelerometer();
 
+    /**
+     *  @brief 
+     *  @returns 
+     */
+    static m3d::Vector2f getTouchDragVector();
+
+    /**
+     *  @brief 
+     *  @returns 
+     */
+    static bool isTouchDragging(){ return _instance->_touchIsDragging;}
+    
+    /**
+     *  @returns if touch is dragging, returns a Vector2f pointer. Otherwise returns nullptr.
+     */
+    static m3d::Vector2f* getTouchDragOrigin();
     
 
 
