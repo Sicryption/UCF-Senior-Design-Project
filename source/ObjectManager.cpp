@@ -83,7 +83,7 @@ void ObjectManager::OnUpdate()
 
 		//only fires if point is actually inside the code editor
 
-		if (touchReleasedThisFrame && !Input::isTouchDragging() && !draggedLastFrame)
+		if (touchReleasedThisFrame && !Input::isTouchDragging())
 			codeEditorsClone[i]->SelectCommand(lastFrameTouchX, lastFrameTouchY);
 
 		if (Input::isTouchDragging())
@@ -133,8 +133,6 @@ void ObjectManager::OnUpdate()
 	
 	lastFrameTouchX = touchx;
 	lastFrameTouchY = touchy;
-
-	draggedLastFrame = Input::isTouchDragging();
 }
 
 //Rectangle button creation. Adds button to array of active buttons.
