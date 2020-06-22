@@ -37,7 +37,19 @@ int main(int argc, char* argv[])
 	ResourceManager::initialize();
     Input::initialize();
 	
-    //sandbox->executeFile("sandbox_init.lua"); 
+    ResourceManager::loadSpritesheet("gfx/menuSprites");
+
+    m3dCI::Sprite* test1= ResourceManager::getSprite("tab1.png");
+    m3dCI::Sprite* test2= ResourceManager::getSprite("tab2.png");
+    m3dCI::Sprite* test3= ResourceManager::getSprite("tab3.png");
+    m3dCI::Sprite* test4= ResourceManager::getSprite("tab4.png");
+    m3dCI::Sprite* test5= ResourceManager::getSprite("tab5.png");
+
+    test1->setXPosition(48*0);
+    test2->setXPosition(48*1);
+    test3->setXPosition(48*2);
+    test4->setXPosition(48*3);
+    test5->setXPosition(48*4);
 	
 	// Main loop
 	while (app->isRunning())
@@ -50,6 +62,14 @@ int main(int argc, char* argv[])
 		util->OnUpdate();
 		om->OnUpdate();
 		mh->OnUpdate();
+
+
+        scr->drawTop(*test1);
+        scr->drawTop(*test2);
+        scr->drawTop(*test3);
+        scr->drawTop(*test4);
+        scr->drawTop(*test5);
+
         //  Render the game screen
 		scr->render();
 	}

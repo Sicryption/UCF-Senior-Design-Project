@@ -243,4 +243,17 @@ namespace m3dCI {
 
         m_imageTint = { tint, tint, tint, tint };
     }
+
+
+    m3dCI::Sprite* m3dCI::Sprite::createFromSheet(C2D_SpriteSheet& t_sheet,int t_index)
+    {
+        Sprite* sprite = new Sprite();
+
+        sprite->m_spriteSheet = t_sheet;
+        sprite->m_index = t_index;
+        C2D_SpriteFromSheet(&(sprite->m_sprite), sprite->m_spriteSheet, sprite->m_index);
+
+        return sprite;
+    }
+
 } /* m3d */

@@ -8,3 +8,4 @@ source/.vs/*
 *.DS_Store
 source/*.DS_Store
 Debug/
+*.t3x
