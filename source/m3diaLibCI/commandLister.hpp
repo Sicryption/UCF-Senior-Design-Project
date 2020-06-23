@@ -42,7 +42,7 @@ namespace m3dCI
 				{ "if","loop","while","end", "label", "goto", "", "" }
 			};
 
-			m3d::Rectangle *backgroundRectangle;
+			m3d::Rectangle *backgroundRectangle = nullptr;
 			std::vector<m3dCI::Sprite*> tabs;
 			std::vector<std::vector<CommandObject*>> commands;
 

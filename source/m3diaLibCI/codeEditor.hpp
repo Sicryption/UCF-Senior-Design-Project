@@ -58,6 +58,8 @@ namespace m3dCI
 			void draw(m3d::RenderContext t_context);
 
 			bool isPointInside(int px, int py);
+
+			bool GetActive();
 			void SetActive(bool state);
 
 			void DoDrag(m3d::Vector2f dragVector);

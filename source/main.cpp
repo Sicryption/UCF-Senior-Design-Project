@@ -38,7 +38,6 @@ int main(int argc, char* argv[])
 	ResourceManager::initialize();
     Input::initialize();
 
-	
 	// Main loop
 	while (app->isRunning())
 	{

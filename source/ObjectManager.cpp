@@ -78,7 +78,7 @@ void ObjectManager::OnUpdate()
 
 	for (unsigned int i = 0; i < codeEditorsClone.size(); i++)
 	{
-		if (codeEditorsClone[i] == nullptr)
+		if (codeEditorsClone[i] == nullptr || !codeEditorsClone[i]->GetActive())
 			continue;
 
 		//only fires if point is actually inside the code editor
@@ -120,17 +120,17 @@ void ObjectManager::OnUpdate()
 		if (touchedThisFrame)
 		{
 			if (buttonsClone[i]->OnTouch != nullptr && buttonsClone[i]->PointIntersects(touchx, touchy))
-				(buttonsClone[i]->OnTouch)(buttonsClone[i]);
+				buttonsClone[i]->OnTouch();
 		}
 		else if (touchReleasedThisFrame)
 		{
 			if (buttonsClone[i]->OnRelease != nullptr && buttonsClone[i]->PointIntersects(lastFrameTouchX, lastFrameTouchY))
-				(buttonsClone[i]->OnRelease)(buttonsClone[i]);
+				buttonsClone[i]->OnRelease();
 		}
 		else
 		{
 			if (buttonsClone[i]->OnHeld != nullptr && buttonsClone[i]->PointIntersects(touchx, touchy))
-				(buttonsClone[i]->OnHeld)(buttonsClone[i]);
+				buttonsClone[i]->OnHeld();
 		}
 	}
 	
@@ -171,9 +171,9 @@ m3dCI::Button* ObjectManager::CreateButton(int x, int y, m3d::Texture& t_texture
 }
 
 //Circular button creation. Adds button to array of active buttons.
-m3dCI::Button* ObjectManager::CreateButton(int x, int y, const std::string& t_spriteSheet, int t_imageId = 0)
+m3dCI::Button* ObjectManager::CreateButton(int x, int y, m3dCI::Sprite* sprite)
 {
-	m3dCI::Button* newButton = new m3dCI::Button(x, y, t_spriteSheet, t_imageId);
+	m3dCI::Button* newButton = new m3dCI::Button(x, y, sprite);
 
 	buttons.push_back(newButton);
 

@@ -6,7 +6,8 @@ class MinigameTemplateMenu : public Menu
 {
 	private:
 		m3dCI::Button *AddButton = nullptr,
-			*RemoveButton = nullptr;
+			*RemoveButton = nullptr,
+			*closeButton = nullptr;
 		m3dCI::CodeEditor* codeEditor = nullptr;
 		m3dCI::CommandLister* commandLister = nullptr;
 
@@ -17,8 +18,9 @@ class MinigameTemplateMenu : public Menu
 
 		void AddCommand(std::string command);
 
-		void AddButton_OnClick(m3dCI::Button* button);
-		void DeleteButton_OnClick(m3dCI::Button* button);
+		void AddButton_OnClick();
+		void DeleteButton_OnClick();
+		void CloseButton_OnClick();
 		
 		void OnUpdate();
 };

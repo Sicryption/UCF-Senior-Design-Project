@@ -13,8 +13,6 @@ namespace m3dCI
 		int tabWidthAndHeight = (TOPSCREEN_HEIGHT / NUM_TABS);
 
 		backgroundRectangle = new m3d::Rectangle(x, y, tabWidthAndHeight + BOTTOMSCREEN_WIDTH * 0.5, h, m3d::Color(255, 255, 255));
-
-		ResourceManager::loadSpritesheet("gfx/menuSprites");
 		
 		for (int i = 0; i < NUM_TABS; i++)
 		{
@@ -34,10 +32,14 @@ namespace m3dCI
 
 	CommandLister::~CommandLister()
 	{
-		delete(backgroundRectangle);
+		//delete(backgroundRectangle);
 
 		for (unsigned int i = 0; i < tabs.size(); i++)
 			delete(tabs[i]);
+
+		for (unsigned int i = 0; i < commands.size(); i++)
+			for(unsigned int j = 0; j < commands[i].size(); j++)
+				delete(commands[i][j]);
 	}
 
 	void CommandLister::CreateTabCommandObjects(int index)
@@ -48,7 +50,7 @@ namespace m3dCI
 		int commandObjectHeight = BOTTOMSCREEN_HEIGHT / NUM_COMMANDS_PER_TAB;
 
 		int sizeOfArray = sizeof(listOfCommandsByTab[index]) / sizeof(listOfCommandsByTab[index][0]);
-		for (unsigned int i = 0; i < sizeOfArray; i++)
+		for (int i = 0; i < sizeOfArray; i++)
 		{
 			if (listOfCommandsByTab[index][i] == "")
 				continue;
@@ -146,9 +148,6 @@ namespace m3dCI
 
 	void CommandLister::SelectTab(int tabIndex)
 	{
-		int tabWidthAndHeight = (TOPSCREEN_HEIGHT / NUM_TABS);
-		m3dCI::Sprite* spriteToChange = tabs[tabIndex];
-
 		//selected sprite other than current selection
 		// - deselect old
 		// - select new

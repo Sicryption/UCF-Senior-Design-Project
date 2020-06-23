@@ -10,7 +10,7 @@ namespace m3dCI
 	#define CELL_HEIGHT 20
 	#define CELLS_TALL 12
 
-	#define LEAST_CELLS_ON_SCREEN 5
+	#define LEAST_CELLS_ON_SCREEN 12
 
 	CodeEditor::CodeEditor(int px, int pw, int p_borderWidth)
 		: m3d::Drawable()
@@ -46,6 +46,7 @@ namespace m3dCI
 
 		innerRectangle->setXPosition(innerRectangle->getXPosition() + change);
 		borderRectangle->setXPosition(borderRectangle->getXPosition() + change);
+		SetActive(false);
 
 		refreshCommandList();
 	}
@@ -57,6 +58,7 @@ namespace m3dCI
 
 		innerRectangle->setXPosition(innerRectangle->getXPosition() - change);
 		borderRectangle->setXPosition(borderRectangle->getXPosition() - change);
+		SetActive(true);
 
 		refreshCommandList();
 	}
@@ -123,7 +125,17 @@ namespace m3dCI
 
 			delete(commands[commandToRemoveIndex]);
 			commands.erase(commands.begin() + commandToRemoveIndex);
+
+			if (commandToRemoveIndex >= (int)commands.size() - LEAST_CELLS_ON_SCREEN)
+				scrollY -= CELL_HEIGHT;
 		}
+
+		int maxScroll = (commands.size() - LEAST_CELLS_ON_SCREEN) * CELL_HEIGHT;
+
+		if (scrollY < 0)
+			scrollY = 0;
+		else if (scrollY > maxScroll)
+			scrollY = maxScroll;
 
 		refreshCommandList();
 		
@@ -200,6 +212,11 @@ namespace m3dCI
 		active = state;
 	}
 
+	bool CodeEditor::GetActive()
+	{
+		return active;
+	}
+
 	bool CodeEditor::IsBlankCommandSelected()
 	{
 		int index = GetSelectedCommandIndex();
@@ -216,14 +233,17 @@ namespace m3dCI
 
 		thisScrollChange = dragVector.v;
 		scrollY -= change;
-		
-		//mus
-		int maxScroll = (commands.size() - LEAST_CELLS_ON_SCREEN) * CELL_HEIGHT;
+
+		int maxScroll = (commands.size() - (commands.size() > LEAST_CELLS_ON_SCREEN?LEAST_CELLS_ON_SCREEN:commands.size())) * CELL_HEIGHT;
 
 		if (scrollY < 0)
+		{
 			scrollY = 0;
+		}
 		else if (scrollY > maxScroll)
+		{
 			scrollY = maxScroll;
+		}
 
 		
 		refreshCommandList();

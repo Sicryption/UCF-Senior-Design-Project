@@ -129,32 +129,6 @@ void MenuHandler::TransitionTo(MenuState state)
 	util->PrintLine("Transition complete.");
 }
 
-void MenuHandler::AddCommandObject(m3dCI::Button* button)
-{
-	MenuHandler* mh = getInstance();
-
-	if (mh == 0)
-		return;
-
-	if (mh->currentState == MenuState::MinigameTemplateMenu)
-	{
-		((MinigameTemplateMenu*)mh->currentMenu)->AddButton_OnClick(button);
-	}
-}
-
-void MenuHandler::RemoveCommandObject(m3dCI::Button* button)
-{
-	MenuHandler* mh = getInstance();
-
-	if (mh == 0)
-		return;
-
-	if (mh->currentState == MenuState::MinigameTemplateMenu)
-	{
-		((MinigameTemplateMenu*)mh->currentMenu)->DeleteButton_OnClick(button);
-	}
-}
-
 void MenuHandler::AddCommand(std::string command)
 {
 	MenuHandler* mh = getInstance();
