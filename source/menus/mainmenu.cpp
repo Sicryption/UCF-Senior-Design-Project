@@ -33,7 +33,10 @@ void MainMenu::OnUpdate()
 		return;
 
 	if (m3d::buttons::buttonReleased(m3d::buttons::Button::Start))
+	{
 		MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameSelect);
+		return;
+	}
 
 	scr->drawTop(*whiteBackground, RenderContext::Mode::Flat);
 	scr->drawBottom(*whiteBackground, RenderContext::Mode::Flat);
