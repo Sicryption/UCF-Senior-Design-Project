@@ -1,7 +1,11 @@
 build/*
 .vscode/*
+.vs/*
+source/.vs/*
 *.3dsx
 *.elf
 *.smdh
 *.DS_Store
 source/*.DS_Store
+Debug/
+*.t3x

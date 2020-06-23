@@ -3,40 +3,61 @@
 #include <string.h>
 
 #include <3ds.h>
+#include <m3dia.hpp>
+#include <png.h>
+#include "lua/lua.hpp"
 
-/*
-    The Lua API is built in C.
-    In a C++ program it has to be included like this.
-*/
-extern "C"{
-    #include "lua/lua.h"
-    #include "lua/lualib.h"
-    #include "lua/lauxlib.h"
-}
+#include "util.hpp"
+#include "ObjectManager.hpp"
+#include "MenuHandler.hpp"
+#include "sandbox.h"
+#include "resources.h"
+#include "gameManager.hpp"
+#include "sceneManager.hpp"
+#include "gameObjects/wall.cpp"
+#include "scenes/startScene.cpp"
+#include "scenes/MazeScene.cpp"
+#include "inputManager.hpp"
 
+using namespace m3d;
 
 int main(int argc, char* argv[])
 {
-    gfxInitDefault();
-	consoleInit(GFX_TOP, NULL);
+	//  Create default Applet and Screen variables
+    Applet *app = new Applet();
+    Screen *scr = new Screen(false);
+	
+    GameManager::Initialize(app, scr);
+    //  Create a Sandbox environment (done here for testing)
+	LuaSandbox* sandbox = new LuaSandbox();
 
-    printf("Press START + SELECT to close...");
+	//  Create default Singleton instances of Utility class and ObjectManager class
+	Util *util = Util::createInstance(scr, app);
+	ObjectManager *om = ObjectManager::createInstance(scr);
+	MenuHandler *mh = MenuHandler::createInstance(scr);
+	ResourceManager::initialize();
+    Input::initialize();
 
+	
 	// Main loop
-	while (aptMainLoop())
-	{              
-		gspWaitForVBlank();
-		gfxSwapBuffers();
-		hidScanInput();
-        u32 kd = hidKeysDown();
+	while (app->isRunning())
+	{
+		//  Call OnUpdate Function for all Singletons.
+        GameManager::Update();
+        //SceneManager::draw();
+        Input::update();
+		util->OnUpdate();
+		om->OnUpdate();
+		mh->OnUpdate();
 
-		// Your code goes here
-
-		if (kd & (KEY_START | KEY_SELECT) )
-			break; // break in order to return to hbmenu
-		
+        //  Render the game screen
+		scr->render();
 	}
 
-	gfxExit();
+    sandbox->close();
+
+	delete (util);
+	delete (mh);
+	delete (om);
 	return 0;
 }
