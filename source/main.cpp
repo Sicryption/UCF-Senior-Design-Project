@@ -22,6 +22,8 @@
 
 using namespace m3d;
 
+
+
 int main(int argc, char* argv[])
 {
 	//  Create default Applet and Screen variables
@@ -51,19 +53,20 @@ int main(int argc, char* argv[])
         new LabelCommand("start"),
         new UserCommand("println(x)"),
         new UserCommand("x = x + 1"),
-        // new SelectCommand("testObject"),
+
         new IfCommand("x < 5"),
-        new GotoCommand("start"),
+            new GotoCommand("start"),
         new EndCommand(),
+
         new WhileCommand("x < 10"),
-        new UserCommand("println(x)"),
-        new UserCommand("x += 1"),
-        new EndCommand()
-        //new UserCommand("println(x)"),
+            new UserCommand("println(x)"),
+            new UserCommand("x = x + 1"),
+        new EndCommand(),
+        new UserCommand("println(x)")
     };
 
     std::string lua = "\n" + CommandObject::ConvertBulk(commands);
-    Util::Print(lua);
+    //Util::Print(lua);
     sandbox->executeString(lua);
 
 	// Main loop

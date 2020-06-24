@@ -125,7 +125,11 @@ std::vector<std::string> ResourceManager::readSpritesheet(std::string path)
 {
     std::vector<std::string> ret;
     std::ifstream fs (path);
-    Util::PrintLine(path);
+
+    #if defined DEBUG
+    Util::PrintLine( "Reading spritesheet from '" + path + "'");
+    #endif
+
     if(fs.is_open())
     {   
         std::string line;
@@ -160,13 +164,18 @@ std::vector<m3dCI::Sprite*> ResourceManager::loadSpritesheet(std::string path)
     C2D_SpriteSheet sheet = C2D_SpriteSheetLoad(sheetPath.c_str());
     
     std::vector<std::string> names = readSpritesheet(defPath);
-    Util::PrintLine( std::to_string(names.size()) );
-
+    
+    #if defined DEBUG
+    Util::PrintLine( "Found [" + std::to_string(names.size()-1) + "] assets in spritesheet \'" + sheetPath + "\'" );
+    #endif
     _hashmap[sheetPath] = &sheet;
 
     for (unsigned int i = 1; i < names.size(); i++)
     {
-        Util::PrintLine(names[i]);
+        #if defined DEBUG
+        Util::PrintLine( "Loading sprite \'" + names[i] + "\'");
+        #endif
+
         _hashmap[names[i]] = m3dCI::Sprite::createFromSheet(sheet,i-1);
         ret.push_back( static_cast<m3dCI::Sprite*>( _hashmap[names[i]]) );
 /*

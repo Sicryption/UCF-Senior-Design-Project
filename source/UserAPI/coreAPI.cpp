@@ -19,7 +19,7 @@ int UserAPI::print_line(lua_State* L)
     }
 
     //  Write to Console
-    Util::Print(s);
+    Util::PrintLine(s);
 
     // Number of results returned
     return 0; 
