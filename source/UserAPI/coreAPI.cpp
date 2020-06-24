@@ -25,7 +25,7 @@ int UserAPI::print_line(lua_State* L)
     return 0; 
 }
 
-int UserAPI::print(lua_State* L)
+int UserAPI::print(lua_State* L) 
 {    
     const char *s;
     size_t l;
