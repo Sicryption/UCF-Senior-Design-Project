@@ -29,8 +29,12 @@ public:
         m_background = m3dCI::Sprite( *ResourceManager::getSprite("command_background.png"));
     }
 
-
     ~CommandObject(){}
+
+    virtual std::vector<std::string> getParamNames() 
+    { 
+        return  {"error"};
+    }
 
     virtual std::string convertToLua()
     {
@@ -44,12 +48,12 @@ public:
        
     }
 
-    static std::string ConvertBulk(std::vector<CommandObject> t_list)
+    static std::string ConvertBulk(std::vector<CommandObject*> t_list)
     {
         std::string chunk;
-        for (CommandObject cmd : t_list)
+        for (CommandObject* cmd : t_list)
         {
-            chunk.append(cmd.convertToLua());
+            chunk.append(cmd->convertToLua());
         }
         return chunk;
     }
