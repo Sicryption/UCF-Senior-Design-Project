@@ -51,7 +51,7 @@ class TextCommand : public CommandObject
 public:
     TextCommand(std::string t_x = "0", std::string t_y = "0",std::string t_text = "text",bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
-        m_name="circle";
+        m_name="text";
         m_params[0] = t_x;
         m_params[1] = t_y;
         m_params[2] = t_text;
