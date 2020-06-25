@@ -49,12 +49,15 @@ int main(int argc, char* argv[])
 
     std::vector<CommandObject*> commands =
     {
-        new UserCommand("x = 0"),
-        new WhileCommand("x < 10"),
-            new IfCommand("x ~= 5"),
-                new UserCommand("println(x)"),
-            new EndCommand(),
-            new UserCommand("x = x + 1"),
+		new UserCommand("x = 1"),
+        new UserCommand("y = 1"),
+		new WhileCommand("x < 10"),
+			new WhileCommand("y < 10"),
+				new UserCommand("println(x*y)"),
+				new UserCommand("y = y + 1"),
+			new EndCommand(),
+			new UserCommand("y = 1"),
+			new UserCommand("x = x + 1"),
         new EndCommand()
     };
 

@@ -9,15 +9,15 @@
 
 namespace m3dCI
 {
-	class CommandObject
+	class commandListerItem
 	{
 	private:
 		m3d::Rectangle* backgroundRectangle;
 		m3dCI::Text* commandTextObject;
 
 	public:
-		CommandObject(int x, int y, int w, int h, std::string command, bool selected);
-		~CommandObject();
+		commandListerItem(int x, int y, int w, int h, std::string command, bool selected);
+		~commandListerItem();
 
 		void draw(m3d::RenderContext t_context);
 		void setBackgroundColor(m3d::Color color);

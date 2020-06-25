@@ -21,10 +21,10 @@ MainMenu::MainMenu(m3d::Screen* screen) :
 
 	int clickHereToContinueX = ((bottomScreenWidth)-(bottomScreenWidth*0.8)) / 2;
 	int clickHereToContinueY = ((screenHeight)-(screenHeight*0.3));
-
+	
 	ClickHereToContinue = om->CreateButton(clickHereToContinueX, clickHereToContinueY, (bottomScreenWidth*0.8), (screenHeight*0.2), m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
 	ClickHereToContinue->SetText("Press start to Play!");
-	ClickHereToContinue->OnTouch = &ClickHereToContinue_OnClick;
+	ClickHereToContinue->OnRelease = [this]() { MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameSelect); };
 }
 
 void MainMenu::OnUpdate()
@@ -33,7 +33,10 @@ void MainMenu::OnUpdate()
 		return;
 
 	if (m3d::buttons::buttonReleased(m3d::buttons::Button::Start))
-		ClickHereToContinue->OnTouch(ClickHereToContinue);
+	{
+		MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameSelect);
+		return;
+	}
 
 	scr->drawTop(*whiteBackground, RenderContext::Mode::Flat);
 	scr->drawBottom(*whiteBackground, RenderContext::Mode::Flat);
@@ -50,9 +53,4 @@ MainMenu::~MainMenu()
 	//delete(whiteBackground);
 	//delete(whiteBottomBackground);
 	om->DeleteButton(ClickHereToContinue);
-}
-
-void MainMenu::ClickHereToContinue_OnClick(m3dCI::Button* button)
-{
-	MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameSelect);
 }
