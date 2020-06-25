@@ -6,6 +6,7 @@
 #include "../commands/endCommand.hpp"
 #include "../commands/labelCommand.hpp"
 #include "../commands/gotoCommand.hpp"
+#include "../commands/deleteCommand.hpp"
 #include "../commands/userCommand.hpp"
 #include "../commands/emptyCommand.hpp"
 #include "../commands/moveCommand.hpp"
