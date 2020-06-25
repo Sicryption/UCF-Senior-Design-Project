@@ -1,9 +1,6 @@
 #pragma once
 #include "IUpdateable.hpp"
 
-#define DEFAULT_SIZE 10 
-#define DEFAULT_COLOR m3d::Color(255,0,0)0
-
 class GameObject : public Updateable
 {
 protected:
@@ -39,10 +36,10 @@ public:
         return angle;
     }
 
-    virtual void setScale(double _x, double _y)
+    void setScale(double _x, double _y)
     {
-        xScale = _x;
-        yScale = _y;
+        x = _x;
+        y = _y;
     }
     m3d::Vector2f getScale()
     {

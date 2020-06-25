@@ -13,7 +13,7 @@ public:
 
     ~DeleteCommand();
 
-    std::vector<std::string> getParamNames() {return {"Object Name"};} 
+    std::vector<std::string> getParamNames() {return {"Object Name"};}
 
     std::string convertToLua()
     {

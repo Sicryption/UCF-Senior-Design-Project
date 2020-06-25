@@ -9,9 +9,6 @@
 #include "../gameManager.hpp"
 
 #define MAX_PARAMS 3
-#define COM_PADDING 3
-#define COM_SPACING 5
-#define COM_TEXT_COLOR m3d::Color(0,0,0)
 
 class CommandObject //: public Drawable 
 {
@@ -22,7 +19,6 @@ protected:
     bool m_isAddLocked;
     std::string m_params[MAX_PARAMS];
     m3dCI::Sprite m_background;
-    m3dCI::Text* m_text[MAX_PARAMS+1];
 
 public:
     CommandObject(bool t_lockEdit = false,bool t_lockAdd = false)
@@ -31,7 +27,6 @@ public:
         m_isEditLocked = t_lockEdit;
         m_isAddLocked = t_lockAdd;
         m_background = m3dCI::Sprite( *ResourceManager::getSprite("command_background.png"));
-        m_text[0] = new m3dCI::Text(m_name);
     }
 
     ~CommandObject(){}
@@ -40,18 +35,18 @@ public:
     { 
         return  {"error"};
     }
-    
-    void setParams(std::string t_params[MAX_PARAMS])
-    {
-        for (int i = 0; i < MAX_PARAMS; i++)
-        {
-            m_params[i] = t_params[i];
-        }
-    }
 
     virtual std::string convertToLua()
     {
         return "";
+    }
+
+    virtual void draw(int x, int y, m3d::RenderContext t_context)
+    {
+		m_background.setPosition(x, y);
+
+        m3d::Screen* scr = GameManager::getScreen();
+        m_background.draw(t_context);
     }
 
     static std::string ConvertBulk(std::vector<CommandObject*> t_list)
@@ -63,36 +58,6 @@ public:
         }
         return chunk;
     }
-
-    virtual void draw(double t_x, double t_y, m3d::RenderContext t_context)
-    {
-        m3d::Screen* scr = GameManager::getScreen();
-        unsigned short int paramCount = getParamNames().size();
-
-        m_text[0]->setText(m_name);
-        m_text[0]->setColor(COM_TEXT_COLOR);
-        m_text[0]->setFontWeight(1.5f);
-        
-        int t_yCursor = t_y + COM_PADDING;
-        int t_xCursor = m_text[0]->getWidth() + COM_PADDING + (2 * COM_SPACING);
-        int t_paramStartX = t_xCursor - COM_SPACING;
-
-        for (unsigned int i = 1; i < paramCount; i++)
-        {
-
-            if(m_text != nullptr)
-            {
-                m_text[i]->setPosition(t_xCursor,t_yCursor);
-                m_text[i]->draw(t_context);
-                t_xCursor += m_text[i]->getWidth() + COM_SPACING;
-            }
-        }
-        
-
-        m_background.draw(t_context);
-       
-    }
-
 
 };
 
