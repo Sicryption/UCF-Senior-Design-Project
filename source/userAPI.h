@@ -41,7 +41,7 @@ namespace UserAPI
     int make_circle(lua_State* L);  
     int make_paddle(lua_State* L); 
 
-    int move(lua_State* L);   
+    int move_object(lua_State* L);   
     int set_position(lua_State* L);
     int get_x_position(lua_State* L);   
     int get_y_position(lua_State* L);   
