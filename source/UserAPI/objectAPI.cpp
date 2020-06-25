@@ -8,9 +8,6 @@
 #include "../gameObjects/objects.h"
 
 
-
-
-
 int UserAPI::move(lua_State* L)
 {
     lua_Number t_id = lua_tonumber(L,-1);
@@ -61,33 +58,78 @@ int make_rectangle(lua_State* L)
 
 int make_circle(lua_State* L) 
 {
-    return 0;
+    lua_Number x = lua_tonumber(L,-1);
+    lua_Number y = lua_tonumber(L,-2);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    int t_id = scene->addObject(new CircleObject())
+    if(t_id == 0)
+    {
+        Util::PrintLine("Error: could not create Rectangle Object in Scene \'" + scene->getSceneName() + "\'");
+        return 0;
+    }
+    
+    lua_pushinteger(L,t_id);
+    return 1;
 }
 
 int make_paddle(lua_State* L)
 {
     return 0;
 }
-
-int move(lua_State* L)
-{
-    return 0;
-}
-   
-
+  
+// TODO: Revise, no set position, only set x and y.
 int set_position(lua_State* L)
 {
+
     return 0;
 }
 
 int get_x_position(lua_State* L)
 {
-    return 0;
+    lua_Number t_id = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    m3d::Vector2f *currentVector = currObj->getPosition();
+
+    lua_pushnumber(L,currentVector->u);
+    return 1;
 }
    
 int get_y_position(lua_State* L)
 {
-    return 0;
+    lua_Number t_id = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+
+    }
+    m3d::Vector2f *currentVector = currObj->getPosition();
+
+    lua_pushnumber(L,currentVector->v);
+    return 1;
 }
    
 
