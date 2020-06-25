@@ -22,7 +22,6 @@ public:
         xScale = t_length;
         yScale = t_length;
         angle = t_angle;
-		
         triangle = new m3d::Triangle(x,y,x,y,x,y,color);
     }
 
@@ -60,6 +59,8 @@ public:
 
     }
 
+    
+
     void draw()
     {
         updateShape();
@@ -67,6 +68,7 @@ public:
 
 
         screen->drawTop(*triangle);
+    
     }
 
     void destroy()

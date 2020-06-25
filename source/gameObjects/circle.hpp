@@ -22,7 +22,6 @@ public:
         xScale = t_radius;
         yScale = t_radius;
         angle = t_angle;
-		
         circle = new m3d::Circle(x,y,xScale,color);
     }
 
@@ -30,13 +29,14 @@ public:
     {
         
     }
-	
     void initialize()
     {
         updateShape();
     }
 
     void update() {
+       
+        
 
     }
 
@@ -53,6 +53,7 @@ public:
         m3d::Screen * screen = GameManager::getScreen();
 
         screen->drawTop(*circle);
+    
     }
 
     void destroy()
