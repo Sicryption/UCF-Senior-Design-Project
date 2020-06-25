@@ -5,9 +5,9 @@
 #include "../util.hpp"   
 #include "../m3diaLibCI/text.hpp"
 #include "../sceneManager.hpp"
+#include "../gameObjects/objects.h"
 
-#define DEFAULT_SIZE 10 
-#define DEFAULT_COLOR m3d::Color(255,0,0)
+
 
 
 
@@ -32,13 +32,30 @@ int UserAPI::move(lua_State* L)
     
     obj->moveTo(x,y);
 
-
     return 0;
 }
 
 int make_rectangle(lua_State* L)
 {
     
+    lua_Number x = lua_tonumber(L,-1);
+    lua_Number y = lua_tonumber(L,-2);
+
+    Scene* scene = SceneManager::getScene();
+    if(scene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    int t_id = scene->addObject( new RectangleObject())
+    if(t_id == 0)
+    {
+        Util::PrintLine("Error: could not create Rectangle Object in Scene \'" + scene->getSceneName() + "\'");
+        return 0;
+    }
+    
+    lua_pushinteger(L,t_id);
     return 1;
 }
 
