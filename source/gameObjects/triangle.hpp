@@ -46,10 +46,22 @@ public:
 
     }
 
+    // TODO: Untested
     void updateShape()
-    {
-        triangle.setPosition(x,y);
-        triangle.setRadius(xScale);        
+    {   
+        double theta = 90 + angle;
+
+        triangle.setX1Pos( x + x_scale * cos(theta) );
+        triangle.setY1Pos( y + y_scale * sin(theta) );
+
+        theta = (theta + 120) % 360;
+        triangle.setX2Pos( x + x_scale * cos(theta) );
+        triangle.setY2Pos( y + y_scale * sin(theta) );
+        
+        theta = (theta + 120) % 360;
+        triangle.setX3Pos( x + x_scale * cos(theta) );
+        triangle.setY3Pos( y + y_scale * sin(theta) );
+
         triangle.setColor(color);        
     }
 

@@ -44,7 +44,7 @@ int make_rectangle(lua_State* L)
         return 0;
     }
 
-    int t_id = scene->addObject( new RectangleObject())
+    int t_id = scene->addObject( new RectangleObject());
     if(t_id == 0)
     {
         Util::PrintLine("Error: could not create Rectangle Object in Scene \'" + scene->getSceneName() + "\'");
