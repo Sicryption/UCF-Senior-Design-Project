@@ -101,7 +101,7 @@ int set_position(lua_State* L)
     if(currObj == nullptr) 
     {
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
-
+        return 0;
     }
 
     currObj->setPosition(t_x, t_y);
@@ -124,7 +124,7 @@ int get_x_position(lua_State* L)
     if(currObj == nullptr) 
     {
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id ) +" in Scene" + currScene->getSceneName() + " \n");
-
+        return 0;
     }
     //m3d::Vector2f *currentVector = currObj->getPosition();
 
@@ -147,7 +147,7 @@ int get_y_position(lua_State* L)
     if(currObj == nullptr) 
     {
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
-
+        return 0;
     }
     //m3d::Vector2f *currentVector = currObj->getPosition();
 
@@ -172,7 +172,7 @@ int rotate(lua_State* L)
     if(currObj == nullptr) 
     {
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
-
+        return 0;
     }
 
     currObj->Rotate(t_angle);
@@ -196,7 +196,7 @@ int set_angle(lua_State* L)
     if(currObj == nullptr) 
     {
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
-
+        return 0;
     }
 
     currObj->setAngle(t_angle);
@@ -218,7 +218,7 @@ int get_angle(lua_State* L)
     if(currObj == nullptr) 
     {
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
-
+        return 0;
     }
 
     lua_pushnumber(L, currObj->getAngle());
@@ -244,7 +244,7 @@ int set_scale(lua_State* L)
     if(currObj == nullptr) 
     {
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
-
+        return 0;
     }
 
     currObj->setScale(t_width,t_height);
@@ -279,6 +279,25 @@ int set_color(lua_State* L)
 
 int delete_object(lua_State* L)
 {
+    lua_Number t_id = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+        return 0;
+    }
+
+    currObj->destroy();
+    currObj = nullptr;
+
     return 0;
 }
  
