@@ -131,6 +131,9 @@ void MenuHandler::TransitionTo(MenuState state)
 
 void MenuHandler::AddCommand(CommandObject *com)
 {
+	if (com == nullptr)
+		return;
+
 	MenuHandler* mh = getInstance();
 
 	if (mh == 0)
