@@ -20,6 +20,8 @@ public:
         xScale = t_xScale;
         yScale = t_yScale;
         angle = t_angle;
+        color = t_color;
+        box = m3d::Rectangle(x,y,xscale,yScale,color);
     }
 
     ~RectangleObject()
