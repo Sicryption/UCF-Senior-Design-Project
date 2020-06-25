@@ -4,7 +4,7 @@
 
 #include <3ds.h>
 #include <m3dia.hpp>
-#include <png.h>
+#include <vector>
 #include "lua/lua.hpp"
 
 #include "util.hpp"
@@ -18,8 +18,11 @@
 #include "scenes/startScene.cpp"
 #include "scenes/MazeScene.cpp"
 #include "inputManager.hpp"
+#include "commands/commands.h"
 
 using namespace m3d;
+
+
 
 int main(int argc, char* argv[])
 {
@@ -38,6 +41,27 @@ int main(int argc, char* argv[])
 	ResourceManager::initialize();
     Input::initialize();
 
+    m3dCI::Sprite* spr = ResourceManager::loadSpritesheet("gfx/commands").at(0);
+    //spr->scale(-0.5,-0.5);
+    
+    uint8_t r = 255,b=128,g =0;
+	m3d::Color color(r,g,b);
+
+    std::vector<CommandObject*> commands =
+    {
+        new UserCommand("x = 0"),
+        new WhileCommand("x < 10"),
+            new IfCommand("x ~= 5"),
+                new UserCommand("println(x)"),
+            new EndCommand(),
+            new UserCommand("x = x + 1"),
+        new EndCommand()
+    };
+
+    std::string lua = "\n" + CommandObject::ConvertBulk(commands);
+    //Util::Print(lua);
+    sandbox->executeString(lua);
+
 	// Main loop
 	while (app->isRunning())
 	{
@@ -45,11 +69,25 @@ int main(int argc, char* argv[])
         GameManager::Update();
         //SceneManager::draw();
         Input::update();
-		util->OnUpdate();
+		util->OnUpdate(); 
 		om->OnUpdate();
 		mh->OnUpdate();
 
+        r = (r+1) % 256;
+        g = (g+1) % 256;
+        b = (b+1) % 256;
+        
+        
+
+        //spr->setTint(m3d::Color(r,g,b,255));
+
+        
+        
+        
         //  Render the game screen
+        //scr->drawTop(*spr);
+        
+        
 		scr->render();
 	}
 
