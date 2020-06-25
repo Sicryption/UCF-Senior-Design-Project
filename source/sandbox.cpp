@@ -1,6 +1,5 @@
 #include "sandbox.h"
 #include "userAPI.h"
-
 #include "util.hpp"
 
 /*
@@ -10,11 +9,16 @@
 
 /// The array of lua accessible user API functions, paired with their lua global name
 std::pair<std::string, lua_CFunction> enabledFunctions[] = {
-    std::make_pair( "println" , UserAPI::print_line)
+    std::pair<std::string, lua_CFunction>( "println" , UserAPI::print_line),
+    std::pair<std::string, lua_CFunction>( "print" , UserAPI::print)
+    ,std::pair<std::string, lua_CFunction>( "move_object" , UserAPI::move_object)
+
+
+
 };
 
 /*
-    Operator oerloading for memBlock.
+    Operator overloading for memBlock.
 */
 
 bool operator ==  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
@@ -135,9 +139,9 @@ void LuaSandbox::executeFile(std::string path)
     size_t length;
     char* buffer;
     std::string fullPath = "romfs:/";
-    fullPath = fullPath.append(path)
+    fullPath = fullPath.append(path);
     
-    FILE* fp = fopen(fullPath);
+    FILE* fp = fopen(fullPath.c_str(), "r");
     if(fp == NULL)
     {
         Util::PrintLine("Error: couldnt open file at '" +  fullPath + "'");

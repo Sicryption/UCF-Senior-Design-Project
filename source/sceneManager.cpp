@@ -1,8 +1,8 @@
 #include "sceneManager.hpp"
-#include "scenes/startScene.cpp"
 
 
-SceneManager * m_instance = nullptr;
+
+SceneManager * m_instance = nullptr; 
 
 
 Scene* SceneManager::getScene()
@@ -12,7 +12,7 @@ Scene* SceneManager::getScene()
         return nullptr;
     }
 
-    return m_instance->m_currentScene;
+    return m_currentScene;
 }
 
 void  SceneManager::transitionTo(Scene* t_next)
@@ -39,7 +39,7 @@ void  SceneManager::initialize(){
     {
         m_instance = new SceneManager();
     }
-    m_currentScene = new startScene();
+    //m_currentScene = new startScene();
 }
 
     void  SceneManager::update()
