@@ -13,6 +13,8 @@
 #include "../commands/scaleCommand.hpp"
 #include "../commands/rotateCommand.hpp"
 #include "../commands/createCommand.hpp"
+#include "../commands/positionCommand.hpp"
+#include "../commands/angleCommand.hpp"
 
 
 /*

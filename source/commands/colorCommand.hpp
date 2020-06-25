@@ -8,8 +8,8 @@ protected:
 public:
     ColorCommand(std::string t_name , m3d::Color t_color,bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
-        m_name = t_name,
-        m_color = t_color
+        m_name = t_name;
+        m_color = t_color;
     }
 
     ~ColorCommand();

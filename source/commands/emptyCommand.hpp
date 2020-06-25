@@ -1,16 +1,16 @@
 #pragma once
 #include "../commands/commandObject.hpp"
 
-class ElseCommand : public CommandObject
+class EmptyCommand : public CommandObject
 {
 
 public:
-    ElseCommand(bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(true, false)
+    EmptyCommand(bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(true, false)
     {
         m_name="--";
     }
 
-    ~ElseCommand();
+    ~EmptyCommand();
 
     std::vector<std::string> getParamNames() {return {};}
 

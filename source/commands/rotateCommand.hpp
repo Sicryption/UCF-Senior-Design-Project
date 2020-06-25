@@ -8,8 +8,8 @@ public:
     
     RotateCommand(int t_angle = 90 , bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
-        m_name="rotate",
-        m_params[0] = t_angle,
+        m_name="rotate";
+        m_params[0] = t_angle;
     }
 
     ~RotateCommand();
@@ -23,6 +23,5 @@ public:
 
 };
 
-class ScaleCommand : public ScaleCommand
-{
+
 
