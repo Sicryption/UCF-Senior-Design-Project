@@ -29,6 +29,7 @@ public:
     {
         
     }
+
     void initialize()
     {
         updateShape();

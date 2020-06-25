@@ -4,8 +4,7 @@
 #include "../userAPI.h"
 #include "../util.hpp"   
 #include "../m3diaLibCI/text.hpp"
-#include "../sceneManager.hpp"
-#include "../gameObjects/objects.h"
+
 
 int UserAPI::move(lua_State* L)
 {

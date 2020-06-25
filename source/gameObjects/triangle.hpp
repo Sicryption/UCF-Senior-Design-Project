@@ -66,7 +66,6 @@ public:
         updateShape();
         m3d::Screen * screen = GameManager::getScreen();
 
-
         screen->drawTop(*triangle);
     
     }
