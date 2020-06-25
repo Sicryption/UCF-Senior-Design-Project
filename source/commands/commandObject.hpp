@@ -35,6 +35,9 @@ public:
     { 
         return  {"error"};
     }
+    {
+        for (int i = 0; i < MAX_PARAMS; i++)
+        {
 
     virtual std::string convertToLua()
     {
