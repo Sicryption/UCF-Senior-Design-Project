@@ -34,7 +34,6 @@ int UserAPI::move(lua_State* L)
 
 int make_rectangle(lua_State* L)
 {
-    
     lua_Number x = lua_tonumber(L,-1);
     lua_Number y = lua_tonumber(L,-2);
 
@@ -71,7 +70,7 @@ int make_circle(lua_State* L)
     int t_id = scene->addObject(new CircleObject())
     if(t_id == 0)
     {
-        Util::PrintLine("Error: could not create Rectangle Object in Scene \'" + scene->getSceneName() + "\'");
+        Util::PrintLine("Error: could not create Circle Object in Scene \'" + scene->getSceneName() + "\'");
         return 0;
     }
     
@@ -103,6 +102,11 @@ int get_x_position(lua_State* L)
     }
 
     GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+
+    }
     m3d::Vector2f *currentVector = currObj->getPosition();
 
     lua_pushnumber(L,currentVector->u);
