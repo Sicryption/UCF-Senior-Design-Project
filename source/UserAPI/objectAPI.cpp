@@ -13,7 +13,7 @@
 
 int UserAPI::move(lua_State* L)
 {
-    std::string t_id = lua_tostring(L,-1);
+    lua_Number t_id = lua_tonumber(L,-1);
     lua_Number x = lua_tonumber(L,-2);
     lua_Number y = lua_tonumber(L,-3);
 
@@ -26,7 +26,7 @@ int UserAPI::move(lua_State* L)
     GameObject* obj = scene->findObject(t_id);
     if(obj == nullptr)
     {
-        Util::PrintLine("Error: couldnt find object \'" + t_id +"\' in Scene \'" + scene->getSceneName() + "\'");
+        Util::PrintLine("Error: couldnt find object \'" + std::to_string(t_id) +"\' in Scene \'" + scene->getSceneName() + "\'");
         return 0;
     }
     
