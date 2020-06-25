@@ -10,21 +10,7 @@
 
 /// The array of lua accessible user API functions, paired with their lua global name
 std::pair<std::string, lua_CFunction> enabledFunctions[] = {
-    std::make_pair( "println" , UserAPI::print_line),
-    std::make_pair( "print" , UserAPI::print),
-    std::make_pair( "rectangle" , UserAPI::make_rectangle),
-    std::make_pair( "circle" , UserAPI::make_circle),
-    std::make_pair( "triangle" , UserAPI::make_rectangle),
-    std::make_pair( "move" , UserAPI::move_object),
-    std::make_pair( "position" , UserAPI::set_position),
-    std::make_pair( "get_x" , UserAPI::get_x_position),
-    std::make_pair( "get_y" , UserAPI::get_y_position),
-    std::make_pair( "rotate" , UserAPI::rotate),
-    std::make_pair( "set_angle" , UserAPI::set_angle),
-    std::make_pair( "get_angle" , UserAPI::get_angle),
-    std::make_pair( "set_scale" , UserAPI::set_scale),
-    std::make_pair( "set_color" , UserAPI::set_color),
-    std::make_pair( "delete" , UserAPI::delete_object)
+    std::make_pair( "println" , UserAPI::print_line)
 };
 
 /*
@@ -149,29 +135,25 @@ void LuaSandbox::executeFile(std::string path)
     size_t length;
     char* buffer;
     std::string fullPath = "romfs:/";
-    fullPath = fullPath.append(path);
+    fullPath = fullPath.append(path)
     
-    FILE* fp = fopen(fullPath.c_str(), "r");
+    FILE* fp = fopen(fullPath);
     if(fp == NULL)
     {
         Util::PrintLine("Error: couldnt open file at '" +  fullPath + "'");
         return;
     }
 
-    Util::PrintLine("seek");
     fseek(fp,0L, SEEK_END);
     size_t size = ftell(fp);
     rewind(fp);
 
-    Util::PrintLine("buffer init");
-    buffer = (char*)calloc(size+1, sizeof(char));
+    buffer = (char*)calloc(size, sizeof(char));
     fread(buffer,sizeof(char),size,fp);
 
-    //Util::PrintLine(buffer);
     fclose(fp);
     
-    //executeString(buffer);
-    executeString(buffer);
+    luaL_dostring(state,buffer);
     return;
 }
 
