@@ -50,19 +50,12 @@ int main(int argc, char* argv[])
     std::vector<CommandObject*> commands =
     {
         new UserCommand("x = 0"),
-        new LabelCommand("start"),
-        new UserCommand("println(x)"),
-        new UserCommand("x = x + 1"),
-
-        new IfCommand("x < 5"),
-            new GotoCommand("start"),
-        new EndCommand(),
-
         new WhileCommand("x < 10"),
-            new UserCommand("println(x)"),
+            new IfCommand("x ~= 5"),
+                new UserCommand("println(x)"),
+            new EndCommand(),
             new UserCommand("x = x + 1"),
-        new EndCommand(),
-        new UserCommand("println(x)")
+        new EndCommand()
     };
 
     std::string lua = "\n" + CommandObject::ConvertBulk(commands);

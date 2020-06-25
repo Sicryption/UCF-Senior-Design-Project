@@ -67,7 +67,7 @@ int get_angle(lua_State* L)
     return 0;
 }
    
-
+// TODO: Design such that x or y = -1, maintains that scale.
 int scale(lua_State* L)
 {
     return 0;

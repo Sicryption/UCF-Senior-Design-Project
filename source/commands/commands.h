@@ -7,6 +7,13 @@
 #include "../commands/labelCommand.hpp"
 #include "../commands/gotoCommand.hpp"
 #include "../commands/userCommand.hpp"
+#include "../commands/emptyCommand.hpp"
+#include "../commands/moveCommand.hpp"
+#include "../commands/colorCommand.hpp"
+#include "../commands/scaleCommand.hpp"
+#include "../commands/rotateCommand.hpp"
+#include "../commands/createCommand.hpp"
+
 
 /*
 ---- Control Statements

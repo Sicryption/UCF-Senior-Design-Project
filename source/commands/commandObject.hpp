@@ -14,7 +14,7 @@ class CommandObject //: public Drawable
 {
 
 protected:
-    std::string name;
+    std::string m_name;
     bool m_isEditLocked;
     bool m_isAddLocked;
     std::string m_params[MAX_PARAMS];
@@ -23,7 +23,7 @@ protected:
 public:
     CommandObject(bool t_lockEdit = false,bool t_lockAdd = false)
     {
-        name="";
+        m_name="";
         m_isEditLocked = t_lockEdit;
         m_isAddLocked = t_lockAdd;
         m_background = m3dCI::Sprite( *ResourceManager::getSprite("command_background.png"));

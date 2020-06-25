@@ -7,7 +7,7 @@ class UserCommand : public CommandObject
 public:
     UserCommand(std::string t_param ="--",bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
-        name="lua";
+        m_name="lua";
         m_params[0] = t_param;
     }
 

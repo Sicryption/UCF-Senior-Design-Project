@@ -7,7 +7,7 @@ class ElseCommand : public CommandObject
 public:
     ElseCommand(bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
-        name="else";
+        m_name="else";
     }
 
     ~ElseCommand();

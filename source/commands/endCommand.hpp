@@ -7,7 +7,7 @@ class EndCommand : public CommandObject
 public:
     EndCommand(bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
-        name="end";
+        m_name="end";
     }
 
     ~EndCommand();

@@ -14,10 +14,14 @@ function select_gameobject(name)
     end
 
     if(type(value["id"])= "number" ) then
-        current_object = value["id"] or nil
+        current_object = value["id"] or 0
     end
 
     return current_object
+end
+
+function delete(name)
+    name_table[name] = nil;
 end
 
 function get_gameobject_properties(id)
@@ -29,7 +33,11 @@ function get_gameobject_properties(id)
     return nil
 end
 
-function create_gameobject(id)
-    obj = {} 
+function create_gameobject(name)
+    obj = {
+        id = nil,
+        name = name
+    } 
+    obj.id = make_rectangle();
     
 end
