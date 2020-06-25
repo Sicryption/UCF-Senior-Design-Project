@@ -139,6 +139,25 @@ int get_y_position(lua_State* L)
 
 int rotate(lua_State* L)
 {
+    lua_Number t_id = lua_tonumber(L,-1);
+    lua_Number angle = lua_tonumber(L,-2);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+
+    }
+
+    currObj->Rotate();
+    
     return 0;
 }
     
