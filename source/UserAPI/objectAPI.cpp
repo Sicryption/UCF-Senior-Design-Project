@@ -86,7 +86,26 @@ int make_paddle(lua_State* L)
 // TODO: Revise, no set position, only set x and y.
 int set_position(lua_State* L)
 {
+    lua_Number t_id = lua_tonumber(L,-1);
+    lua_Number t_x = lua_tonumber(L,-2);
+    lua_Number t_y = lua_tonumber(L,-3);
 
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+
+    }
+
+    currObj->setPosition(t_x, t_y);
+    
     return 0;
 }
 
@@ -140,7 +159,7 @@ int get_y_position(lua_State* L)
 int rotate(lua_State* L)
 {
     lua_Number t_id = lua_tonumber(L,-1);
-    lua_Number angle = lua_tonumber(L,-2);
+    lua_Number t_angle = lua_tonumber(L,-2);
 
     Scene *currScene = SceneManager::getScene();
     if(currScene == nullptr)
@@ -156,35 +175,104 @@ int rotate(lua_State* L)
 
     }
 
-    currObj->Rotate();
-    
+    currObj->Rotate(t_angle);
+
     return 0;
 }
     
 int set_angle(lua_State* L)
 {
+    lua_Number t_id = lua_tonumber(L,-1);
+    lua_Number t_angle = lua_tonumber(L,-2);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+
+    }
+
+    currObj->setAngle(t_angle);
     return 0;
 }
     
 int get_angle(lua_State* L)
 {
-    return 0;
+    lua_Number t_id = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+
+    }
+
+    lua_pushnumber(L, currObj->getAngle());
+
+    return 1;
 }
    
 // TODO: Design such that x or y = -1, maintains that scale.
-int scale(lua_State* L)
-{
-    return 0;
-}
-    
 int set_scale(lua_State* L)
 {
+    lua_Number t_id     = lua_tonumber(L,-1);
+    lua_Number t_width  = lua_tonumber(L,-2);
+    lua_Number t_height = lua_tonumber(L,-3);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+
+    }
+
+    currObj->setScale(t_width,t_height);
     return 0;
 }
     
     
 int set_color(lua_State* L)
 {
+    lua_Number t_id     = lua_tonumber(L,-1);
+    lua_Number t_red  = lua_tonumber(L,-2);
+    lua_Number t_green = lua_tonumber(L,-3);
+    lua_Number t_blue  = lua_tonumber(L,-2);
+    lua_Number t_alpha = lua_tonumber(L,-3);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+
+    }
     return 0;
 }
    
