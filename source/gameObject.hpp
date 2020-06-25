@@ -1,9 +1,6 @@
 #pragma once
 #include "IUpdateable.hpp"
 
-#define DEFAULT_SIZE 10 
-#define DEFAULT_COLOR m3d::Color(255,0,0)
-
 class GameObject : public Updateable
 {
 protected:
