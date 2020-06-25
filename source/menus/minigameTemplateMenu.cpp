@@ -8,10 +8,11 @@ MinigameTemplateMenu::MinigameTemplateMenu(m3d::Screen* screen) :
 
 	codeEditor = om->CreateCodeEditor(margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), 1);
 
-	codeEditor->addCommand("Circle MyCircle");
-	codeEditor->addCommand("Red");
-	codeEditor->addCommand("Left 5");
-	codeEditor->addCommand("Right 15");
+	codeEditor->addCommand(new UserCommand("x = 1"));
+	codeEditor->addCommand(new WhileCommand("x < 10"));
+	codeEditor->addCommand(new UserCommand("println(x)"));
+	codeEditor->addCommand(new UserCommand("x = x + 1"));
+	codeEditor->addCommand(new EndCommand());
 	codeEditor->SetActive(true);
 
 	int buttonWidth = BOTTOMSCREEN_WIDTH * 0.25 - (margin * 2);
@@ -26,6 +27,7 @@ MinigameTemplateMenu::MinigameTemplateMenu(m3d::Screen* screen) :
 
 	closeButton = om->CreateButton(48 + BOTTOMSCREEN_WIDTH * 0.5, 0, ResourceManager::getSprite("tabClose.png"));
 	closeButton->OnRelease = [this]() { this->CloseButton_OnClick(); };
+	closeButton->SetEnabledState(false);
 
 	commandLister = om->CreateCommandLister();
 }
@@ -76,6 +78,7 @@ void MinigameTemplateMenu::AddButton_OnClick()
 	codeEditor->SetActive(false);
 	AddButton->SetEnabledState(false);
 	RemoveButton->SetEnabledState(false);
+	closeButton->SetEnabledState(true);
 
 	codeEditor->ShiftToTop();
 }
@@ -92,13 +95,14 @@ void MinigameTemplateMenu::CloseButton_OnClick()
 	codeEditor->ShiftToBottom();
 	AddButton->SetEnabledState(true);
 	RemoveButton->SetEnabledState(true);
+	closeButton->SetEnabledState(false);
 
 	scr->clear();
 
 	showCommandLister = false;
 }
 
-void MinigameTemplateMenu::AddCommand(std::string command)
+void MinigameTemplateMenu::AddCommand(CommandObject* command)
 {
 	codeEditor->addCommand(command);
 	commandLister->SetActive(false);
@@ -106,6 +110,7 @@ void MinigameTemplateMenu::AddCommand(std::string command)
 	codeEditor->ShiftToBottom();
 	AddButton->SetEnabledState(true);
 	RemoveButton->SetEnabledState(true);
+	closeButton->SetEnabledState(false);
 
 	scr->clear();
 

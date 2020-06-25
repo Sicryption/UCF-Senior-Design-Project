@@ -15,6 +15,7 @@
 #include "../commands/createCommand.hpp"
 #include "../commands/positionCommand.hpp"
 #include "../commands/angleCommand.hpp"
+#include "../commands/deleteCommand.hpp"
 
 
 /*

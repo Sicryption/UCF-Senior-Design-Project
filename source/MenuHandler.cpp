@@ -129,8 +129,11 @@ void MenuHandler::TransitionTo(MenuState state)
 	util->PrintLine("Transition complete.");
 }
 
-void MenuHandler::AddCommand(std::string command)
+void MenuHandler::AddCommand(CommandObject *com)
 {
+	if (com == nullptr)
+		return;
+
 	MenuHandler* mh = getInstance();
 
 	if (mh == 0)
@@ -138,6 +141,6 @@ void MenuHandler::AddCommand(std::string command)
 
 	if (mh->currentState == MenuState::MinigameTemplateMenu)
 	{
-		((MinigameTemplateMenu*)mh->currentMenu)->AddCommand(command);
+		((MinigameTemplateMenu*)mh->currentMenu)->AddCommand(com);
 	}
 }

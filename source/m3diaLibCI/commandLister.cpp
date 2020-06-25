@@ -44,7 +44,7 @@ namespace m3dCI
 
 	void CommandLister::CreateTabCommandObjects(int index)
 	{
-		std::vector<CommandObject*> objects;
+		std::vector<commandListerItem*> objects;
 
 		int tabWidthAndHeight = (TOPSCREEN_HEIGHT / NUM_TABS);
 		int commandObjectHeight = BOTTOMSCREEN_HEIGHT / NUM_COMMANDS_PER_TAB;
@@ -52,15 +52,15 @@ namespace m3dCI
 		int sizeOfArray = sizeof(listOfCommandsByTab[index]) / sizeof(listOfCommandsByTab[index][0]);
 		for (int i = 0; i < sizeOfArray; i++)
 		{
-			if (listOfCommandsByTab[index][i] == "")
+			if (listOfCommandsByTab[index][i].first == "")
 				continue;
 
-			m3dCI::CommandObject* command = new m3dCI::CommandObject(
+			m3dCI::commandListerItem* command = new m3dCI::commandListerItem(
 				x + tabWidthAndHeight,
 				y + commandObjectHeight * i,
 				BOTTOMSCREEN_WIDTH * 0.5,
 				commandObjectHeight,
-				listOfCommandsByTab[index][i],
+				listOfCommandsByTab[index][i].first,
 				false);
 
 			command->setBackgroundColor(i % 2 ? m3d::Color(211, 211, 211) : m3d::Color(169, 169, 169));
@@ -120,11 +120,11 @@ namespace m3dCI
 		}
 		else if (px <= tabWidthAndHeight + BOTTOMSCREEN_WIDTH * 0.5)
 		{
-			SelectCommand(px, py);
+			SelectCommandObject(px, py);
 		}
 	}
 
-	void CommandLister::SelectCommand(int px, int py)
+	void CommandLister::SelectCommandObject(int px, int py)
 	{
 		int selectedTab = getCurrentlySelectedTab();
 
@@ -132,10 +132,12 @@ namespace m3dCI
 			return;
 
 		int commandObjectHeight = BOTTOMSCREEN_HEIGHT / NUM_COMMANDS_PER_TAB;
-
 		int selectedCommand = py / commandObjectHeight;
 
-		MenuHandler::AddCommand(listOfCommandsByTab[selectedTab][selectedCommand]);
+		if (selectedCommand == -1 || listOfCommandsByTab[selectedTab][selectedCommand].first == "")
+			return;
+
+		listOfCommandsByTab[selectedTab][selectedCommand].second();
 	}
 
 	void CommandLister::SelectTab(int px, int py)

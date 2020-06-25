@@ -16,6 +16,7 @@ namespace m3dCI
 		: m3d::Drawable()
 	{
 		x = px;
+		xShift = 0;
 		y = 0;
 		w = pw;
 		h = TOPSCREEN_HEIGHT;
@@ -25,7 +26,7 @@ namespace m3dCI
 		borderRectangle = new m3d::Rectangle(px, y, pw, h, m3d::Color(0, 0, 0));
 		innerRectangle = new m3d::Rectangle(px + p_borderWidth, y, pw - (p_borderWidth * 2), h, m3d::Color(255, 255, 255));
 
-		addCommand("");
+		addCommand(new EmptyCommand(true));
 	}
 
 	CodeEditor::~CodeEditor()
@@ -42,10 +43,10 @@ namespace m3dCI
 	void CodeEditor::ShiftToTop()
 	{
 		int change = (TOPSCREEN_WIDTH - BOTTOMSCREEN_WIDTH) / 2;
-		x += change;
+		xShift = change;
 
-		innerRectangle->setXPosition(innerRectangle->getXPosition() + change);
-		borderRectangle->setXPosition(borderRectangle->getXPosition() + change);
+		innerRectangle->setXPosition(x + xShift + borderWidth);
+		borderRectangle->setXPosition(x + xShift);
 		SetActive(false);
 
 		refreshCommandList();
@@ -53,11 +54,10 @@ namespace m3dCI
 
 	void CodeEditor::ShiftToBottom()
 	{
-		int change = (TOPSCREEN_WIDTH - BOTTOMSCREEN_WIDTH) / 2;
-		x -= change;
+		xShift = 0;
 
-		innerRectangle->setXPosition(innerRectangle->getXPosition() - change);
-		borderRectangle->setXPosition(borderRectangle->getXPosition() - change);
+		innerRectangle->setXPosition(x + xShift + borderWidth);
+		borderRectangle->setXPosition(x + xShift);
 		SetActive(true);
 
 		refreshCommandList();
@@ -77,17 +77,18 @@ namespace m3dCI
 
 		//int largerBound = topIndex + CELLS_TALL > commands.size() ? commands.size() - 1 : topIndex + CELLS_TALL;
 
+		int topLeftX = x + xShift + borderWidth;
+		int topLeftY = y;
+
 		//we want to bound this so only objects which can actually be seen get rendered
 		for (unsigned int i = 0; i < commands.size(); i++)
 		{
-			commands[i]->draw(t_context);
+			commands[i]->draw(topLeftX, topLeftY + (CELL_HEIGHT * i) - scrollY, t_context);
 		}
 	}
 
-	void CodeEditor::addCommand(std::string command, int position)
+	void CodeEditor::addCommand(CommandObject* obj, int position)
 	{
-		m3dCI::CommandObject* obj = new m3dCI::CommandObject(x + borderWidth, y + CELL_HEIGHT * commands.size(), w - (borderWidth * 2), CELL_HEIGHT, command, false);
-
 		if (currentSelectedCommand == nullptr)
 			SelectCommand(commands.size() - 1);
 
@@ -152,15 +153,10 @@ namespace m3dCI
 		if (!active || !isPointInside(px, py))
 			return;
 
-		int commandIndexToSelect = -1;
+		int commandIndexToSelect = (py + scrollY) / CELL_HEIGHT;
 
-		for (int i = 0; i < (int)commands.size(); i++)
-		{
-			if (py + scrollY >= y + CELL_HEIGHT * i && py + scrollY < y + CELL_HEIGHT * (i + 1))
-			{
-				commandIndexToSelect = i;
-			}
-		}
+		if (commandIndexToSelect == -1 || commandIndexToSelect >= (int)commands.size())
+			return;
 
 		SelectCommand(commandIndexToSelect);
 	}
@@ -185,14 +181,12 @@ namespace m3dCI
 			if (commands[i] == nullptr)
 				continue;
 
-			if (commands[i] == currentSelectedCommand)
-				commands[i]->setBackgroundColor(m3d::Color(34,177,76));
-			else
-			{
-				commands[i]->setBackgroundColor(i % 2 ? m3d::Color(211, 211, 211) : m3d::Color(169, 169, 169));
-			}
-
-			commands[i]->setPosition(x + borderWidth, y - scrollY + (CELL_HEIGHT * i));
+			//if (commands[i] == currentSelectedCommand)
+			//	commands[i]->setBackgroundColor(m3d::Color(34,177,76));
+			//else
+			//{
+			//	commands[i]->setBackgroundColor(i % 2 ? m3d::Color(211, 211, 211) : m3d::Color(169, 169, 169));
+			//}
 		}
 	}
 

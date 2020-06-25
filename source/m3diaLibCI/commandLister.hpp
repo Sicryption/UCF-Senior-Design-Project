@@ -3,7 +3,8 @@
 #include "sprite.hpp"
 #include "text.hpp"
 #include "button.hpp"
-#include "commandObject.hpp"
+#include "commandListerItem.hpp"
+#include "../commands/commands.h"
 #include "../resources.h"
 #include "../MenuHandler.hpp"
 
@@ -28,26 +29,34 @@
 #define VAR_STATEMENTS 3
 #define CONTROL_STATEMENTS 4
 
+using namespace std;
+
+#define t(x) MenuHandler::AddCommand(x)
+#define func(a) []() { t(a); }
+#define PAIR(name, command) { name, []() { t(command); }}
+#define NULLPAIR PAIR("", nullptr)
+#define COLORPAIR(name, r, g, b) PAIR(name, new ColorCommand(name, m3d::Color(r,g,b,255)))
+
 namespace m3dCI 
 {
     class CommandLister : public m3d::Drawable
 	{
 		private:
-			std::string listOfCommandsByTab[NUM_TABS][NUM_COMMANDS_PER_TAB] =
+			pair<string, function<void()>> listOfCommandsByTab[NUM_TABS][NUM_COMMANDS_PER_TAB] =
 			{
-				{ "Circle","Rectangle","Triangle","Text", "Select", "Delete", "", "" },
-				{ "Red","Orange","Yellow","Green", "Blue", "Indigo", "Violet", "" },
-				{ "Up","Down","Left","Right", "Scale", "Scale_X", "Scale_Y", "Rotate" },
-				{ "var","Delete_var","get_x","get_y", "get_angle", "get_scale_x", "get_scale_y", "get_speed" },
-				{ "if","loop","while","end", "label", "goto", "", "" }
+				{ PAIR("Circle", new CircleCommand()), PAIR("Rectangle", new RectangleCommand()), PAIR("Triangle", nullptr), PAIR("Text", new TextCommand("Empty")), PAIR("Select", new SelectCommand()), PAIR("Delete", new DeleteCommand), NULLPAIR, NULLPAIR },
+				{ COLORPAIR("Red", 255, 0, 0), COLORPAIR("Orange", 255, 127, 0), COLORPAIR("Yellow", 255, 255, 0), COLORPAIR("Green", 0, 255, 0), COLORPAIR("Blue", 0, 0, 2550), COLORPAIR("Indigo", 75, 0, 130), COLORPAIR("Violet", 148, 0, 211), COLORPAIR("Black", 0, 0, 0) },
+				{ PAIR("Up", new UpCommand()), PAIR("Down", new DownCommand()), PAIR("Left", new LeftCommand()), PAIR("Right", new RightCommand()), PAIR("Scale", new ScaleCommand(1,1)), PAIR("Scale_X", new ScaleCommand(1, -1)), PAIR("Scale_Y", new ScaleCommand(-1, 1)) },
+				{ PAIR("Var", new VarCommand()), PAIR("Get_X", new GetXCommand()), PAIR("Get_Y", new GetYCommand()), PAIR("Get_Angle", new GetAngleCommand()), PAIR("Set_Angle", new SetAngleCommand()), PAIR("Get_Scale_X", nullptr), PAIR("Get_Scale_Y", nullptr) },
+				{ PAIR("If", new IfCommand()), PAIR("Loop", nullptr), PAIR("While", new WhileCommand()), PAIR("End", new EndCommand()), PAIR("Label", new LabelCommand()), PAIR("goto", new GotoCommand()), NULLPAIR, NULLPAIR }
 			};
 
 			m3d::Rectangle *backgroundRectangle = nullptr;
 			std::vector<m3dCI::Sprite*> tabs;
-			std::vector<std::vector<CommandObject*>> commands;
+			std::vector<std::vector<commandListerItem*>> commands;
 
 			int currentlySelectedTab = -1;
-			CommandObject* currentSelectedCommand = nullptr;
+			commandListerItem* currentSelectedCommand = nullptr;
 
 			bool active = false;
 			int x, y, w, h;
@@ -61,7 +70,7 @@ namespace m3dCI
 
 			void SelectTab(int tabIndex);
 			void SelectTab(int px, int py);
-			void SelectCommand(int px, int py);
+			void SelectCommandObject(int px, int py);
 		public:
 			//Create the CodeEditor.
 			/*

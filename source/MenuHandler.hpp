@@ -6,6 +6,7 @@
 #include <vector>
 #include <m3dia.hpp>
 
+#include "commands/commands.h"
 #include "m3diaLibCI/button.hpp"
 
 using namespace m3d;
@@ -34,13 +35,10 @@ class MenuHandler
 		//The function which is called on every game frame.
 		void OnUpdate();
 
-		bool IsTransitioning();
 		void TransitionTo(MenuState state);
 		virtual ~MenuHandler();
 
-		static void AddCommand(std::string command);
-		static void AddCommandObject(m3dCI::Button* button);
-		static void RemoveCommandObject(m3dCI::Button* button);
+		static void AddCommand(CommandObject *command);
 
 	private:
 		MenuState currentState;

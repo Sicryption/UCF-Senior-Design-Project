@@ -70,7 +70,7 @@ class DownCommand : public CommandObject
 public:
     DownCommand(std::string t_param = "1",bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
-        m_name="up";
+        m_name="down";
         m_params[0] = t_param;
     }
 

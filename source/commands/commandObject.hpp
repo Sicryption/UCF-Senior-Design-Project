@@ -41,11 +41,12 @@ public:
         return "";
     }
 
-    virtual void draw(m3d::RenderContext t_context)
+    virtual void draw(int x, int y, m3d::RenderContext t_context)
     {
+		m_background.setPosition(x, y);
+
         m3d::Screen* scr = GameManager::getScreen();
         m_background.draw(t_context);
-       
     }
 
     static std::string ConvertBulk(std::vector<CommandObject*> t_list)

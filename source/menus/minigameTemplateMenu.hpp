@@ -16,7 +16,7 @@ class MinigameTemplateMenu : public Menu
 		MinigameTemplateMenu(m3d::Screen* screen);
 		virtual ~MinigameTemplateMenu();
 
-		void AddCommand(std::string command);
+		void AddCommand(CommandObject* command);
 
 		void AddButton_OnClick();
 		void DeleteButton_OnClick();
