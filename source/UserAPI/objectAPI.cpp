@@ -5,7 +5,6 @@
 #include "../util.hpp"   
 #include "../m3diaLibCI/text.hpp"
 
-
 int UserAPI::move(lua_State* L)
 {
     lua_Number t_id = lua_tonumber(L,-1);
