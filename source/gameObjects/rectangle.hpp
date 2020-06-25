@@ -7,7 +7,7 @@ class RectangleObject : public GameObject
 
 private:
 
-    m3d::Rectangle box;
+    m3d::Rectangle* box;
     m3d::Color color;
 
 public:
@@ -20,6 +20,8 @@ public:
         xScale = t_xScale;
         yScale = t_yScale;
         angle = t_angle;
+        color = t_color;
+        box = new m3d::Rectangle(x,y,xScale,yScale,color);
     }
 
     ~RectangleObject()
@@ -29,11 +31,11 @@ public:
 
     void updateShape()
     {
-        box.setPosition(x,y);
-        box.setHeight(yScale);
-        box.setWidth(xScale);
+        box->setPosition(x,y);
+        box->setHeight(yScale);
+        box->setWidth(xScale);
         
-        box.setColor(color);        
+        box->setColor(color);        
     }
 
     void initialize()
@@ -51,13 +53,13 @@ public:
         updateShape();
         m3d::Screen * screen = GameManager::getScreen();
 
-        screen->drawTop(box);
+        screen->drawTop(*box);
     
     }
 
     void destroy()
     { 
-        this->~TestObject(); 
+        this->~RectangleObject(); 
     }
     
     void moveTo(double t_x,double t_y)

@@ -7,7 +7,7 @@ class TriangleObject : public GameObject
 
 private:
 
-    m3d::Triangle triangle;
+    m3d::Triangle* triangle;
     m3d::Color color;
 
     double radius;
@@ -22,6 +22,8 @@ public:
         xScale = t_length;
         yScale = t_length;
         angle = t_angle;
+		
+        triangle = new m3d::Triangle(x,y,x,y,x,y,color);
     }
 
     ~TriangleObject()
@@ -29,11 +31,23 @@ public:
         
     }
 
+    // TODO: Untested
     void updateShape()
-    {
-        triangle.setPosition(x,y);
+    {   
+        double theta = fmod(90 + angle,360);
+
+        triangle->setX1Pos( x + xScale * cos(theta) );
+        triangle->setY1Pos( y + yScale * sin(theta) );
+
+        theta = fmod((theta + 120), 360);
+        triangle->setX2Pos( x + xScale * cos(theta) );
+        triangle->setY2Pos( y + yScale * sin(theta) );
         
-        triangle.setColor(color);        
+        theta = fmod((theta + 120) , 360);
+        triangle->setX3Pos( x + xScale * cos(theta) );
+        triangle->setY3Pos( y + yScale * sin(theta) );
+
+        triangle->setColor(color);        
     }
 
     void initialize()
@@ -46,25 +60,18 @@ public:
 
     }
 
-    void updateShape()
-    {
-        triangle.setPosition(x,y);
-        triangle.setRadius(xScale);        
-        triangle.setColor(color);        
-    }
-
     void draw()
     {
         updateShape();
         m3d::Screen * screen = GameManager::getScreen();
 
-        screen->drawTop(triangle);
-    
+
+        screen->drawTop(*triangle);
     }
 
     void destroy()
     { 
-        this->~TestObject(); 
+        this->~TriangleObject(); 
     }
     
     void moveTo(double t_x,double t_y)

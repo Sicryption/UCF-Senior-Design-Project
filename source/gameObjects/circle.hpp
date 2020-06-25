@@ -7,7 +7,7 @@ class CircleObject : public GameObject
 
 private:
 
-    m3d::Circle circle;
+    m3d::Circle* circle;
     m3d::Color color;
 
     double radius;
@@ -22,22 +22,15 @@ public:
         xScale = t_radius;
         yScale = t_radius;
         angle = t_angle;
+		
+        circle = new m3d::Circle(x,y,xScale,color);
     }
 
     ~CircleObject()
     {
         
     }
-
-    void updateShape()
-    {
-        circle.setPosition(x,y);
-        circle.setHeight(radius);
-        circle.setWidth(radius);
-        
-        circle.setColor(color);        
-    }
-
+	
     void initialize()
     {
         updateShape();
@@ -45,14 +38,13 @@ public:
 
     void update() {
 
-
     }
 
     void updateShape()
     {
-        circle.setPosition(x,y);
-        circle.setRadius(xScale);        
-        circle.setColor(color);        
+        circle->setPosition(x,y);
+        circle->setRadius(xScale);        
+        circle->setColor(color);        
     }
 
     void draw()
@@ -60,13 +52,12 @@ public:
         updateShape();
         m3d::Screen * screen = GameManager::getScreen();
 
-        screen->drawTop(circle);
-    
+        screen->drawTop(*circle);
     }
 
     void destroy()
     { 
-        this->~TestObject(); 
+        this->~CircleObject(); 
     }
     
     void moveTo(double t_x,double t_y)
