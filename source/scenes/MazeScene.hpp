@@ -1,6 +1,7 @@
 #pragma once
 #include "../gameManager.hpp"
 #include "../sceneManager.hpp"
+#include "../MenuHandler.hpp"
 #include "../scene.hpp"
 #include "../resources.h"
 #include "../sandbox.h"
@@ -16,8 +17,8 @@ class MazeScene : public Minigame
 		m3d::Color *colorRec;
 		m3d::Color *colorText;
 		m3d::Text *prompt;
+		LuaSandbox *box;
         TerminalObject *runner;
-        LuaSandbox *box;
         int x;
 		int y;
         bool walls[24][40] ={ { 1, 0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1},
@@ -46,6 +47,16 @@ class MazeScene : public Minigame
             { 1, 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  1}};
             //2d array acting as map of array
         bool (*wallHolder)[40] = walls;
+
+		enum MazeState
+		{
+			TutorialMessage,
+			Requesting,
+			Execute,
+			Win,
+			Lose
+		};
+		MazeState currentState;
 	public:
 		MazeScene()
 		{
@@ -76,6 +87,7 @@ class MazeScene : public Minigame
 		    wallpaper->setCenter(0,0);
 		    wallpaper->setScale(10,10);
 
+			currentState = MazeState::TutorialMessage;
 		}
 		void draw(){
 			m3d::Screen * screen = GameManager::getScreen();
@@ -83,6 +95,7 @@ class MazeScene : public Minigame
 		    wallpaper->setPosition(0,0);
 			//screen->drawBottom(*bwallpaper);
 			//screen->drawBottom(*prompt);
+
             screen->drawTop(*wallpaper);
             runner->draw();
 
@@ -90,8 +103,33 @@ class MazeScene : public Minigame
         void load(){}; //any data files
         void unload(){};
         void update(){
-           // MenuHandler::Re
+
+			switch (currentState)
+			{
+				case MazeState::TutorialMessage:
+					if (buttons::buttonDown(buttons::Start))
+					{
+						currentState = MazeState::Requesting;
+
+						std::vector<CommandObject*> startingCommands =
+						{
+							new RightCommand("1")
+						};
+
+						MenuHandler::RequestUserCode(startingCommands, [&](std::string str) { SubmitMazeCode(str); });
+					}
+					break;
+				case MazeState::Execute:
+					break;
+			}
         };
+
+		void SubmitMazeCode(std::string luaCode)
+		{
+			box->executeString(luaCode);
+			currentState = MazeState::Execute;
+		}
+
         void onEnter(){};
         void onExit(){};
         bool checkWinCond(){return true;};
