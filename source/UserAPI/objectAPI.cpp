@@ -67,10 +67,10 @@ int make_circle(lua_State* L)
         return 0;
     }
 
-    int t_id = scene->addObject(new CircleObject())
+    int t_id = currScene->addObject(new CircleObject()); 
     if(t_id == 0)
     {
-        Util::PrintLine("Error: could not create Circle Object in Scene \'" + scene->getSceneName() + "\'");
+        Util::PrintLine("Error: could not create Circle Object in Scene \'" + currScene->getSceneName() + "\'");
         return 0;
     }
     
@@ -100,7 +100,7 @@ int set_position(lua_State* L)
     GameObject *currObj = currScene->findObject(t_id);
     if(currObj == nullptr) 
     {
-        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
 
     }
 
@@ -123,12 +123,12 @@ int get_x_position(lua_State* L)
     GameObject *currObj = currScene->findObject(t_id);
     if(currObj == nullptr) 
     {
-        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id ) +" in Scene" + currScene->getSceneName() + " \n");
 
     }
-    m3d::Vector2f *currentVector = currObj->getPosition();
+    //m3d::Vector2f *currentVector = currObj->getPosition();
 
-    lua_pushnumber(L,currentVector->u);
+    lua_pushnumber(L, currObj->getPosition().u);
     return 1;
 }
    
@@ -146,12 +146,12 @@ int get_y_position(lua_State* L)
     GameObject *currObj = currScene->findObject(t_id);
     if(currObj == nullptr) 
     {
-        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
 
     }
-    m3d::Vector2f *currentVector = currObj->getPosition();
+    //m3d::Vector2f *currentVector = currObj->getPosition();
 
-    lua_pushnumber(L,currentVector->v);
+    lua_pushnumber(L,currObj->getPosition().v);
     return 1;
 }
    
@@ -171,7 +171,7 @@ int rotate(lua_State* L)
     GameObject *currObj = currScene->findObject(t_id);
     if(currObj == nullptr) 
     {
-        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
 
     }
 
@@ -195,7 +195,7 @@ int set_angle(lua_State* L)
     GameObject *currObj = currScene->findObject(t_id);
     if(currObj == nullptr) 
     {
-        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
 
     }
 
@@ -217,7 +217,7 @@ int get_angle(lua_State* L)
     GameObject *currObj = currScene->findObject(t_id);
     if(currObj == nullptr) 
     {
-        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
 
     }
 
@@ -243,7 +243,7 @@ int set_scale(lua_State* L)
     GameObject *currObj = currScene->findObject(t_id);
     if(currObj == nullptr) 
     {
-        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
 
     }
 
@@ -270,7 +270,7 @@ int set_color(lua_State* L)
     GameObject *currObj = currScene->findObject(t_id);
     if(currObj == nullptr) 
     {
-        Util::PrintLine("Error: could not get specified object " + t_id +" in Scene" + currScene->getSceneName + " \n");
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
 
     }
     return 0;
