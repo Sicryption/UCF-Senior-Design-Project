@@ -127,6 +127,36 @@ void LuaSandbox::executeString(std::string text)
     return;
 }
 
+void LuaSandbox::executeFile(std::string path)
+{
+    //  TODO: Needs a more thorough test
+    // Temporary implementation, unprotected
+    
+    size_t length;
+    char* buffer;
+    std::string fullPath = "romfs:/";
+    fullPath = fullPath.append(path)
+    
+    FILE* fp = fopen(fullPath);
+    if(fp == NULL)
+    {
+        Util::PrintLine("Error: couldnt open file at '" +  fullPath + "'");
+        return;
+    }
+
+    fseek(fp,0L, SEEK_END);
+    size_t size = ftell(fp);
+    rewind(fp);
+
+    buffer = (char*)calloc(size, sizeof(char));
+    fread(buffer,sizeof(char),size,fp);
+
+    fclose(fp);
+    
+    luaL_dostring(state,buffer);
+    return;
+}
+
 double LuaSandbox::tryGetDouble(std::string id)
 {
     //  convert sting to const char*
