@@ -8,11 +8,6 @@ MinigameTemplateMenu::MinigameTemplateMenu(m3d::Screen* screen) :
 
 	codeEditor = om->CreateCodeEditor(margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), 1);
 
-	codeEditor->addCommand(new UserCommand("x = 1"));
-	codeEditor->addCommand(new WhileCommand("x < 10"));
-	codeEditor->addCommand(new UserCommand("println(x)"));
-	codeEditor->addCommand(new UserCommand("x = x + 1"));
-	codeEditor->addCommand(new EndCommand());
 	codeEditor->SetActive(true);
 
 	int buttonWidth = BOTTOMSCREEN_WIDTH * 0.25 - (margin * 2);
@@ -28,6 +23,10 @@ MinigameTemplateMenu::MinigameTemplateMenu(m3d::Screen* screen) :
 	closeButton = om->CreateButton(48 + BOTTOMSCREEN_WIDTH * 0.5, 0, ResourceManager::getSprite("tabClose.png"));
 	closeButton->OnRelease = [this]() { this->CloseButton_OnClick(); };
 	closeButton->SetEnabledState(false);
+	
+	submitButton = om->CreateButton(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonWidth*2, buttonWidth, buttonWidth, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
+	submitButton->SetText("Run");
+	submitButton->OnRelease = [this]() { this->SubmitButton_OnClick(); };
 
 	commandLister = om->CreateCommandLister();
 }
@@ -57,6 +56,9 @@ void MinigameTemplateMenu::OnUpdate()
 	if (RemoveButton != nullptr)
 		scr->drawBottom(*RemoveButton);
 
+	if (submitButton != nullptr)
+		scr->drawBottom(*submitButton);
+
 	if (closeButton != nullptr && showCommandLister)
 		scr->drawBottom(*closeButton);
 }
@@ -81,6 +83,15 @@ void MinigameTemplateMenu::AddButton_OnClick()
 	closeButton->SetEnabledState(true);
 
 	codeEditor->ShiftToTop();
+}
+
+void MinigameTemplateMenu::SubmitButton_OnClick()
+{
+	if (submitFunction != nullptr)
+	{
+		string luaString = codeEditor->GetLuaString();
+		submitFunction(luaString);
+	}
 }
 
 void MinigameTemplateMenu::DeleteButton_OnClick()
@@ -115,4 +126,14 @@ void MinigameTemplateMenu::AddCommand(CommandObject* command)
 	scr->clear();
 
 	showCommandLister = false;
+}
+
+void MinigameTemplateMenu::ClearCommands()
+{
+	codeEditor->ClearCommands();
+}
+
+void MinigameTemplateMenu::SetSubmitFunction(std::function<void(string)> callbackFunction)
+{
+	submitFunction = callbackFunction;
 }

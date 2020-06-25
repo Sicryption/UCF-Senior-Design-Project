@@ -52,6 +52,9 @@ namespace m3dCI
 			void addCommand(CommandObject* command, int position = -1);
 			void SelectCommand(int px, int py);
 			void removeCommand(int position = -1);
+			void ClearCommands();
+
+			std::string GetLuaString();
 
 			bool IsBlankCommandSelected();
 

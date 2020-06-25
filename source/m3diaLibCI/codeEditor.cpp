@@ -143,6 +143,15 @@ namespace m3dCI
 		SelectCommand(commandToRemoveIndex == (int)commands.size()?commandToRemoveIndex - 1:commandToRemoveIndex-1);
 	}
 
+	void CodeEditor::ClearCommands()
+	{
+		for (int i = (int)commands.size() - 1; i >= 0; i--)
+		{
+			removeCommand(i);
+		}
+		scrollY = 0;
+	}
+
 	bool CodeEditor::isPointInside(int px, int py)
 	{
 		return px >= x && px <= x + w && py >= y && py < y + h;
@@ -246,5 +255,10 @@ namespace m3dCI
 	void CodeEditor::DragComplete()
 	{
 		thisScrollChange = 0;
+	}
+
+	std::string CodeEditor::GetLuaString()
+	{
+		return CommandObject::ConvertBulk(commands);
 	}
 }
