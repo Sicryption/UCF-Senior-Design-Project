@@ -1,6 +1,6 @@
 
-#include "../userAPI.h"
-#include "../util.hpp" 
+#include "../userAPI.hpp"
+
 
 /**
  *  User API print function
@@ -25,7 +25,8 @@ int UserAPI::print_line(lua_State* L)
     return 0; 
 }
 
-int UserAPI::print(lua_State* L) 
+
+int UserAPI::print(lua_State* L)
 {    
     const char *s;
     size_t l;
@@ -43,7 +44,7 @@ int UserAPI::print(lua_State* L)
 
     // Number of results returned
     return 0; 
-}
+}  
 
 
 
