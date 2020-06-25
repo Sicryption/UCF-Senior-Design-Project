@@ -51,4 +51,3 @@ void  SceneManager::initialize(){
     {
         m_currentScene->draw();
     }
-

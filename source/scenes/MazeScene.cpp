@@ -54,6 +54,7 @@ class MazeScene : public Scene
        //initialize playable character
        runner = new TerminalObject();
        runner->initialize();
+			 addObject(runner);
        //Load text and bottom screen background color
 			 colorRec = new m3d::Color(150,150,150);
 			 colorText = new m3d::Color(0,0,0);
@@ -85,14 +86,14 @@ class MazeScene : public Scene
       {
           if(walls[y][x+1] == 0){
             x++;
-            runner->update();
+            //runner->update();
           }
       }
       if(m3d::buttons::buttonPressed(m3d::buttons::Left))
       {
         if(walls[y][x-1] == 0){
           x--;
-          runner->update();
+          //runner->update();
         }
       }
       if(m3d::buttons::buttonPressed(m3d::buttons::Up))
@@ -101,7 +102,7 @@ class MazeScene : public Scene
           if(y>0)
             y--;
 
-          runner->update();
+          //runner->update();
         }
       }
       if(m3d::buttons::buttonPressed(m3d::buttons::Down))
@@ -109,9 +110,16 @@ class MazeScene : public Scene
         if(walls[y+1][x] == 0){
           if(y<24)
             y++;
-          runner->update();
+          //runner->update();
         }
       }
+			auto it =  m_hashmap.cbegin();
+			for(;it != m_hashmap.cend(); it++)
+			{
+				runner = it;
+				runner->update();
+				//	it->second->destroy();
+			}
     };
     void onEnter(){};
     void onExit(){};
