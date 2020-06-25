@@ -1,8 +1,7 @@
 
 
 
-#include "../userAPI.h"
-
+#include "../userAPI.hpp"
 
 
 int UserAPI::move_object(lua_State* L)

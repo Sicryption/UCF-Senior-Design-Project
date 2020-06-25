@@ -4,6 +4,7 @@
 #include <iostream>
 #include <utility>
 
+#include <3ds.h>
 #include <m3dia.hpp>
 
 #include "lua/lua.hpp"
@@ -28,7 +29,8 @@ namespace UserAPI
      *  @param L lua state object
      *  @returns 0 on success, 1 if the stack is empty
      */
-    int print_line(lua_State* L);  
+    int print_line(lua_State* L);
+    
 
     /**
      *  @brief User API function, prints a string to the console/
@@ -37,7 +39,9 @@ namespace UserAPI
      *  @param L lua state object
      *  @returns 0 on success, 1 if the stack is empty
      */
-    int print(lua_State* L);  
+    int print(lua_State* L);
+    
+    
 
     //========== Object API
 
