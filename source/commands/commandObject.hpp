@@ -35,9 +35,14 @@ public:
     { 
         return  {"error"};
     }
+    
+    void setParams(std::string[MAX_PARAMS] t_params)
     {
         for (int i = 0; i < MAX_PARAMS; i++)
         {
+            m_params[i] = t_params[i];
+        }
+    }
 
     virtual std::string convertToLua()
     {
