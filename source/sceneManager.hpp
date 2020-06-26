@@ -16,9 +16,9 @@ public:
     static Scene* getScene();
     static void transitionTo(Scene*);
 
-    static void initialize();
-    static void update();
-    static void draw();
+    static void OnInitialize();
+    static void OnUpdate();
+    static void OnDraw();
 
 
 };
