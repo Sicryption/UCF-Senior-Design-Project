@@ -40,7 +40,6 @@ int main(int argc, char* argv[])
     Input::initialize();
 	SceneManager::OnInitialize();
 
-    ResourceManager::loadSpritesheet("gfx/commands").at(0);
 
 	// Main loop
 	while (app->isRunning())

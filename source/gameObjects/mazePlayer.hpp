@@ -29,20 +29,20 @@ public:
 
     void initialize()
     {
-
         sprite = new m3dCI::Sprite(*(ResourceManager::getSprite("terminal.png")));
         sprite->setScale(xScale,yScale);
         sprite->setPosition(x,y);
     }
 
     void update() {
-
         
     };
 
     void draw()
     {
         m3d::Screen * screen = GameManager::getScreen();
+
+		sprite->setPosition(x, y);
         screen->drawTop(*sprite);
     }
 
@@ -54,6 +54,9 @@ public:
                x = _x;
                y = _y; 
             }*/
+
+		x += _x;
+		y += _y;
     };
     void Rotate(double deg){};
 };

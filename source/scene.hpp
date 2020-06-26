@@ -5,6 +5,9 @@
 #include <map>
 #include <memory>
 #include "gameObject.hpp"
+#include "sandbox.h"
+
+#define setObjectName(name, id) sandbox->executeString("name_table[\"" name "\"] = " + std::to_string(id))
 
 class Scene : public Updateable
 {
@@ -13,6 +16,7 @@ protected:
     std::map<unsigned int, GameObject*> m_hashmap;
     unsigned int m_idCounter;
     std::string m_name;
+	LuaSandbox *sandbox;
 
 public:
 
@@ -53,7 +57,7 @@ public:
     unsigned int addObject(GameObject* obj)
     {
         m_hashmap[m_idCounter] = obj;
-        return ++m_idCounter;
+        return m_idCounter++;
     }
 
     void removeObject(unsigned int t_id)

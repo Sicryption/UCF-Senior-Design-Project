@@ -4,7 +4,6 @@
 #include "../MenuHandler.hpp"
 #include "../scene.hpp"
 #include "../resources.h"
-#include "../sandbox.h"
 #include "../minigame.hpp"
 #include "../gameObjects/mazePlayer.hpp"
 
@@ -18,10 +17,8 @@ class MazeScene : public Minigame
 		m3d::Color *colorRec;
 		m3d::Color *colorText;
 		m3d::Text *prompt;
-		LuaSandbox *box;
         TerminalObject *runner;
-        int x;
-		int y;
+		int x, y, runnerID;
         bool walls[24][40] ={ { 1, 0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1},
             { 1, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1},
             { 1, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1},
@@ -66,14 +63,18 @@ class MazeScene : public Minigame
 			y = 0.0;
 		}
 		void initialize(){
-            box = new LuaSandbox();
-            //box->executeFile("lua/init_scene.lua");
+            sandbox = new LuaSandbox();
+			sandbox->executeFile("lua/init_scene.lua");
         //loads and gets maze texture
 			//texture = new m3dCI::Sprite(*(ResourceManager::getSprite("wall.png")));
             //sprite* spr = new m3d::Sprite();
        //initialize playable character
             runner = new TerminalObject(*wallHolder);
+
+			runnerID = addObject(runner);
+
             runner->initialize();
+			setObjectName("runner", runnerID);
 			//addObject(runner);
        //Load text and bottom screen background color
 			colorRec = new m3d::Color(150,150,150);
@@ -86,6 +87,8 @@ class MazeScene : public Minigame
 		    //wallpaper->setTexture(*texture);
 		    wallpaper->setCenter(0,0);
 		    wallpaper->setScale(10,10);
+
+
 
 			currentState = MazeState::TutorialMessage;
 		}
@@ -113,7 +116,9 @@ class MazeScene : public Minigame
 
 						std::vector<CommandObject*> startingCommands =
 						{
-							new RightCommand("1")
+							new SelectCommand("runner"),
+							new DownCommand("5"),
+							new RightCommand("15")
 						};
 
 						MenuHandler::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
@@ -126,7 +131,11 @@ class MazeScene : public Minigame
 
 		void SubmitMazeCode(std::vector<CommandObject*> luaCode)
 		{
-			//box->executeString(luaCode);
+			std::string str = CommandObject::ConvertBulk(luaCode);
+
+			Util::getInstance()->PrintLine(str);
+
+			sandbox->executeString(str);
 			currentState = MazeState::Execute;
 		}
 

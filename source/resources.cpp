@@ -23,6 +23,8 @@ void ResourceManager::initialize()
     _hashmap.clear();
     
     ResourceManager::loadSpritesheet("gfx/mazeSprites");
+	ResourceManager::loadSpritesheet("gfx/menuSprites");
+	ResourceManager::loadSpritesheet("gfx/commands");
 
     return;
 }

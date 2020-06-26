@@ -70,25 +70,27 @@ public:
         unsigned short int paramCount = getParamNames().size();
 
 		m_background.setPosition(t_x, t_y);
+		m_background.draw(t_context);
 
         m_text[0]->setText(m_name);
         m_text[0]->setColor(COM_TEXT_COLOR);
-        m_text[0]->setFontWeight(0.8f);
-		m_text[0]->setFontSize(0.8f);
-        
+        m_text[0]->setFontWeight(0.6f);
+		m_text[0]->setFontSize(0.6f);
+
+		m_text[0]->setPosition(t_x + COM_PADDING, t_y + COM_PADDING);
+		m_text[0]->draw(t_context);
+
         int t_yCursor = t_y + COM_PADDING;
         int t_xCursor = m_text[0]->getWidth() + COM_PADDING + (2 * COM_SPACING);
         int t_paramStartX = t_xCursor - COM_SPACING;
 
-		m_background.draw(t_context);
-
-        for (unsigned int i = 0; i < paramCount; i++)
+        for (unsigned int i = 1; i < paramCount; i++)
         {
             if(m_text[i] != nullptr)
             {
 				m_text[i]->setPosition(t_xCursor, t_yCursor);
                 m_text[i]->draw(t_context);
-                t_xCursor += m_text[i]->getWidth() + COM_SPACING;
+                t_xCursor += m_text[i - 1]->getWidth() + COM_SPACING;
             }
         }
     }

@@ -4,7 +4,6 @@ MinigameTemplateMenu::MinigameTemplateMenu(m3d::Screen* screen) :
 	Menu(screen)
 {
 	int margin = 5;
-	ResourceManager::loadSpritesheet("gfx/menuSprites");
 
 	codeEditor = om->CreateCodeEditor(margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), 1);
 

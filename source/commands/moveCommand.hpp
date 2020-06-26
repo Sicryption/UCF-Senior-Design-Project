@@ -17,7 +17,7 @@ public:
 
     std::string convertToLua()
     {
-        return "move( -" + m_params[0] + ", 0)\n"; 
+        return "move( current_object , -" + m_params[0] + ", 0)\n"; 
     }
 
 };
@@ -38,7 +38,7 @@ public:
 
     std::string convertToLua()
     {
-        return "move( " + m_params[0] + ", 0)\n"; 
+        return "move( current_object , " + m_params[0] + ", 0)\n"; 
     }
 
 };
@@ -59,7 +59,7 @@ public:
 
     std::string convertToLua()
     {
-        return "move( 0, -" + m_params[0] + ")\n"; 
+        return "move( current_object ,  0, -" + m_params[0] + ")\n"; 
     }
 
 };
@@ -80,7 +80,7 @@ public:
 
     std::string convertToLua()
     {
-        return "move( 0, " + m_params[0] + ")\n"; 
+        return "move( current_object , 0, " + m_params[0] + ")\n";
     }
 
 };
