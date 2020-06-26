@@ -1,2 +1,3 @@
 --atlas -f rgba8888 -z auto
 command_background.png
+command_lock.png

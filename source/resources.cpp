@@ -1,5 +1,5 @@
 #include "resources.h"
-
+#define ERROR_SPRITE _hashmap["error.png"]
 
 //ResourceManager* ResourceManager::_instance = NULL;
 std::map<std::string, void*> ResourceManager::_hashmap = {};
@@ -22,9 +22,12 @@ void ResourceManager::initialize()
     //getInstance();
     _hashmap.clear();
     
+    ResourceManager::loadSpritesheet("gfx/common");
     ResourceManager::loadSpritesheet("gfx/mazeSprites");
 	ResourceManager::loadSpritesheet("gfx/menuSprites");
 	ResourceManager::loadSpritesheet("gfx/commands");
+
+
 
     return;
 }
@@ -209,7 +212,7 @@ m3dCI::Sprite* ResourceManager::getSprite(std::string path)
     //std::string fullPath  = TEXTURE_PATH;
     //fullPath.append(id);
 
-    tex = static_cast<m3dCI::Sprite*>( _hashmap[path] ); 
+    tex = static_cast<m3dCI::Sprite*>( (_hashmap[path] == NULL) ? ERROR_SPRITE:_hashmap[path] ); 
     
     return tex;
 }

@@ -11,7 +11,9 @@
 #define MAX_PARAMS 3
 #define COM_PADDING 3
 #define COM_SPACING 5
-#define COM_TEXT_COLOR m3d::Color(0,0,0)
+#define COM_TEXT_COLOR  m3d::Color(0,0,0)
+#define COM_LOCK_TINT   m3d::Color(100,100,100,100)
+#define COM_CLEAR_TINT  m3d::Color(255,255,255)
 
 class CommandObject //: public Drawable 
 {
@@ -23,6 +25,7 @@ protected:
     std::string m_params[MAX_PARAMS];
     m3dCI::Sprite m_background;
 	m3dCI::Text* m_text[MAX_PARAMS + 1] = { nullptr, nullptr, nullptr, nullptr };
+    m3dCI::Sprite m_lockIcon;
 
 public:
     CommandObject(bool t_lockEdit = false,bool t_lockAdd = false)
@@ -31,7 +34,10 @@ public:
         m_isEditLocked = t_lockEdit;
         m_isAddLocked = t_lockAdd;
         m_background = m3dCI::Sprite( *ResourceManager::getSprite("command_background.png"));
+        m_background.setTint(COM_LOCK_TINT);
         m_text[0] = new m3dCI::Text(m_name);
+        m_lockIcon = m3dCI::Sprite( *ResourceManager::getSprite("command_lock.png"));
+        m_lockIcon.setCenter(-108,7);
     }
 
     ~CommandObject(){}
@@ -70,7 +76,22 @@ public:
         unsigned short int paramCount = getParamNames().size();
 
 		m_background.setPosition(t_x, t_y);
-		m_background.draw(t_context);
+        m_lockIcon.setPosition(t_x, t_y);
+        if(m_isEditLocked)
+        {
+            m_background.setBlend(0.5f);
+        }else
+        {
+            m_background.setBlend(0.f);
+        }
+        m_background.draw(t_context);
+		
+
+        if(m_isAddLocked)
+        {
+            m_lockIcon.draw(t_context); 
+        }
+
 
         m_text[0]->setText(m_name);
         m_text[0]->setColor(COM_TEXT_COLOR);
@@ -96,6 +117,8 @@ public:
                 t_xCursor += m_text[i - 1]->getWidth() + COM_SPACING;
             }
         }
+
+        
     }
 
 

@@ -12,6 +12,7 @@ class MazeScene : public Minigame
 	private:
 		m3dCI::Sprite *wallpaper;
 		m3dCI::Sprite *texture;
+        m3dCI::Sprite* popup;
 		m3d::Rectangle *winScreen;
         m3d::Rectangle *loseScreen;
 		m3d::Color *colorRec;
@@ -62,12 +63,15 @@ class MazeScene : public Minigame
             x = 1.0;
 			y = 0.0;
 		}
+
 		void initialize(){
             sandbox = new LuaSandbox();
 			sandbox->executeFile("lua/init_scene.lua");
+
         //loads and gets maze texture
 			//texture = new m3dCI::Sprite(*(ResourceManager::getSprite("wall.png")));
             //sprite* spr = new m3d::Sprite();
+
        //initialize playable character
             runner = new TerminalObject(*wallHolder);
 
@@ -76,14 +80,19 @@ class MazeScene : public Minigame
             runner->initialize();
 			setObjectName("runner", runnerID);
 			//addObject(runner);
+
        //Load text and bottom screen background color
 			colorRec = new m3d::Color(150,150,150);
 			colorText = new m3d::Color(0,0,0);
+
        //initializes text and bottom screen background
 			winScreen = new m3d::Rectangle(0,0,320,240,*colorRec);
 			prompt = new m3d::Text("Maze",*colorText);
 			prompt->setPosition(160,120);
-			wallpaper = new m3dCI::Sprite(*(ResourceManager::getSprite("maze.png")));
+			wallpaper   = new m3dCI::Sprite(*(ResourceManager::getSprite("maze.png")));
+            //  Initialize popup BG
+            popup       = new m3dCI::Sprite(*(ResourceManager::getSprite("menu_popup.png")));
+            popup->setPosition(80,20);
 		    //wallpaper->setTexture(*texture);
 		    wallpaper->setCenter(0,0);
 		    wallpaper->setScale(10,10);
@@ -92,32 +101,43 @@ class MazeScene : public Minigame
 
 			currentState = MazeState::TutorialMessage;
 		}
+
 		void draw(){
 			m3d::Screen * screen = GameManager::getScreen();
 
 		    wallpaper->setPosition(0,0);
+            screen->drawTop(*wallpaper);
+
+            if(currentState == MazeState::TutorialMessage)
+            {   
+                screen->drawTop(*popup);
+            }
+
 			//screen->drawBottom(*bwallpaper);
 			//screen->drawBottom(*prompt);
 
-            screen->drawTop(*wallpaper);
             runner->draw();
 
 		}
+
         void load(){}; //any data files
+        
         void unload(){};
+        
         void update(){
 
 			switch (currentState)
 			{
 				case MazeState::TutorialMessage:
+
 					if (buttons::buttonDown(buttons::Start))
 					{
 						currentState = MazeState::Requesting;
 
 						std::vector<CommandObject*> startingCommands =
 						{
-							new SelectCommand("runner"),
-							new DownCommand("5"),
+							new SelectCommand("runner",true,false),
+							new DownCommand("5",false,true),
 							new RightCommand("15")
 						};
 
