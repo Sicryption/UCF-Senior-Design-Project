@@ -257,8 +257,8 @@ namespace m3dCI
 		thisScrollChange = 0;
 	}
 
-	std::string CodeEditor::GetLuaString()
+	std::vector<CommandObject*> CodeEditor::GetCommands()
 	{
-		return CommandObject::ConvertBulk(commands);
+		return commands;
 	}
 }

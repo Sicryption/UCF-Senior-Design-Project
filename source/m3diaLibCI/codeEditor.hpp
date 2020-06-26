@@ -54,7 +54,7 @@ namespace m3dCI
 			void removeCommand(int position = -1);
 			void ClearCommands();
 
-			std::string GetLuaString();
+			std::vector<CommandObject*> GetCommands();
 
 			bool IsBlankCommandSelected();
 

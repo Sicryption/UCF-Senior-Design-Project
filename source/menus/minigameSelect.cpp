@@ -23,8 +23,8 @@ MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 	int ButtonWidth = 50;
 	int ButtonHeight = 50;
 
-	int Rows = MINIGAME_COUNT / 2;
-	int Columns = MINIGAME_COUNT / 3;
+	int Rows = MINIGAME_COUNT / 3;
+	int Columns = MINIGAME_COUNT / 2;
 
 	int rowPadding = ((screenHeight * 0.25) * Rows - (ButtonHeight * Rows)) / (Rows - 1);
 	int columnPadding = ((bottomScreenWidth * 0.25) * Columns - (ButtonWidth * Columns)) / (Columns - 1);//45
@@ -40,9 +40,11 @@ MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 			h = ButtonHeight;
 
 		m3dCI::Button* newButton = om->CreateButton(x, y, w, h, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
-		newButton->OnRelease = [&]()
+		newButton->OnRelease = [&, i]()
 		{
-			SceneManager::transitionTo(new MazeScene());
+			if(i == MINIGAME_LIST::MAZE)
+				SceneManager::transitionTo(new MazeScene());
+
 			MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameTemplateMenu);
 		};
 
