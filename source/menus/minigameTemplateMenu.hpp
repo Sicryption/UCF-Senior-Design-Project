@@ -12,7 +12,7 @@ class MinigameTemplateMenu : public Menu
 		m3dCI::CodeEditor* codeEditor = nullptr;
 		m3dCI::CommandLister* commandLister = nullptr;
 
-		std::function<void(string)> submitFunction = nullptr;
+		std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
 
 		bool showCommandLister = false;
 	public:
@@ -22,7 +22,7 @@ class MinigameTemplateMenu : public Menu
 		void AddCommand(CommandObject* command);
 		void ClearCommands();
 
-		void SetSubmitFunction(std::function<void(string)> callbackFunction);
+		void SetSubmitFunction(std::function<void(std::vector<CommandObject*>)> callbackFunction);
 
 		void AddButton_OnClick();
 		void DeleteButton_OnClick();

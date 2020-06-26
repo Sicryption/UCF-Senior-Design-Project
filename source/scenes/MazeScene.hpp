@@ -117,7 +117,7 @@ class MazeScene : public Minigame
 							new RightCommand("1")
 						};
 
-						MenuHandler::RequestUserCode(startingCommands, [&](std::string str) { SubmitMazeCode(str); });
+						MenuHandler::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
 					}
 					break;
 				case MazeState::Execute:
@@ -125,9 +125,9 @@ class MazeScene : public Minigame
 			}
         };
 
-		void SubmitMazeCode(std::string luaCode)
+		void SubmitMazeCode(std::vector<CommandObject*> luaCode)
 		{
-			box->executeString(luaCode);
+			//box->executeString(luaCode);
 			currentState = MazeState::Execute;
 		}
 

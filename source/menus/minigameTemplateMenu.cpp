@@ -88,10 +88,7 @@ void MinigameTemplateMenu::AddButton_OnClick()
 void MinigameTemplateMenu::SubmitButton_OnClick()
 {
 	if (submitFunction != nullptr)
-	{
-		string luaString = codeEditor->GetLuaString();
-		submitFunction(luaString);
-	}
+		submitFunction(codeEditor->GetCommands());
 }
 
 void MinigameTemplateMenu::DeleteButton_OnClick()
@@ -133,7 +130,7 @@ void MinigameTemplateMenu::ClearCommands()
 	codeEditor->ClearCommands();
 }
 
-void MinigameTemplateMenu::SetSubmitFunction(std::function<void(string)> callbackFunction)
+void MinigameTemplateMenu::SetSubmitFunction(std::function<void(std::vector<CommandObject*>)> callbackFunction)
 {
 	submitFunction = callbackFunction;
 }

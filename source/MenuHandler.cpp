@@ -148,7 +148,7 @@ void MenuHandler::AddCommand(CommandObject *com)
 }
 
 
-void MenuHandler::RequestUserCode(std::vector<CommandObject*> commands, std::function<void(string)> callbackFunction)
+void MenuHandler::RequestUserCode(std::vector<CommandObject*> commands, std::function<void(std::vector<CommandObject*>)> callbackFunction)
 {
 	MenuHandler* mh = getInstance();
 

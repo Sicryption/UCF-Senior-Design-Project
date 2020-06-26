@@ -39,7 +39,7 @@ class MenuHandler
 		virtual ~MenuHandler();
 
 		static void AddCommand(CommandObject *command);
-		static void RequestUserCode(std::vector<CommandObject*> commands, std::function<void(std::string)> callbackFunction);
+		static void RequestUserCode(std::vector<CommandObject*> commands, std::function<void(std::vector<CommandObject*>)> callbackFunction);
 	private:
 		MenuState currentState;
 

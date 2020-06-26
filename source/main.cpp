@@ -49,13 +49,13 @@ int main(int argc, char* argv[])
         GameManager::Update();
         //SceneManager::draw();
         Input::update();
-		util->OnUpdate(); 
 		om->OnUpdate();
 		mh->OnUpdate();
 		SceneManager::OnUpdate();
 
 		SceneManager::OnDraw();
-        
+		util->OnUpdate();
+
 		scr->render();
 	}
 

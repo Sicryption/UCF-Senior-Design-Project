@@ -9,6 +9,11 @@
 class MinigameSelect : public Menu
 {
 	private:
+		enum MINIGAME_LIST
+		{
+			MAZE = 0
+		};
+
 		//std::vector<MinigameDescriptor
 		MinigameDescriptor minigames[MINIGAME_COUNT] =
 		{
