@@ -6,7 +6,7 @@ function tick()
 end
 
 function select_gameobject(name)
-    return  value = name_table[name]
+    return  name_table[name]
 end
 
 function delete(name)
