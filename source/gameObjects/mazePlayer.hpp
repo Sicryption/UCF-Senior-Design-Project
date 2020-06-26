@@ -8,11 +8,11 @@ class TerminalObject : public GameObject
 private:
     m3dCI::Sprite *texture;
     m3dCI::Sprite *sprite;
-    bool* wall;
+    bool (*wall)[24][40];
     //pointer to maze array 
 
 public:
-    TerminalObject(bool* walls)
+    TerminalObject(bool (*walls)[24][40])
     {
         wall =  walls;
         x = 10;
@@ -49,14 +49,13 @@ public:
     void destroy(){ this->~TerminalObject(); }
     void moveTo(double _x,double _y)
     {
-        /*if(*(wall[(int)x]+(int)y)==0)
-            {
-               x = _x;
-               y = _y; 
-            }*/
-
-		x += _x;
-		y += _y;
+        if( (x + _x) < 0 || (y + _y) < 0 || (x + _x) >= 40 || (y + _y) >= 24)
+            return;
+        if((*wall)[(int)(x + _x)][(int)(y + _y)]==0)
+        {
+            x += _x;
+	        y += _y;
+        }
     };
     void Rotate(double deg){};
 };
