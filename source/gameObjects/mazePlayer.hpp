@@ -53,8 +53,8 @@ public:
             return;
         if((*wall)[(int)(x + _x)][(int)(y + _y)]==0)
         {
-            x += _x;
-	        y += _y;
+            x += (_x * 10);
+	        y += (_y * 10);
         }
     };
     void Rotate(double deg){};
