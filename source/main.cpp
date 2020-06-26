@@ -25,25 +25,32 @@ using namespace m3d;
 int main(int argc, char* argv[])
 {
 	//  Create default Applet and Screen variables
-    Applet *app = new Applet();
-    Screen *scr = new Screen(false);
+    Applet app;
+    Screen scr;
 	
-    GameManager::Initialize(app, scr);
+    GameManager::Initialize(&app, &scr);
     //  Create a Sandbox environment (done here for testing)
 	LuaSandbox* sandbox = new LuaSandbox();
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
-	Util *util = Util::createInstance(scr, app);
-	ObjectManager *om = ObjectManager::createInstance(scr);
-	MenuHandler *mh = MenuHandler::createInstance(scr);
+	Util *util = Util::createInstance(&scr, &app);
+	ObjectManager *om = ObjectManager::createInstance(&scr);
+	MenuHandler *mh = MenuHandler::createInstance(&scr);
 	ResourceManager::initialize();
     Input::initialize();
 	SceneManager::OnInitialize();
 
 
 	// Main loop
-	while (app->isRunning())
+	while (app.isRunning())
 	{
+        if( m3d::buttons::buttonDown(m3d::buttons::Start) && m3d::buttons::buttonPressed(m3d::buttons::Select) ||
+            m3d::buttons::buttonDown(m3d::buttons::Select) && m3d::buttons::buttonPressed(m3d::buttons::Start))
+        {
+            app.exit();
+            //break;
+        }
+
 		//  Call OnUpdate Function for all Singletons.
         GameManager::Update();
         //SceneManager::draw();
@@ -55,13 +62,13 @@ int main(int argc, char* argv[])
 		SceneManager::OnDraw();
 		util->OnUpdate();
 
-		scr->render();
+		scr.render();
 	}
 
     sandbox->close();
-
 	delete (util);
 	delete (mh);
 	delete (om);
+
 	return 0;
 }
