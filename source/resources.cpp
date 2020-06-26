@@ -21,6 +21,8 @@ void ResourceManager::initialize()
     //  If no instance exists, construct one
     //getInstance();
     _hashmap.clear();
+    
+    ResourceManager::loadSpritesheet("gfx/mazeSprites");
 
     return;
 }
