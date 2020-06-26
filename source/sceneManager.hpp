@@ -5,11 +5,11 @@ class SceneManager
 {
 private:
 
-    Scene* m_nextScene;
+    static Scene* m_nextScene;
     static Scene* m_currentScene;
 
-    static SceneManager * m_instance;
-    static Scene* getInstance();
+    //static SceneManager* m_instance;
+    //static SceneManager* getInstance();
 
 public:
 

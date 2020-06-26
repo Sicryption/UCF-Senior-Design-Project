@@ -4,8 +4,14 @@
 #include <iostream>
 #include <utility>
 
-#include "lua/lua.hpp"
+#include <3ds.h>
+#include <m3dia.hpp>
 
+#include "lua/lua.hpp"
+#include "util.hpp"   
+#include "m3diaLibCI/text.hpp"
+#include "sceneManager.hpp"
+#include "gameObjects/objects.h"
 
 /**
  *  A namespace defining the functions bound to a Lua Sandbox
@@ -23,7 +29,8 @@ namespace UserAPI
      *  @param L lua state object
      *  @returns 0 on success, 1 if the stack is empty
      */
-    int print_line(lua_State* L);  
+    int print_line(lua_State* L);
+    
 
     /**
      *  @brief User API function, prints a string to the console/
@@ -32,7 +39,9 @@ namespace UserAPI
      *  @param L lua state object
      *  @returns 0 on success, 1 if the stack is empty
      */
-    int print(lua_State* L);  
+    int print(lua_State* L);
+    
+    
 
     //========== Object API
 
@@ -41,7 +50,7 @@ namespace UserAPI
     int make_circle(lua_State* L);  
     int make_paddle(lua_State* L); 
 
-    int move(lua_State* L);   
+    int move_object(lua_State* L);   
     int set_position(lua_State* L);
     int get_x_position(lua_State* L);   
     int get_y_position(lua_State* L);   
