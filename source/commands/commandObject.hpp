@@ -77,11 +77,14 @@ public:
         m_text[0]->setFontWeight(0.6f);
 		m_text[0]->setFontSize(0.6f);
 
-		m_text[0]->setPosition(t_x + COM_PADDING, t_y + COM_PADDING);
+		int t_yCursor = t_y + COM_PADDING - 1;
+		int t_xCursor = COM_PADDING + 7;
+
+		m_text[0]->setPosition(t_xCursor, t_yCursor);
 		m_text[0]->draw(t_context);
 
-        int t_yCursor = t_y + COM_PADDING;
-        int t_xCursor = m_text[0]->getWidth() + COM_PADDING + (2 * COM_SPACING);
+		t_xCursor += m_text[0]->getWidth() + (2 * COM_SPACING);
+
         int t_paramStartX = t_xCursor - COM_SPACING;
 
         for (unsigned int i = 1; i < paramCount; i++)
