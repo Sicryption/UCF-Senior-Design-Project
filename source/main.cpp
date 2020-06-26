@@ -14,7 +14,7 @@
 #include "resources.h"
 #include "gameManager.hpp"
 #include "sceneManager.hpp"
-#include "gameObjects/wall.cpp"
+#include "gameObjects/mazePlayer.hpp"
 #include "scenes/startScene.cpp"
 #include "scenes/MazeScene.hpp"
 #include "inputManager.hpp"

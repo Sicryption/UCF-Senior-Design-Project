@@ -46,7 +46,8 @@ class MazeScene : public Minigame
             { 1, 0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  1,  0,  0,  1},
             { 1, 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  1}};
             //2d array acting as map of array
-        bool (*wallHolder)[40] = walls;
+        bool (*wallHolder)[24][40] = &walls;
+		//wallHolder = &walls;
 
 		enum MazeState
 		{
@@ -72,7 +73,7 @@ class MazeScene : public Minigame
 			//texture = new m3dCI::Sprite(*(ResourceManager::getSprite("wall.png")));
             //sprite* spr = new m3d::Sprite();
        //initialize playable character
-            runner = new TerminalObject(*wallHolder);
+            runner = new TerminalObject(wallHolder);
             runner->initialize();
 			//addObject(runner);
        //Load text and bottom screen background color
@@ -120,6 +121,12 @@ class MazeScene : public Minigame
 					}
 					break;
 				case MazeState::Execute:
+					break;
+				case MazeState::Win:
+					break;
+				case MazeState::Lose:
+					break;
+				case MazeState::Requesting:
 					break;
 			}
         };
