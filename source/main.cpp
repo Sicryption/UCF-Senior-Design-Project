@@ -16,8 +16,9 @@
 #include "sceneManager.hpp"
 #include "gameObjects/wall.cpp"
 #include "scenes/startScene.cpp"
-#include "scenes/MazeScene.cpp"
+#include "scenes/MazeScene.hpp"
 #include "inputManager.hpp"
+
 
 using namespace m3d;
 
@@ -38,7 +39,8 @@ int main(int argc, char* argv[])
 	ResourceManager::initialize();
     Input::initialize();
 
-	
+	MazeScene *tester = new MazeScene();
+	tester->initialize(); 
 	// Main loop
 	while (app->isRunning())
 	{
@@ -47,10 +49,10 @@ int main(int argc, char* argv[])
         GameManager::Update();
         //SceneManager::draw();
         Input::update();
-		util->OnUpdate();
-		om->OnUpdate();
-		mh->OnUpdate();
-
+		//util->OnUpdate();
+		//om->OnUpdate();
+		//mh->OnUpdate();
+		tester->draw();
         //  Render the game screen
 		scr->render();
 	}

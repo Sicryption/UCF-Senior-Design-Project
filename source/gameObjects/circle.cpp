@@ -38,7 +38,7 @@ public:
     }
 
     void moveTo(double _x, double _y) {
-        Rec->setYPosition(y + (int)(_y + 0.5));
+        cir->setYPosition(y + (int)(_y + 0.5));
     }
 
 };
