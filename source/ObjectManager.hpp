@@ -23,6 +23,7 @@ class ObjectManager
 		Util* util;
 		//Stored values for TouchEvents. Stores the previous frames x and y touch values
 		int lastFrameTouchX, lastFrameTouchY;
+		bool draggedLastFrame = false;
 		//Array of all active buttons
 		std::vector<m3dCI::Button*> buttons;
 
@@ -59,7 +60,7 @@ class ObjectManager
 
 		m3dCI::Button* CreateButton(int px, int py, m3d::Texture& t_texture);
 
-		m3dCI::Button* CreateButton(int px, int py, const std::string& t_spriteSheet, int t_imageId);
+		m3dCI::Button* CreateButton(int px, int py, m3dCI::Sprite* sprite);
 
 		void DeleteButton(m3dCI::Button* button);
 

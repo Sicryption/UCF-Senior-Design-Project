@@ -35,7 +35,7 @@ MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 				h = ButtonHeight;
 			
 			m3dCI::Button* newButton = om->CreateButton(x, y, w, h, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
-			newButton->OnTouch = &TransitionToMinigameTemplate;
+			newButton->OnRelease = [this]() { MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameTemplateMenu); };
 
 			minigameOptions[column + (row * Columns)] = newButton;
 		}
@@ -63,9 +63,4 @@ MinigameSelect::~MinigameSelect()
 		om->DeleteButton(minigameOptions[i]);
 	delete(whiteBackground);
 	delete(MinigameSelectTopText);
-}
-
-void MinigameSelect::TransitionToMinigameTemplate(m3dCI::Button* b)
-{
-	MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameTemplateMenu);
 }

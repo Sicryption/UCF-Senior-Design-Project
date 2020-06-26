@@ -14,13 +14,9 @@ class MinigameSelect : public Menu
 
 		m3dCI::Text* MinigameSelectTopText;
 		m3dCI::Button* minigameOptions[MinigameCount];
-
-		static void TransitionToMinigameTemplate(m3dCI::Button* b);
 	public:
 		MinigameSelect(m3d::Screen* screen);
 		virtual ~MinigameSelect();
-
-		static void SelectFirstMinigame(m3dCI::Button* button);
 		
 		void OnUpdate();
 };

@@ -6,19 +6,28 @@ class MinigameTemplateMenu : public Menu
 {
 	private:
 		m3dCI::Button *AddButton = nullptr,
-			*RemoveButton = nullptr;
+			*RemoveButton = nullptr,
+			*closeButton = nullptr,
+			*submitButton = nullptr;
 		m3dCI::CodeEditor* codeEditor = nullptr;
 		m3dCI::CommandLister* commandLister = nullptr;
+
+		std::function<void(string)> submitFunction = nullptr;
 
 		bool showCommandLister = false;
 	public:
 		MinigameTemplateMenu(m3d::Screen* screen);
 		virtual ~MinigameTemplateMenu();
 
-		void AddCommand(std::string command);
+		void AddCommand(CommandObject* command);
+		void ClearCommands();
 
-		void AddButton_OnClick(m3dCI::Button* button);
-		void DeleteButton_OnClick(m3dCI::Button* button);
+		void SetSubmitFunction(std::function<void(string)> callbackFunction);
+
+		void AddButton_OnClick();
+		void DeleteButton_OnClick();
+		void SubmitButton_OnClick();
+		void CloseButton_OnClick();
 		
 		void OnUpdate();
 };

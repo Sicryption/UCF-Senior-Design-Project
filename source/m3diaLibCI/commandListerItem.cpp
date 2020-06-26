@@ -1,8 +1,8 @@
-#include "commandObject.hpp"
+#include "commandListerItem.hpp"
 
 namespace m3dCI
 {
-	CommandObject::CommandObject(int x, int y, int w, int h, std::string command, bool selected = false)
+	commandListerItem::commandListerItem(int x, int y, int w, int h, std::string command, bool selected = false)
 	{
 		backgroundRectangle = new m3d::Rectangle(x, y, w, h, m3d::Color(0, 0, 255));
 
@@ -15,24 +15,24 @@ namespace m3dCI
 		commandTextObject->setFontWeight(0.68);
 	}
 
-	CommandObject::~CommandObject()
+	commandListerItem::~commandListerItem()
 	{
 		delete(backgroundRectangle);
 		delete(commandTextObject);
 	}
 
-	void CommandObject::draw(m3d::RenderContext t_context)
+	void commandListerItem::draw(m3d::RenderContext t_context)
 	{
 		backgroundRectangle->draw(t_context);
 		commandTextObject->draw(t_context);
 	}
 
-	void CommandObject::setBackgroundColor(m3d::Color color)
+	void commandListerItem::setBackgroundColor(m3d::Color color)
 	{
 		backgroundRectangle->setColor(color);
 	}
 
-	void CommandObject::setPosition(int x, int y)
+	void commandListerItem::setPosition(int x, int y)
 	{
 		commandTextObject->setPosition(x + 2, y);//+2 for buffer from left edge
 		backgroundRectangle->setPosition(x, y);

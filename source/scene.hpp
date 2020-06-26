@@ -12,6 +12,7 @@ class Scene : public Updateable
 protected:
     std::map<unsigned int, GameObject*> m_hashmap;
     unsigned int m_idCounter;
+    std::string m_name;
 
 public:
 
@@ -38,6 +39,16 @@ public:
     virtual void onEnter()=0;
 
     virtual void onExit()=0;
+
+    std::string getSceneName()
+    {
+        return m_name;
+    }
+
+    GameObject* findObject(int t_id)
+    {
+        return m_hashmap[t_id];
+    }
 
     unsigned int addObject(GameObject* obj)
     {
