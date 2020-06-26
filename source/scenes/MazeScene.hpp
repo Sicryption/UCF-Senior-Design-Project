@@ -6,6 +6,7 @@
 #include "../resources.h"
 #include "../sandbox.h"
 #include "../minigame.hpp"
+#include "../gameObjects/mazePlayer.hpp"
 
 class MazeScene : public Minigame
 {
