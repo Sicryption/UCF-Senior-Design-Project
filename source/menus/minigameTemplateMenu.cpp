@@ -42,7 +42,8 @@ void MinigameTemplateMenu::OnUpdate()
 		else
 		{
 			scr->drawBottom(*codeEditor);
-			RemoveButton->SetEnabledState(!codeEditor->IsBlankCommandSelected());
+			AddButton->SetEnabledState(codeEditor->canAdd());
+			RemoveButton->SetEnabledState(codeEditor->canRemove());
 		}
 	}
 

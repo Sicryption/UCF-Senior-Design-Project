@@ -121,6 +121,14 @@ public:
         
     }
 
+	bool IsEditLocked()
+	{
+		return m_isEditLocked;
+	}
 
+	bool IsAddlocked()
+	{
+		return m_isAddLocked;
+	}
 };
 
