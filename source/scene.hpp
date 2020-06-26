@@ -21,7 +21,6 @@ public:
         m_hashmap.empty();
         m_idCounter = 0;
     }
-
     ~Scene()
     {
         auto it =  m_hashmap.cbegin();

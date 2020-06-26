@@ -54,4 +54,3 @@ void  SceneManager::draw()
         m_currentScene->draw();
     }
 }
-

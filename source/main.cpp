@@ -16,9 +16,10 @@
 #include "sceneManager.hpp"
 #include "gameObjects/wall.cpp"
 #include "scenes/startScene.cpp"
-#include "scenes/MazeScene.cpp"
+#include "scenes/MazeScene.hpp"
 #include "inputManager.hpp"
 #include "commands/commands.h"
+
 
 using namespace m3d;
 
