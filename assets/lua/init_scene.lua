@@ -6,9 +6,9 @@ function tick()
 end
 
 function select_gameobject(name)
-    return  name_table[name]
+      current_object = name_table[name]
 end
 
 function delete(name)
-    name_table[name] = nil;
+    name_table[name] = nil
 end
