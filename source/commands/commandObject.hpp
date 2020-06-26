@@ -77,8 +77,8 @@ public:
         m_text[0]->setFontWeight(0.6f);
 		m_text[0]->setFontSize(0.6f);
 
-		int t_yCursor = t_y + COM_PADDING - 1;
-		int t_xCursor = COM_PADDING + 7;
+		int t_yCursor = t_y + COM_PADDING - 3;
+		int t_xCursor = COM_PADDING + 12;
 
 		m_text[0]->setPosition(t_xCursor, t_yCursor);
 		m_text[0]->draw(t_context);
