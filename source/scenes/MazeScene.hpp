@@ -69,7 +69,6 @@ class MazeScene : public Minigame
             box = new LuaSandbox();
             //box->executeFile("lua/init_scene.lua");
         //loads and gets maze texture
-            ResourceManager::loadSpritesheet("gfx/mazeSprites");
 			//texture = new m3dCI::Sprite(*(ResourceManager::getSprite("wall.png")));
             //sprite* spr = new m3d::Sprite();
        //initialize playable character
