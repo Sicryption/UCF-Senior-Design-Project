@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <utility>
+#include <string>
+#include <sstream> 
 
 #include <3ds.h>
 #include <m3dia.hpp>
@@ -12,6 +14,8 @@
 #include "m3diaLibCI/text.hpp"
 #include "sceneManager.hpp"
 #include "gameObjects/objects.h"
+
+#define DEBUG
 
 /**
  *  A namespace defining the functions bound to a Lua Sandbox

@@ -110,7 +110,9 @@ public:
         {
             std::cerr << "Error: memory allocation error, not enough space \n";
         }
-        bindAPI();
+        luaopen_base(state);
+        luaopen_table(state);
+        //bindAPI();
     }
 
     ~LuaSandbox()
