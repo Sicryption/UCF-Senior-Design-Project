@@ -17,6 +17,18 @@ MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 	int screenHeight = screen->getScreenHeight();
 
 	MinigameSelectTopText->setPosition((topScreenWidth / 2) - (width / 2), (screenHeight / 2) - (height / 2));
+	
+	MinigameName = new m3dCI::Text("[SELECTED MINIGAME]");
+	MinigameName->setFontSize(0.9);
+	MinigameName->setFontWeight(0.9);
+	MinigameName->setColor(m3d::Color(0, 0, 0));
+	MinigameName->setPosition(20 + 100, 45);
+
+	MinigameDescription = new m3dCI::Text("If you see this then\n I made a mistake..");
+	MinigameDescription->setFontSize(0.6);
+	MinigameDescription->setFontWeight(0.6);
+	MinigameDescription->setColor(m3d::Color(0, 0, 0));
+	MinigameDescription->setPosition(20+100, 90);
 
 	whiteBackground = new m3d::Rectangle(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
 
@@ -31,21 +43,34 @@ MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 
 	for (int i = 0; i < MINIGAME_COUNT; i++)
 	{
-		int row = i % Rows;
 		int column = i % Columns;
+		int row = i / 3;
 
 		int x = (bottomScreenWidth * 0.25) / 2 + (columnPadding * column) + (ButtonWidth * column),
 			y = (screenHeight * 0.25) + (rowPadding * row) + (ButtonHeight * row),
 			w = ButtonWidth,
 			h = ButtonHeight;
 
-		m3dCI::Button* newButton = om->CreateButton(x, y, w, h, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
+		m3dCI::Button* newButton;
+		if (minigames[i].getName() != "NULL")
+			newButton = om->CreateButton(x, y, ResourceManager::getSprite(minigames[i].getSmallSpriteLocation()));
+		else
+			newButton = om->CreateButton(x, y, w, h, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
+
 		newButton->OnRelease = [&, i]()
 		{
-			if(i == MINIGAME_LIST::MAZE)
-				SceneManager::transitionTo(new MazeScene());
+			//second touch
+			if (selectedMinigame == i)
+			{
+				if (i == MINIGAME_LIST::MAZE)
+					SceneManager::transitionTo(new MazeScene());
 
-			MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameTemplateMenu);
+				MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameTemplateMenu);
+			}
+			else
+			{
+				SelectMinigame(i);
+			}
 		};
 
 		minigameOptions[column + (row * Columns)] = newButton;
@@ -61,7 +86,15 @@ void MinigameSelect::OnUpdate()
 
 	scr->drawTop(*whiteBackground, RenderContext::Mode::Flat);
 	scr->drawBottom(*whiteBackground, RenderContext::Mode::Flat);
-	scr->drawTop(*MinigameSelectTopText, RenderContext::Mode::Flat);
+
+	if(selectedMinigame == -1)
+		scr->drawTop(*MinigameSelectTopText, RenderContext::Mode::Flat);
+	else
+	{
+		scr->drawTop(*MinigameName, RenderContext::Mode::Flat);
+		scr->drawTop(*MinigameDescription, RenderContext::Mode::Flat);
+		scr->drawTop(*selectedMinigameLargeSprite, RenderContext::Mode::Flat);
+	}
 
 	for(int i = 0; i < MINIGAME_COUNT; i++)
 		scr->drawBottom(*minigameOptions[i], RenderContext::Mode::Flat);
@@ -71,6 +104,21 @@ MinigameSelect::~MinigameSelect()
 {
 	for (int i = 0; i < MINIGAME_COUNT; i++)
 		om->DeleteButton(minigameOptions[i]);
+
 	delete(whiteBackground);
 	delete(MinigameSelectTopText);
+	delete(MinigameName);
+	delete(MinigameDescription);
+	delete(selectedMinigameLargeSprite);
+}
+
+void MinigameSelect::SelectMinigame(int index)
+{
+	selectedMinigame = index;
+
+	selectedMinigameLargeSprite = ResourceManager::getSprite(minigames[index].getLargeSpriteLocation());
+	selectedMinigameLargeSprite->setPosition(10, 45);
+
+	MinigameName->setText(minigames[index].getName());
+	MinigameDescription->setText(minigames[index].getDescription());
 }
