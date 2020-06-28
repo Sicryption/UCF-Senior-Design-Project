@@ -20,4 +20,9 @@ public:
 	}
 
 	MinigameDescriptor() : MinigameDescriptor("NULL", "NULL", "NULL", "NULL") {}
+
+	string getName() { return name; };
+	string getDescription() { return description; };
+	string getSmallSpriteLocation() { return smallSprite; };
+	string getLargeSpriteLocation() { return largeSprite; };
 };
