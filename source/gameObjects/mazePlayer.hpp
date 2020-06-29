@@ -50,14 +50,17 @@ public:
     void destroy(){ this->~TerminalObject(); }
     void moveTo(double _x,double _y)
     {
+         /*
         if( (x + _x) < 0 || (y + _y) < 0 || (x + _x) >= 40 || (y + _y) >= 24)
             return;
-        /*
+        
         if((*wall)[(int)(x + _x)][(int)(y + _y)]==0)
         {
             x += (_x * 10);
 	        y += (_y * 10);
         }*/
+        if( ((x/10) + _x) < 0 || ((y/10) + _y) < 0 || ((x/10) + _x) >= 20 || ((y/10) + _y) >= 12)
+            return;
         if(_y == 0)
         {
             if(_x > 0)
