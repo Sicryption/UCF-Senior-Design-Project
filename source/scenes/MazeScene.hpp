@@ -136,9 +136,9 @@ class MazeScene : public Minigame
 
 						std::vector<CommandObject*> startingCommands =
 						{
-							new SelectCommand("runner",true,false),
-							new DownCommand("5",false,true),
-							new RightCommand("15")
+							new SelectCommand("runner",true,true),
+							new DownCommand("1",false,true),
+							new RightCommand("1")
 						};
 
 						MenuHandler::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
@@ -157,7 +157,9 @@ class MazeScene : public Minigame
 
 		void SubmitMazeCode(std::vector<CommandObject*> luaCode)
 		{
-			std::string str = CommandObject::ConvertBulk(luaCode);
+			//std::string str = "coroutine.create(function ()" + CommandObject::ConvertBulk(luaCode) + " end)" ;
+            std::string str = CommandObject::ConvertBulk(luaCode);
+
 
 			Util::getInstance()->PrintLine(str);
 
