@@ -20,6 +20,7 @@ class MinigameTemplateMenu : public Menu
 		virtual ~MinigameTemplateMenu();
 
 		void AddCommand(CommandObject* command);
+		void AddStartCommands(std::vector<CommandObject*> obj);
 		void ClearCommands();
 
 		void SetSubmitFunction(std::function<void(std::vector<CommandObject*>)> callbackFunction);
