@@ -52,7 +52,7 @@ MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 			h = ButtonHeight;
 
 		m3dCI::Button* newButton;
-		if (minigames[i].getName() != "NULL")
+		if (minigames[i].getSmallSpriteLocation() != "NULL")
 			newButton = om->CreateButton(x, y, new m3dCI::Sprite(*ResourceManager::getSprite(minigames[i].getSmallSpriteLocation())));
 		else
 			newButton = om->CreateButton(x, y, w, h, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
