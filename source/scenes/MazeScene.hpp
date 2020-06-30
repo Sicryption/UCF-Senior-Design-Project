@@ -136,9 +136,32 @@ class MazeScene : public Minigame
 
 						std::vector<CommandObject*> startingCommands =
 						{
-							new SelectCommand("runner",true,false),
-							new DownCommand("5",false,true),
-							new RightCommand("15")
+							new SelectCommand("runner",true,true),
+							new RightCommand("18",false,true),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new RightCommand("18"),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new UpCommand("5"),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new UpCommand("5"),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new UpCommand("5"),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new UpCommand("5"),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new UpCommand("5")
 						};
 
 						MenuHandler::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });

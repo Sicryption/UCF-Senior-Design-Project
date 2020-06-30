@@ -110,6 +110,12 @@ void MinigameTemplateMenu::CloseButton_OnClick()
 	showCommandLister = false;
 }
 
+void MinigameTemplateMenu::AddStartCommands(std::vector<CommandObject*> commands)
+{
+	for (unsigned int i = 0; i < commands.size(); i++)
+		codeEditor->addCommand(commands[i]);
+}
+
 void MinigameTemplateMenu::AddCommand(CommandObject* command)
 {
 	codeEditor->addCommand(command);
