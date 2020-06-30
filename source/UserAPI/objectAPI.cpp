@@ -20,9 +20,6 @@ int UserAPI::move_object(lua_State* L)
     GameObject* obj = scene->findObject(t_id);
     if(obj == nullptr)
     {
-		Util::PrintLine(std::to_string(t_id));
-		Util::PrintLine(std::to_string(x));
-		Util::PrintLine(std::to_string(y));
 
         Util::PrintLine("Error: couldnt find object \'" + std::to_string(t_id) +"\' in Scene \'" + scene->getSceneName() + "\'");
         return 0;

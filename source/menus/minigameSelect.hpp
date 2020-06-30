@@ -17,16 +17,26 @@ class MinigameSelect : public Menu
 		//std::vector<MinigameDescriptor
 		MinigameDescriptor minigames[MINIGAME_COUNT] =
 		{
-			MinigameDescriptor("Maze", "Navigate through this ezpz", "mazeSmall.png", "mazeLarge.png")
+			MinigameDescriptor("Maze", "Navigate through a maze.\n\n\n\nAims to teach: Object Movement", "mazeSmall.png", "mazeLarge.png"),
+			MinigameDescriptor("Pong", "Don't let the ball bounce\ninto your base!\n\n\nAims to teach: Conditionals", "pongSmall.png", "pongLarge.png"),
+			MinigameDescriptor("Tic-Tac-Toe", "Get three X's in a row!\n\n\n\nAims to teach: Object Creation", "TTTSmall.png", "TTTLarge.png"),
+			MinigameDescriptor(),
+			MinigameDescriptor(),
+			MinigameDescriptor()
 		};
+		
+		int selectedMinigame = -1;
 		
 		m3d::Rectangle* whiteBackground;
 
-		m3dCI::Text* MinigameSelectTopText;
+		m3dCI::Sprite *selectedMinigameLargeSprite = nullptr;
+		m3dCI::Text *MinigameSelectTopText = nullptr, *MinigameDescription = nullptr, *MinigameName = nullptr;
 		m3dCI::Button* minigameOptions[MINIGAME_COUNT];
 	public:
 		MinigameSelect(m3d::Screen* screen);
 		virtual ~MinigameSelect();
+
+		void SelectMinigame(int index);
 		
 		void OnUpdate();
 };
