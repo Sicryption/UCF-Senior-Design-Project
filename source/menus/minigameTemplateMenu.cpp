@@ -24,7 +24,7 @@ MinigameTemplateMenu::MinigameTemplateMenu(m3d::Screen* screen) :
 	RemoveButton->SetText("DEL");
 	RemoveButton->OnRelease = [this]() { this->DeleteButton_OnClick(); };
 
-	closeButton = om->CreateButton(48 + BOTTOMSCREEN_WIDTH * 0.5, 0, ResourceManager::getSprite("tabClose.png"));
+	closeButton = om->CreateButton(48 + BOTTOMSCREEN_WIDTH * 0.5, 0, new m3dCI::Sprite(*ResourceManager::getSprite("tabClose.png")));
 	closeButton->OnRelease = [this]() { this->CloseButton_OnClick(); };
 	closeButton->SetEnabledState(false);
 	

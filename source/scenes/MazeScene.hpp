@@ -138,8 +138,6 @@ class MazeScene : public Minigame
 						{
 							new SelectCommand("runner",true,true),
 							new DownCommand("5",false,true),
-							new RightCommand("15")
-							new DownCommand("5"),
 							new LeftCommand("18"),
 							new DownCommand("5"),
 							new RightCommand("18"),
