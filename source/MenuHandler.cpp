@@ -64,12 +64,28 @@ MenuHandler::~MenuHandler()
 //The function which is called on every game frame.
 void MenuHandler::OnUpdate()
 {
-	if(currentMenu != nullptr)
-		currentMenu->OnUpdate();
+	if (transition != MenuState::NotTransitioning)
+	{
+		TransitionTo(transition);
+	}
+	else
+	{
+		if (currentMenu != nullptr)
+			currentMenu->OnUpdate();
+	}
 }
 
 void MenuHandler::TransitionTo(MenuState state)
 {
+	//This adds a frame buffer between menu changes. Allowing for objects in the menu to interact with other menu pieces
+	if (transition == MenuState::NotTransitioning)
+	{
+		transition = state;
+		return;
+	}
+
+	transition = MenuState::NotTransitioning;
+
 	scr->clear();//Causes screen to blink. Otherwise, the screen buffers dont get cleared between scenes. 
 
 	switch (state)
@@ -114,19 +130,12 @@ void MenuHandler::TransitionTo(MenuState state)
 			currentState = state;
 			break;
 		}
-		case MenuState::Testing:
-		{
-			util->PrintLine("Attempting transition to: Testing");
-			break;
-		}
 		default:
 		{
 			util->PrintLine("Attempting to transition to menu state which has not been defined.");
 			break;
 		}
 	}
-
-	util->PrintLine("Transition complete.");
 }
 
 void MenuHandler::AddCommand(CommandObject *com)
