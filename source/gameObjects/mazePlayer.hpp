@@ -50,7 +50,12 @@ public:
     void destroy(){ this->~TerminalObject(); }
     void moveTo(double _x,double _y)
     {
+        int i;
+        int xc = (x/20);
+        int yc = (y/20);
          /*
+
+        
         if( (x + _x) < 0 || (y + _y) < 0 || (x + _x) >= 40 || (y + _y) >= 24)
             return;
         
@@ -59,28 +64,31 @@ public:
             x += (_x * 10);
 	        y += (_y * 10);
         }*/
-        if( ((x/10) + _x) < 0 || ((y/10) + _y) < 0 || ((x/10) + _x) >= 20 || ((y/10) + _y) >= 12)
-            return;
+        //if( (xc + _x) < 0 || (yc + _y) < 0 || (xc + _x) >= 20 || (yc + _y) >= 12)
+            //return;
         if(_y == 0)
         {
             if(_x > 0)
             {
-                _x += x;
-                for(int i = x; i < (int)_x; i++)
+                _x += xc;
+                for( i = xc; i < (int)_x; i++)
                 {
-                    if((*wall)[i][y] == 1)
+                    if((*wall)[yc][i + 1] == 1)
+                    {
                         break;
-                    x += 10;
+                    }
+                        
+                    x = x + 20;
                 }
             }
             if(_x < 0)
             {
-                _x += x;
-                for(int i = x; i > (int)_x; i--)
+                _x += xc;
+                for(i = xc; i > (int)_x; i--)
                 {
-                    if((*wall)[i][y] == 1)
+                    if((*wall)[yc][i - 1] == 1)
                         break;
-                    x -= 10;
+                    x -= 20;
                 }
             }
             
@@ -89,22 +97,22 @@ public:
         {
             if(_y > 0)
             {
-                _y += y;
-                for(int i = y; i < (int)_y; i++)
+                _y += yc;
+                for(i = yc; i < (int)_y; i++)
                 {
-                    if((*wall)[x][i] == 1)
+                    if((*wall)[i+1][xc] == 1)
                         break;
-                    y += 10;
+                    y += 20;
                 }
             }
             if(_y < 0)
             {
-                _y += y;
-                for(int i = y; i > (int)_y; i--)
+                _y += yc;
+                for( i = yc; i > (int)_y; i--)
                 {
-                    if((*wall)[x][i] == 1)
+                    if((*wall)[i - 1][xc] == 1)
                         break;
-                    y -= 10;
+                    y -= 20;
                 }
             }
         }

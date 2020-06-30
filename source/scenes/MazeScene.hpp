@@ -86,7 +86,7 @@ class MazeScene : public Minigame
             popup->setPosition(80,20);
 		    //wallpaper->setTexture(*texture);
 		    wallpaper->setCenter(0,0);
-		    wallpaper->setScale(10,10);
+		    wallpaper->setScale(1,1);
 
 
 
@@ -128,8 +128,16 @@ class MazeScene : public Minigame
 						std::vector<CommandObject*> startingCommands =
 						{
 							new SelectCommand("runner",true,false),
-							new DownCommand("5",false,true),
-							new RightCommand("15")
+							new RightCommand("18",false,true),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new RightCommand("18"),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new UpCommand("5")
+							//new RightCommand("18")
 						};
 
 						MenuHandler::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
