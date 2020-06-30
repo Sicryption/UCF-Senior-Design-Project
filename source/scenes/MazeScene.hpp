@@ -45,7 +45,8 @@ class MazeScene : public Minigame
             { 1, 0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  1,  0,  0,  1},
             { 1, 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  1}};
             //2d array acting as map of array
-        bool (*wallHolder)[40] = walls;
+        bool (*wallHolder)[24][40] = &walls;
+		//wallHolder = &walls;
 
 		enum MazeState
 		{
@@ -73,10 +74,9 @@ class MazeScene : public Minigame
             //sprite* spr = new m3d::Sprite();
 
        //initialize playable character
-            runner = new TerminalObject(*wallHolder);
+            runner = new TerminalObject(wallHolder);
 
 			runnerID = addObject(runner);
-
             runner->initialize();
 			setObjectName("runner", runnerID);
 			//addObject(runner);
@@ -139,12 +139,42 @@ class MazeScene : public Minigame
 							new SelectCommand("runner",true,true),
 							new DownCommand("5",false,true),
 							new RightCommand("15")
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new RightCommand("18"),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new UpCommand("5"),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new UpCommand("5"),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new UpCommand("5"),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new UpCommand("5"),
+							new DownCommand("5"),
+							new LeftCommand("18"),
+							new DownCommand("5"),
+							new UpCommand("5")
 						};
 
 						MenuHandler::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
 					}
 					break;
 				case MazeState::Execute:
+					break;
+				case MazeState::Win:
+					break;
+				case MazeState::Lose:
+					break;
+				case MazeState::Requesting:
 					break;
 			}
         };
