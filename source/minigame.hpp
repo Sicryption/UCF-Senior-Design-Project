@@ -111,7 +111,7 @@ class Minigame : public Scene
 	//from scene
 		virtual void initialize()
         {
-            m_sandboxThread = new m3d::Thread( sandboxRuntime, &m_sandboxThreadState, true, false);
+            m_sandboxThread = new m3d::Thread( [this](m3d::Parameter p){sandboxRuntime(p);} , &m_sandboxThreadState, true, false);
         }
 
 		virtual void load()=0;
