@@ -5,6 +5,7 @@
 /**
  *  User API print function, taken from the lua API implementation
  *  @brief
+ *  taken from Lua API's base Library
  */
 int UserAPI::print_line(lua_State* L)
 {   
@@ -18,19 +19,25 @@ int UserAPI::print_line(lua_State* L)
         lua_pushvalue(L, i);   /* value to print */
         lua_call(L, 1, 1);
         s = lua_tolstring(L, -1, &l);  /* get result */
+        
         if (s == NULL)
-        return luaL_error(L, "'tostring' must return a string to 'print'");
+            return luaL_error(L, "'tostring' must return a string to 'print'");
+
         if (i>1) 
         {
             lua_writestring("\t", 1);
             std::cout << "    "; 
+            Util::Print("    ");
         }   
+
         lua_writestring(s, l);
         std::cout << s ;
+        Util::Print(s);
         lua_pop(L, 1);  /* pop result */
     }
     lua_writeline();
-     std::cout << std::endl;
+    std::cout << std::endl;
+    Util::Print("\n");
     return 0;
 }
 

@@ -112,7 +112,7 @@ public:
         }
         luaopen_base(state);
         luaopen_table(state);
-        //bindAPI();
+        bindAPI();
     }
 
     ~LuaSandbox()
