@@ -84,5 +84,4 @@ public:
     {
         return  m_params[0] + " = 0\n"; 
     }
-
 };
