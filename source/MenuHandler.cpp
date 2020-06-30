@@ -171,8 +171,7 @@ void MenuHandler::RequestUserCode(std::vector<CommandObject*> commands, std::fun
 
 	menu->ClearCommands();
 
-	for (unsigned int i = 0; i < commands.size(); i++)
-		menu->AddCommand(commands[i]);
+	menu->AddStartCommands(commands);
 
 	menu->SetSubmitFunction(callbackFunction);
 }

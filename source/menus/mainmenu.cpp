@@ -44,7 +44,9 @@ void MainMenu::OnUpdate()
 	int bottomScreenWidth = scr->getScreenWidth(m3d::RenderContext::ScreenTarget::Bottom);
 	int screenHeight = scr->getScreenHeight();
 
-	if (m3d::buttons::buttonReleased(m3d::buttons::Button::Start))
+	if (m3d::buttons::buttonReleased(m3d::buttons::Button::Start)
+		|| m3d::buttons::buttonReleased(m3d::buttons::Button::A)
+		|| Input::btnReleased(m3d::buttons::Touch))
 	{
 		if (!ClickHereToContinue->GetEnabledState())
 		{
@@ -55,9 +57,9 @@ void MainMenu::OnUpdate()
 		}
 		else
 		{
-			MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameSelect);
+			if (m3d::buttons::buttonReleased(m3d::buttons::Button::Start))
+				MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameSelect);
 		}
-		return;
 	}
 
 	scr->drawTop(*whiteBackground, RenderContext::Mode::Flat);
