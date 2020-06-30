@@ -51,6 +51,12 @@ public:
 	{
 		return m_params;
 	}
+
+
+	std::string getName()
+	{
+		return m_name;
+	}
 	
 	void setParam(int index, std::string str)
 	{
