@@ -17,7 +17,7 @@ class MazeScene : public Minigame
         m3d::Rectangle *loseScreen;
 		m3d::Color *colorRec;
 		m3d::Color *colorText;
-		m3d::Text *prompt;
+		m3dCI::Text *prompt;
         TerminalObject *runner;
 		int x, y, runnerID;
         bool walls[12][20] ={{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -78,8 +78,10 @@ class MazeScene : public Minigame
 
        //initializes text and bottom screen background
 			winScreen = new m3d::Rectangle(0,0,320,240,*colorRec);
-			prompt = new m3d::Text("Maze",*colorText);
-			prompt->setPosition(160,120);
+			prompt = new m3dCI::Text(" Use move commands to traverse \n the maze. In order to add a move \n command select Add, then go to\n the tab with the arrows. There\n you can select up, down, left \n or right as a direction to\n move in the maze. You can then\n change the amount of spaces you\n want to move by selecting it and\n clicking edit. Be sure to enter all\n commands you will need to get to\n the end of the maze before running.",*colorText);
+			prompt->setPosition(90,30);
+			prompt->setFontSize(.5);
+			prompt->setFontWeight(.5);
 			wallpaper   = new m3dCI::Sprite(*(ResourceManager::getSprite("maze1.png")));
             //  Initialize popup BG
             popup       = new m3dCI::Sprite(*(ResourceManager::getSprite("menu_popup.png")));
@@ -102,6 +104,8 @@ class MazeScene : public Minigame
             if(currentState == MazeState::TutorialMessage)
             {   
                 screen->drawTop(*popup);
+				screen->drawTop(*prompt);
+				//use m3dci for prompt
             }
 
 			//screen->drawBottom(*bwallpaper);
