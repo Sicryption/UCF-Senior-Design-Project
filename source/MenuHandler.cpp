@@ -138,6 +138,14 @@ void MenuHandler::TransitionTo(MenuState state)
 	}
 }
 
+MenuHandler::MenuState MenuHandler::GetTransitionState()
+{
+	if (instance == 0)
+		instance = MenuHandler::getInstance();
+
+	return instance->currentState;
+}
+
 void MenuHandler::AddCommand(CommandObject *com)
 {
 	if (com == nullptr)
