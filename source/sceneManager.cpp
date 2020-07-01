@@ -12,7 +12,14 @@ Scene* SceneManager::getScene()
 void  SceneManager::transitionTo(Scene* t_next)
 {
 
-    if(t_next == nullptr){return;}
+    if(t_next == nullptr)
+    {
+        m_currentScene->unload();
+        m_currentScene->onExit();
+        m_currentScene = nullptr;
+        m_nextScene = nullptr;
+        return;
+    }
 
     m_nextScene = t_next;
     m_nextScene->initialize();
@@ -22,6 +29,7 @@ void  SceneManager::transitionTo(Scene* t_next)
     if(m_currentScene != nullptr)
     {
         m_currentScene->unload();
+        m_currentScene->onExit();
     }
 
     m_nextScene->load();

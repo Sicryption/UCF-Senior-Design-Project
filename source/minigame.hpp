@@ -55,10 +55,11 @@ class Minigame : public Scene
                 if(m_luaChunk != nullptr)
                 {
                    
-                   
+                    onExecutionBegin();
+                    //  TODO: Disable Command Menu
                     sandbox->executeString(*m_luaChunk);
                     m_luaChunk = nullptr;
-                   
+                    onExecutionBegin();
 
                 }
 
@@ -67,15 +68,7 @@ class Minigame : public Scene
             //m_mutex_threadState.unlock();
         }
 
-        void onExecutionBegin()
-        {
-            // TODO: Disable Command Editor
-        }
-
-        void onExecutionEnd()
-        {
-            // TODO: Enable Command Editor
-        }
+        
 
 	protected:
 		static bool winCond;
@@ -106,6 +99,16 @@ class Minigame : public Scene
             //  Wait for thread state access
             m3d::Lock lock(m_mutex_threadState);
             m_sandboxThreadState = state;
+            
+        }
+
+        virtual void onExecutionBegin()
+        {
+            
+        }
+
+        virtual void onExecutionEnd()
+        {
             
         }
 
