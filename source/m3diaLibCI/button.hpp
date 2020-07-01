@@ -45,19 +45,21 @@ namespace m3dCI
 			Button(int px, int py, int pr, m3d::Color p_innerColor, m3d::Color p_borderColor, int p_borderWidth);
 
 			Button(int px, int py, m3d::Texture& t_texture);
-			Button(int px, int py, const std::string& t_spriteSheet, int t_imageId);
+			Button(int px, int py, m3dCI::Sprite* sprite);
 			
 			//The function which is called when the touch event is touched over the button.
 			// Called if a single touch is over the button and the touch happened on the same frame
-			void (*OnTouch)(Button*) = nullptr;
+			std::function<void()> OnTouch;
 			
 			//The function which is called when the touch event is released over the button.
+			std::function<void()> OnRelease;
 			// Called when a touch is released over a button.
-			void (*OnRelease)(Button*) = nullptr;
+			//void (*OnRelease)(Button*) = nullptr;
 			
 			//The function which is called when the touch event is held over the button.
 			// Called when a touch is over a button, but the initial touch did not happen on the frame being called
-			void (*OnHeld)(Button*) = nullptr;
+			std::function<void()> OnHeld;
+			//void (*OnHeld)(Button*) = nullptr;
 			
 			//Check if a point intersects with the button
 			bool PointIntersects(int x, int y);
@@ -92,5 +94,6 @@ namespace m3dCI
 			void setBorderColor(m3d::Color t_color);
 			m3d::Color getInnerColor();
 			m3d::Color getBorderColor();
+			void setScale(float x, float y);
 	};
 }

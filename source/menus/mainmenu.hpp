@@ -9,8 +9,7 @@ class MainMenu : public Menu
 
 		m3dCI::Text* StartupText;
 		m3dCI::Button* ClickHereToContinue;
-
-		static void ClickHereToContinue_OnClick(m3dCI::Button* button);
+		m3dCI::Sprite* apple;
 	public:
 		MainMenu(m3d::Screen* screen);
 		virtual ~MainMenu();

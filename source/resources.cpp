@@ -1,5 +1,5 @@
 #include "resources.h"
-
+#define ERROR_SPRITE _hashmap["error.png"]
 
 //ResourceManager* ResourceManager::_instance = NULL;
 std::map<std::string, void*> ResourceManager::_hashmap = {};
@@ -21,6 +21,13 @@ void ResourceManager::initialize()
     //  If no instance exists, construct one
     //getInstance();
     _hashmap.clear();
+    
+    ResourceManager::loadSpritesheet("gfx/common");
+    ResourceManager::loadSpritesheet("gfx/mazeSprites");
+	ResourceManager::loadSpritesheet("gfx/menuSprites");
+	ResourceManager::loadSpritesheet("gfx/commands");
+
+
 
     return;
 }
@@ -125,7 +132,11 @@ std::vector<std::string> ResourceManager::readSpritesheet(std::string path)
 {
     std::vector<std::string> ret;
     std::ifstream fs (path);
-    Util::PrintLine(path);
+
+    #if defined DEBUG
+    Util::PrintLine( "Reading spritesheet from '" + path + "'");
+    #endif
+
     if(fs.is_open())
     {   
         std::string line;
@@ -160,13 +171,18 @@ std::vector<m3dCI::Sprite*> ResourceManager::loadSpritesheet(std::string path)
     C2D_SpriteSheet sheet = C2D_SpriteSheetLoad(sheetPath.c_str());
     
     std::vector<std::string> names = readSpritesheet(defPath);
-    Util::PrintLine( std::to_string(names.size()) );
-
+    
+    #if defined DEBUG
+    Util::PrintLine( "Found [" + std::to_string(names.size()-1) + "] assets in spritesheet \'" + sheetPath + "\'" );
+    #endif
     _hashmap[sheetPath] = &sheet;
 
     for (unsigned int i = 1; i < names.size(); i++)
     {
-        Util::PrintLine(names[i]);
+        #if defined DEBUG
+        Util::PrintLine( "Loading sprite \'" + names[i] + "\'");
+        #endif
+
         _hashmap[names[i]] = m3dCI::Sprite::createFromSheet(sheet,i-1);
         ret.push_back( static_cast<m3dCI::Sprite*>( _hashmap[names[i]]) );
 /*
@@ -196,7 +212,7 @@ m3dCI::Sprite* ResourceManager::getSprite(std::string path)
     //std::string fullPath  = TEXTURE_PATH;
     //fullPath.append(id);
 
-    tex = static_cast<m3dCI::Sprite*>( _hashmap[path] ); 
+    tex = static_cast<m3dCI::Sprite*>( (_hashmap[path] == NULL) ? ERROR_SPRITE:_hashmap[path] ); 
     
     return tex;
 }

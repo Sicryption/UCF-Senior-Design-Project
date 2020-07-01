@@ -6,6 +6,7 @@
 #include <vector>
 #include <m3dia.hpp>
 
+#include "commands/commands.h"
 #include "m3diaLibCI/button.hpp"
 
 using namespace m3d;
@@ -23,10 +24,10 @@ class MenuHandler
 			MainMenu,
 			MinigameSelect,
 			MinigameTemplateMenu,
-			Testing
+			NotTransitioning
 		};
 
-		int transitionBuffer = -1;
+		MenuState transition = MenuState::NotTransitioning;
 
 		static MenuHandler* getInstance();
 		static MenuHandler* createInstance(Screen* screen);
@@ -34,14 +35,12 @@ class MenuHandler
 		//The function which is called on every game frame.
 		void OnUpdate();
 
-		bool IsTransitioning();
 		void TransitionTo(MenuState state);
 		virtual ~MenuHandler();
 
-		static void AddCommand(std::string command);
-		static void AddCommandObject(m3dCI::Button* button);
-		static void RemoveCommandObject(m3dCI::Button* button);
-
+		static MenuState GetTransitionState();
+		static void AddCommand(CommandObject *command);
+		static void RequestUserCode(std::vector<CommandObject*> commands, std::function<void(std::vector<CommandObject*>)> callbackFunction);
 	private:
 		MenuState currentState;
 
@@ -60,5 +59,6 @@ class MenuHandler
 			All further attempts to accesss this class can use dummy values for all parameters of getInstance
 		*/
 		static MenuHandler *instance;
+
 		MenuHandler(Screen* screen);
 };

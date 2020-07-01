@@ -9,3 +9,4 @@ source/.vs/*
 source/*.DS_Store
 Debug/
 *.t3x
+*.psd

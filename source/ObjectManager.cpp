@@ -67,6 +67,9 @@ ObjectManager::~ObjectManager()
 //The function which is called on every game frame.
 void ObjectManager::OnUpdate()
 {
+	if (MenuHandler::GetTransitionState() != MenuHandler::MenuState::NotTransitioning)
+		return;
+
 	int touchedThisFrame = hidKeysDown() & KEY_TOUCH,
 		touchReleasedThisFrame = hidKeysUp() & KEY_TOUCH,
 		touchx = m3d::touch::getXPosition(),
@@ -75,10 +78,12 @@ void ObjectManager::OnUpdate()
 	std::vector<m3dCI::Button*> buttonsClone(buttons);
 	std::vector<m3dCI::CodeEditor*> codeEditorsClone(codeEditors);
 	std::vector<m3dCI::CommandLister*> commandListersClone(commandListers);
+	std::vector<m3dCI::CommandEditor*> commandEditorsClone(commandEditors);
+
 
 	for (unsigned int i = 0; i < codeEditorsClone.size(); i++)
 	{
-		if (codeEditorsClone[i] == nullptr)
+		if (codeEditorsClone[i] == nullptr || !codeEditorsClone[i]->GetActive())
 			continue;
 
 		//only fires if point is actually inside the code editor
@@ -109,6 +114,15 @@ void ObjectManager::OnUpdate()
 			//only fires if point is actually inside the command lister
 			commandListersClone[i]->SelectPoint(lastFrameTouchX, lastFrameTouchY);
 		}
+
+		for (unsigned int i = 0; i < commandEditorsClone.size(); i++)
+		{
+			if (commandEditorsClone[i] == nullptr)
+				continue;
+
+			//only fires if point is actually inside the command lister
+			commandEditorsClone[i]->HandleClick(lastFrameTouchX, lastFrameTouchY);
+		}
 	}
 	
 	for (unsigned int i = 0; i < buttonsClone.size(); i++)
@@ -120,20 +134,20 @@ void ObjectManager::OnUpdate()
 		if (touchedThisFrame)
 		{
 			if (buttonsClone[i]->OnTouch != nullptr && buttonsClone[i]->PointIntersects(touchx, touchy))
-				(buttonsClone[i]->OnTouch)(buttonsClone[i]);
+				buttonsClone[i]->OnTouch();
 		}
 		else if (touchReleasedThisFrame)
 		{
 			if (buttonsClone[i]->OnRelease != nullptr && buttonsClone[i]->PointIntersects(lastFrameTouchX, lastFrameTouchY))
-				(buttonsClone[i]->OnRelease)(buttonsClone[i]);
+				buttonsClone[i]->OnRelease();
 		}
 		else
 		{
 			if (buttonsClone[i]->OnHeld != nullptr && buttonsClone[i]->PointIntersects(touchx, touchy))
-				(buttonsClone[i]->OnHeld)(buttonsClone[i]);
+				buttonsClone[i]->OnHeld();
 		}
 	}
-	
+
 	lastFrameTouchX = touchx;
 	lastFrameTouchY = touchy;
 
@@ -171,9 +185,9 @@ m3dCI::Button* ObjectManager::CreateButton(int x, int y, m3d::Texture& t_texture
 }
 
 //Circular button creation. Adds button to array of active buttons.
-m3dCI::Button* ObjectManager::CreateButton(int x, int y, const std::string& t_spriteSheet, int t_imageId = 0)
+m3dCI::Button* ObjectManager::CreateButton(int x, int y, m3dCI::Sprite* sprite)
 {
-	m3dCI::Button* newButton = new m3dCI::Button(x, y, t_spriteSheet, t_imageId);
+	m3dCI::Button* newButton = new m3dCI::Button(x, y, sprite);
 
 	buttons.push_back(newButton);
 
@@ -240,5 +254,31 @@ void ObjectManager::DeleteCommandLister(m3dCI::CommandLister* cl)
 	{
 		delete(commandListers[index]);
 		commandListers.erase(commandListers.begin() + index);
+	}
+}
+
+
+m3dCI::CommandEditor* ObjectManager::CreateCommandEditor(CommandObject* command)
+{
+	m3dCI::CommandEditor* ce = new m3dCI::CommandEditor(command);
+
+	commandEditors.push_back(ce);
+
+	return ce;
+}
+
+void ObjectManager::DeleteCommandEditor(m3dCI::CommandEditor* ce)
+{
+	int index = -1;
+
+	for (unsigned int i = 0; i < commandEditors.size(); i++)
+		if (commandEditors[i] == ce)
+			index = i;
+
+	if (index != -1)
+	{
+		delete(commandEditors[index]);
+
+		commandEditors.erase(commandEditors.begin() + index);
 	}
 }

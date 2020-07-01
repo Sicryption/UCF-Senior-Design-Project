@@ -1,7 +1,6 @@
-#include "sandbox.h"
-#include "userAPI.h"
-
+#include "userAPI.hpp"
 #include "util.hpp"
+#include "sandbox.h"
 
 /*
     Comparison oparations for the memBlock object.
@@ -10,11 +9,28 @@
 
 /// The array of lua accessible user API functions, paired with their lua global name
 std::pair<std::string, lua_CFunction> enabledFunctions[] = {
-    std::make_pair( "println" , UserAPI::print_line)
+    std::make_pair( "println" , UserAPI::print_line),
+    std::make_pair( "print" , UserAPI::print),
+    std::make_pair( "rectangle" , UserAPI::make_rectangle),
+    std::make_pair( "circle" , UserAPI::make_circle),
+    std::make_pair( "triangle" , UserAPI::make_rectangle),
+    std::make_pair( "move" , UserAPI::move_object),
+    std::make_pair( "position" , UserAPI::set_position),
+    std::make_pair( "get_x" , UserAPI::get_x_position),
+    std::make_pair( "get_y" , UserAPI::get_y_position),
+    std::make_pair( "rotate" , UserAPI::rotate),
+    std::make_pair( "set_angle" , UserAPI::set_angle),
+    std::make_pair( "get_angle" , UserAPI::get_angle),
+    std::make_pair( "set_scale" , UserAPI::set_scale),
+    std::make_pair( "set_color" , UserAPI::set_color),
+    std::make_pair( "delete" , UserAPI::delete_object)
+
+
+
 };
 
 /*
-    Operator oerloading for memBlock.
+    Operator overloading for memBlock.
 */
 
 bool operator ==  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
@@ -124,6 +140,36 @@ void LuaSandbox::executeString(std::string text)
     const char* temp = text.c_str();
     //Util::getInstance()->PrintLine(temp);
     luaL_dostring(state,temp);
+    return;
+}
+
+void LuaSandbox::executeFile(std::string path)
+{
+    //  TODO: Needs a more thorough test
+    // Temporary implementation, unprotected
+    
+    size_t length;
+    char* buffer;
+    std::string fullPath = "romfs:/";
+    fullPath = fullPath.append(path);
+    
+    FILE* fp = fopen(fullPath.c_str(), "r");
+    if(fp == NULL)
+    {
+        std::cerr << "Error: couldnt open file at '" << fullPath << "'" << std::endl;
+        return;
+    }
+
+    fseek(fp,0L, SEEK_END);
+    size_t size = ftell(fp);
+    rewind(fp);
+
+    buffer = (char*)calloc(size, sizeof(char));
+    fread(buffer,sizeof(char),size,fp);
+
+    fclose(fp);
+    
+    luaL_dostring(state,buffer);
     return;
 }
 

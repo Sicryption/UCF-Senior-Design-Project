@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sstream>
+#include <thread>
+#include <chrono>
 
 #include <3ds.h>
 #include <m3dia.hpp>
-#include <png.h>
+#include <vector>
 #include "lua/lua.hpp"
 
 #include "util.hpp"
@@ -14,50 +17,54 @@
 #include "resources.h"
 #include "gameManager.hpp"
 #include "sceneManager.hpp"
-#include "gameObjects/wall.cpp"
-#include "scenes/startScene.cpp"
-#include "scenes/MazeScene.cpp"
 #include "inputManager.hpp"
+#include "commands/commands.h"
 
 using namespace m3d;
+
 
 int main(int argc, char* argv[])
 {
 	//  Create default Applet and Screen variables
-    Applet *app = new Applet();
-    Screen *scr = new Screen(false);
-	
-    GameManager::Initialize(app, scr);
-    //  Create a Sandbox environment (done here for testing)
-	LuaSandbox* sandbox = new LuaSandbox();
+    Applet app;
+    Screen scr;
 
 	//  Create default Singleton instances of Utility class and ObjectManager class
-	Util *util = Util::createInstance(scr, app);
-	ObjectManager *om = ObjectManager::createInstance(scr);
-	MenuHandler *mh = MenuHandler::createInstance(scr);
+    GameManager::Initialize(&app, &scr);
+	Util *util = Util::createInstance(&scr, &app);
+	ObjectManager *om = ObjectManager::createInstance(&scr);
+	MenuHandler *mh = MenuHandler::createInstance(&scr);
 	ResourceManager::initialize();
     Input::initialize();
+	SceneManager::OnInitialize();
 
-	
+
 	// Main loop
-	while (app->isRunning())
+	while (app.isRunning())
 	{
+        if( m3d::buttons::buttonDown(m3d::buttons::Start) && m3d::buttons::buttonPressed(m3d::buttons::Select) ||
+            m3d::buttons::buttonDown(m3d::buttons::Select) && m3d::buttons::buttonPressed(m3d::buttons::Start))
+        {
+            app.exit();
+            //break;
+        }
+
 		//  Call OnUpdate Function for all Singletons.
         GameManager::Update();
-        //SceneManager::draw();
         Input::update();
-		util->OnUpdate();
 		om->OnUpdate();
 		mh->OnUpdate();
+		util->OnUpdate();
+		SceneManager::OnUpdate();
 
-        //  Render the game screen
-		scr->render();
+		SceneManager::OnDraw();
+        util->OnDraw();
+		scr.render();
 	}
-
-    sandbox->close();
 
 	delete (util);
 	delete (mh);
 	delete (om);
+
 	return 0;
 }

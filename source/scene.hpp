@@ -5,6 +5,8 @@
 #include <map>
 #include <memory>
 #include "gameObject.hpp"
+#include "sandbox.h"
+
 
 class Scene : public Updateable
 {
@@ -12,6 +14,8 @@ class Scene : public Updateable
 protected:
     std::map<unsigned int, GameObject*> m_hashmap;
     unsigned int m_idCounter;
+    std::string m_name;
+	//LuaSandbox *sandbox;
 
 public:
 
@@ -20,7 +24,6 @@ public:
         m_hashmap.empty();
         m_idCounter = 0;
     }
-
     ~Scene()
     {
         auto it =  m_hashmap.cbegin();
@@ -40,10 +43,20 @@ public:
 
     virtual void onExit()=0;
 
+    std::string getSceneName()
+    {
+        return m_name;
+    }
+
+    GameObject* findObject(int t_id)
+    {
+        return m_hashmap[t_id];
+    }
+
     unsigned int addObject(GameObject* obj)
     {
         m_hashmap[m_idCounter] = obj;
-        return ++m_idCounter;
+        return m_idCounter++;
     }
 
     void removeObject(unsigned int t_id)

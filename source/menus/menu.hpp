@@ -6,8 +6,8 @@
 #include "../MenuHandler.hpp"
 #include "../m3diaLibCI/text.hpp"
 #include "../m3diaLibCI/codeEditor.hpp"
-#include "../m3diaLibCI/commandObject.hpp"
 #include "../m3diaLibCI/commandLister.hpp"
+#include "../m3diaLibCI/commandEditor.hpp"
 
 #include <m3dia.hpp>
 

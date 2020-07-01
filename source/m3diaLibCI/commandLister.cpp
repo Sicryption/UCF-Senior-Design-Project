@@ -13,8 +13,6 @@ namespace m3dCI
 		int tabWidthAndHeight = (TOPSCREEN_HEIGHT / NUM_TABS);
 
 		backgroundRectangle = new m3d::Rectangle(x, y, tabWidthAndHeight + BOTTOMSCREEN_WIDTH * 0.5, h, m3d::Color(255, 255, 255));
-
-		ResourceManager::loadSpritesheet("gfx/menuSprites");
 		
 		for (int i = 0; i < NUM_TABS; i++)
 		{
@@ -34,31 +32,36 @@ namespace m3dCI
 
 	CommandLister::~CommandLister()
 	{
-		delete(backgroundRectangle);
+		//delete(backgroundRectangle);
 
-		for (unsigned int i = 0; i < tabs.size(); i++)
-			delete(tabs[i]);
+		//these tabs aren't being copied from the sprites. Deleting them would result in crashes later. Should create clones to fix this
+		//for (unsigned int i = 0; i < tabs.size(); i++)
+		//	delete(tabs[i]);
+
+		for (unsigned int i = 0; i < commands.size(); i++)
+			for(unsigned int j = 0; j < commands[i].size(); j++)
+				delete(commands[i][j]);
 	}
 
 	void CommandLister::CreateTabCommandObjects(int index)
 	{
-		std::vector<CommandObject*> objects;
+		std::vector<commandListerItem*> objects;
 
 		int tabWidthAndHeight = (TOPSCREEN_HEIGHT / NUM_TABS);
 		int commandObjectHeight = BOTTOMSCREEN_HEIGHT / NUM_COMMANDS_PER_TAB;
 
 		int sizeOfArray = sizeof(listOfCommandsByTab[index]) / sizeof(listOfCommandsByTab[index][0]);
-		for (unsigned int i = 0; i < sizeOfArray; i++)
+		for (int i = 0; i < sizeOfArray; i++)
 		{
-			if (listOfCommandsByTab[index][i] == "")
+			if (listOfCommandsByTab[index][i].first == "")
 				continue;
 
-			m3dCI::CommandObject* command = new m3dCI::CommandObject(
+			m3dCI::commandListerItem* command = new m3dCI::commandListerItem(
 				x + tabWidthAndHeight,
 				y + commandObjectHeight * i,
 				BOTTOMSCREEN_WIDTH * 0.5,
 				commandObjectHeight,
-				listOfCommandsByTab[index][i],
+				listOfCommandsByTab[index][i].first,
 				false);
 
 			command->setBackgroundColor(i % 2 ? m3d::Color(211, 211, 211) : m3d::Color(169, 169, 169));
@@ -118,11 +121,11 @@ namespace m3dCI
 		}
 		else if (px <= tabWidthAndHeight + BOTTOMSCREEN_WIDTH * 0.5)
 		{
-			SelectCommand(px, py);
+			SelectCommandObject(px, py);
 		}
 	}
 
-	void CommandLister::SelectCommand(int px, int py)
+	void CommandLister::SelectCommandObject(int px, int py)
 	{
 		int selectedTab = getCurrentlySelectedTab();
 
@@ -130,10 +133,12 @@ namespace m3dCI
 			return;
 
 		int commandObjectHeight = BOTTOMSCREEN_HEIGHT / NUM_COMMANDS_PER_TAB;
-
 		int selectedCommand = py / commandObjectHeight;
 
-		MenuHandler::AddCommand(listOfCommandsByTab[selectedTab][selectedCommand]);
+		if (selectedCommand == -1 || listOfCommandsByTab[selectedTab][selectedCommand].first == "")
+			return;
+
+		listOfCommandsByTab[selectedTab][selectedCommand].second();
 	}
 
 	void CommandLister::SelectTab(int px, int py)
@@ -146,9 +151,6 @@ namespace m3dCI
 
 	void CommandLister::SelectTab(int tabIndex)
 	{
-		int tabWidthAndHeight = (TOPSCREEN_HEIGHT / NUM_TABS);
-		m3dCI::Sprite* spriteToChange = tabs[tabIndex];
-
 		//selected sprite other than current selection
 		// - deselect old
 		// - select new

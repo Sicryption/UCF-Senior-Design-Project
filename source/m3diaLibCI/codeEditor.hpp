@@ -2,7 +2,7 @@
 
 #include "sprite.hpp"
 #include "text.hpp"
-#include "commandObject.hpp"
+#include "../commands/commands.h"
 
 #include <citro2d.h>
 #include <string>
@@ -22,7 +22,7 @@ namespace m3dCI
 			std::vector<CommandObject*> commands;
 
 			CommandObject* currentSelectedCommand = nullptr;
-			int x, y, borderWidth, w, h;
+			int x, xShift = 0, y, borderWidth, w, h;
 
 			double scrollY = 0;
 			double thisScrollChange = 0;
@@ -49,15 +49,24 @@ namespace m3dCI
 			virtual ~CodeEditor();
 			
 			//need a way to insert at specified line
-			void addCommand(std::string command, int position = -1);
+			void addCommand(CommandObject* command, int position = -1);
 			void SelectCommand(int px, int py);
 			void removeCommand(int position = -1);
+			void ClearCommands();
+
+			bool canAdd();
+			bool canEdit();
+			bool canRemove();
+			std::vector<CommandObject*> GetCommands();
+			CommandObject* getSelectedObject();
 
 			bool IsBlankCommandSelected();
 
 			void draw(m3d::RenderContext t_context);
 
 			bool isPointInside(int px, int py);
+
+			bool GetActive();
 			void SetActive(bool state);
 
 			void DoDrag(m3d::Vector2f dragVector);

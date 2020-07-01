@@ -1,54 +1,64 @@
 #include "sceneManager.hpp"
-#include "scenes/startScene.cpp"
 
 
-SceneManager * m_instance = nullptr;
-
+Scene* SceneManager::m_nextScene = nullptr;
+Scene* SceneManager::m_currentScene = nullptr; 
 
 Scene* SceneManager::getScene()
-{
-    if(m_instance == nullptr)
-    {
-        return nullptr;
-    }
-
-    return m_instance->m_currentScene;
+{    
+    return m_currentScene;
 }
 
 void  SceneManager::transitionTo(Scene* t_next)
 {
-    getInstance();
-    m_instance->m_nextScene = t_next;
-    //  TODO: asynchronously init and load next scene.
 
-    if(m_instance->m_currentScene != nullptr)
+    if(t_next == nullptr)
     {
-        //  TODO: Unload objects
-        //  TODO: Call scene's exit
+        m_currentScene->unload();
+        m_currentScene->onExit();
+        m_currentScene = nullptr;
+        m_nextScene = nullptr;
+        return;
     }
 
+    m_nextScene = t_next;
+    m_nextScene->initialize();
+
+
+    
+    if(m_currentScene != nullptr)
+    {
+        m_currentScene->unload();
+        m_currentScene->onExit();
+    }
+
+    m_nextScene->load();
+    
     //  TODO: swap scenes
-
+    delete(m_currentScene);
+    m_currentScene = m_nextScene;
+    m_nextScene = nullptr;
 
 }
 
-void  SceneManager::initialize(){
-    //  m_currentScene = tester;
-    //tester->initialize();
-    if(m_instance == NULL)
-    {
-        m_instance = new SceneManager();
-    }
-    m_currentScene = new startScene();
+void  SceneManager::OnInitialize()
+{
+    m_nextScene = nullptr;
+    m_currentScene = nullptr;   
 }
 
-    void  SceneManager::update()
+void  SceneManager::OnUpdate()
+{
+    if(m_currentScene != nullptr)
     {
         m_currentScene->update();
     }
+}
 
-    void  SceneManager::draw()
+void  SceneManager::OnDraw()
+{
+    if(m_currentScene != nullptr)
     {
         m_currentScene->draw();
     }
-
+}

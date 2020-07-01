@@ -40,14 +40,14 @@ m3dCI::Button::Button(int px, int py, m3d::Texture& t_texture)
 	buttonType = SpriteObject;
 }
 
-//Creates a Sprite from a spritesheet to take the form of a button
-m3dCI::Button::Button(int px, int py, const std::string& t_spriteSheet, int t_imageId = 0)
+//Uses a Sprite to take the form of a button
+m3dCI::Button::Button(int px, int py, m3dCI::Sprite* psprite)
 	: m3d::Drawable()
 {
 	x = px;
 	y = py;
 
-	sprite = new m3dCI::Sprite(t_spriteSheet, t_imageId);
+	sprite = psprite;
 
 	w = sprite->m_sprite.params.pos.w;
 	h = sprite->m_sprite.params.pos.h;
@@ -338,4 +338,10 @@ m3d::Color m3dCI::Button::getInnerColor ()
 m3d::Color m3dCI::Button::getBorderColor()
 {
 	return outerColor;
+}
+
+void m3dCI::Button::setScale(float x, float y)
+{
+	if(buttonType == ButtonType::SpriteObject)
+		sprite->setScale(x, y);
 }

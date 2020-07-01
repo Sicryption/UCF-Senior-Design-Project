@@ -1,173 +1,325 @@
-#include <m3dia.hpp>
 
-#include "../objectAPI.hpp"
-#include "../util.hpp"   
-#include "../m3diaLibCI/text.hpp"
 
-const int DEF_HEIGHT = 10;
-const int DEF_WIDTH = 10;
-const int DEF_RADIUS = 10; 
-const m3d::Color DEF_COLOR(100,0,0);
 
-int objectAPI::rectangle(lua_State *L) 
-{
-    lua_Number luaXpos, luaYpos;
-    int xpos, ypos;
-    if (lua_isnumber(L,-1) && lua_isnumber(L,-2))
-    {
-        luaXpos = lua_tonumber(L, -1);
-        luaYpos = lua_tonumber(L, -2);
+#include "../userAPI.hpp"
 
-        xpos = (int)luaXpos;
-        ypos = (int)luaYpos;
-
-        m3d::Rectangle *newRec = new m3d::Rectangle(xpos,ypos,DEF_HEIGHT,DEF_WIDTH,DEF_COLOR);
-
-        /* TODO: How to identify and link these to the GameObject class?? 
-        We need a unique identifier to help us link this object to the new object created.
-        Also: include GameObject Class. Discuss with team. */
-
-        return(0);
-    }
-    
-    else
-    {
-        return luaL_error(L,"int needs to be entered in order to execute");
-    }
+/**
+ * 
+ * https://stackoverflow.com/questions/1903954/is-there-a-standard-sign-function-signum-sgn-in-c-c
+ */
+template <typename T> int sign(T val) {
+    return (T(0) < val) - (val < T(0));
 }
 
-int objectAPI::circle(lua_State *L) 
+int UserAPI::move_object(lua_State* L)
 {
-    lua_Number luaXpos, luaYpos;
-    int xpos, ypos;
-    if (lua_isnumber(L,-1) && lua_isnumber(L,-2))
+    int y = lua_tonumber(L,-1);
+    int x = lua_tonumber(L,-2); 
+    lua_Number t_id = lua_tonumber(L,-3);
+    
+    Scene* scene = SceneManager::getScene();
+
+    if(scene == nullptr)
     {
-        luaXpos = lua_tonumber(L, -1);
-        luaYpos = lua_tonumber(L, -2);
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+    GameObject* obj = scene->findObject(t_id);
+    if(obj == nullptr)
+    {
 
-        xpos = (int)luaXpos;
-        ypos = (int)luaYpos;
-
-       m3d::Circle *newCir = new m3d::Circle(xpos,ypos,DEF_RADIUS,DEF_COLOR);
-
-        /* TODO: How to identify and link these to the GameObject class?? 
-        We need a unique identifier to help us link this object to the new object created.
-        Also: include GameObject Class. Discuss with team. */
-
-        return(0);
+        Util::PrintLine("Error: couldnt find object \'" + std::to_string(t_id) +"\' in Scene \'" + scene->getSceneName() + "\'");
+        return 0;
     }
     
-    else
+    Util::PrintLine("move [" + std::to_string(t_id) + "]. x: " +  std::to_string(x) + ", y: " +  std::to_string(y) );
+    
+    while(!(x == 0 && y == 0))
     {
-        return luaL_error(L,"int needs to be entered in order to execute");
-    }
-}
+        x = x - sign(x);
+        y = y - sign(y);
+        
 
-int objectAPI::triangle(lua_State *L) 
-{
-    lua_Number luaXpos, luaYpos;
-    int xpos, ypos;
-    if (lua_isnumber(L,-1) && lua_isnumber(L,-2))
-    {
-        luaXpos = lua_tonumber(L, -1);
-        luaYpos = lua_tonumber(L, -2);
-
-        xpos = (int)luaXpos;
-        ypos = (int)luaYpos;
-
-       m3d::Triangle *newTri = new m3d::Triangle(xpos,ypos,xpos-1,ypos-1,xpos+1,ypos+1,DEF_COLOR);
-
-        /* TODO: How to identify and link these to the GameObject class?? 
-        We need a unique identifier to help us link this object to the new object created.
-        Also: include GameObject Class. Discuss with team. */
-
-        return(0);
+        Util::PrintLine("step [" + std::to_string(t_id) + "]. x: " +  std::to_string(sign(x)) + ", y: " +  std::to_string(sign(x)) );
+        obj->moveTo(    sign(x),
+                        sign(y));
+        m3d::Thread::sleep(STEP_TIME);
     }
     
-    else
-    {
-        return luaL_error(L,"int needs to be entered in order to execute");
-    }
+
+    return 0;
 }
 
-int objectAPI::text(lua_State *L) 
+int UserAPI::make_rectangle(lua_State* L)
 {
-    lua_Number luaXpos, luaYpos;
-    int xpos, ypos;
+    lua_Number x = lua_tonumber(L,-1);
+    lua_Number y = lua_tonumber(L,-2);
 
-    if (lua_isnumber(L,-1) && lua_isnumber(L,-2) && lua_isstring(L,-3))
+    Scene* scene = SceneManager::getScene();
+    if(scene == nullptr)
     {
-        luaXpos = lua_tonumber(L, -1);
-        luaYpos = lua_tonumber(L, -2);
-
-        xpos = (int)luaXpos;
-        ypos = (int)luaYpos;
-
-        const char *s;
-        size_t len;
-
-        s = lua_tolstring(L,-3,&len);
-
-       m3dCI::Text *newText = new m3dCI::Text(s,DEF_COLOR);
-       newText->setXPosition(xpos);
-       newText->setYPosition(ypos);
-
-        /* TODO: How to identify and link these to the GameObject class?? 
-        We need a unique identifier to help us link this object to the new object created.
-        Also: include GameObject Class. Discuss with team. */
-
-        return(0);
+        Util::PrintLine("Error: no current scene");
+        return 0;
     }
 
-    else
+    int t_id = scene->addObject( new RectangleObject());
+    if(t_id == 0)
     {
-        return luaL_error(L,"'int,int,string' needs to be entered in order to execute");
-    }
-
-}
-
-int objectAPI::up(lua_State *L) 
-{
-    lua_Number luaXchange, luaID;
-    int xchange, id;
-
-    if (lua_isnumber(L,-1) && lua_isnumber(L,-2))
-    {
-        luaID = lua_tonumber(L,-1);
-        luaXchange = lua_tonumber(L,-2);
-
-        id = (int)luaID;
-        xchange = (int)luaXchange;
-
-        /* TODO: Discuss how to connect GameObject class with userAPI to look for Object.
-        */
-
-        /*
-       m3d::Drawable *object; 
-
-       if (m3d::Rectangle *shape = dynamic_cast<m3d::Rectangle*>(object))
-       {
-           shape->setXPosition(shape->getXPosition() + xchange);
-       }
-
-       else if (m3d::Circle *shape = dynamic_cast<m3d::Circle*>(object))
-       {
-           shape->setXPosition(shape->getXPosition() + xchange);
-       }
-
-       else if (m3d::Triangle *shape = dynamic_cast<m3d::Triangle*>(object))
-       {
-           shape->setX1Pos(shape->getX1Pos() + xchange);
-           shape->setX2Pos(shape->getX2Pos() + xchange);
-           shape->setX3Pos(shape->getX3Pos() + xchange);
-       }
-
-       else if(m3d::Text *shape = dynamic_cast<m3d::Text*>(object))
-       {
-           shape->setXPosition(shape->getXPosition() + xchange);
-       }
-
-       */
+        Util::PrintLine("Error: could not create Rectangle Object in Scene \'" + scene->getSceneName() + "\'");
+        return 0;
     }
     
-}       
+    lua_pushinteger(L,t_id);
+    return 1;
+}
+
+int UserAPI::make_circle(lua_State* L) 
+{
+    lua_Number x = lua_tonumber(L,-1);
+    lua_Number y = lua_tonumber(L,-2);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    int t_id = currScene->addObject(new CircleObject()); 
+    if(t_id == 0)
+    {
+        Util::PrintLine("Error: could not create Circle Object in Scene \'" + currScene->getSceneName() + "\'");
+        return 0;
+    }
+    
+    lua_pushinteger(L,t_id);
+    return 1;
+}
+
+int make_paddle(lua_State* L)
+{
+    return 0;
+}
+  
+// TODO: Revise, no set position, only set x and y.
+int UserAPI::set_position(lua_State* L)
+{
+    lua_Number t_id = lua_tonumber(L,-1);
+    lua_Number t_x = lua_tonumber(L,-2);
+    lua_Number t_y = lua_tonumber(L,-3);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+        return 0;
+    }
+
+    currObj->setPosition(t_x, t_y);
+    m3d::Thread::sleep(STEP_TIME);
+    return 0;
+}
+
+int UserAPI::get_x_position(lua_State* L)
+{
+    lua_Number t_id = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id ) +" in Scene" + currScene->getSceneName() + " \n");
+        return 0;
+    }
+    //m3d::Vector2f *currentVector = currObj->getPosition();
+
+    lua_pushnumber(L, currObj->getPosition().u);
+    return 1;
+}
+   
+int UserAPI::get_y_position(lua_State* L)
+{
+    lua_Number t_id = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+        return 0;
+    }
+    //m3d::Vector2f *currentVector = currObj->getPosition();
+
+    lua_pushnumber(L,currObj->getPosition().v);
+    return 1;
+}
+   
+
+int UserAPI::rotate(lua_State* L)
+{
+    lua_Number t_id = lua_tonumber(L,-1);
+    lua_Number t_angle = lua_tonumber(L,-2);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+        return 0;
+    }
+
+    currObj->Rotate(t_angle);
+    m3d::Thread::sleep(STEP_TIME);
+    return 0;
+}
+    
+int UserAPI::set_angle(lua_State* L)
+{
+    lua_Number t_id = lua_tonumber(L,-1);
+    lua_Number t_angle = lua_tonumber(L,-2);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+        return 0;
+    }
+
+    currObj->setAngle(t_angle);
+    m3d::Thread::sleep(STEP_TIME);
+    return 0;
+}
+    
+int UserAPI::get_angle(lua_State* L)
+{
+    lua_Number t_id = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+        return 0;
+    }
+
+    lua_pushnumber(L, currObj->getAngle());
+
+    return 1;
+}
+   
+// TODO: Design such that x or y = -1, maintains that scale.
+int UserAPI::set_scale(lua_State* L)
+{
+    lua_Number t_id     = lua_tonumber(L,-1);
+    lua_Number t_width  = lua_tonumber(L,-2);
+    lua_Number t_height = lua_tonumber(L,-3);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+        return 0;
+    }
+
+    currObj->setScale(t_width,t_height);
+    m3d::Thread::sleep(STEP_TIME);
+    return 0;
+}
+    
+    
+int UserAPI::set_color(lua_State* L)
+{
+    lua_Number t_id     = lua_tonumber(L,-1);
+    lua_Number t_red  = lua_tonumber(L,-2);
+    lua_Number t_green = lua_tonumber(L,-3);
+    lua_Number t_blue  = lua_tonumber(L,-2);
+    lua_Number t_alpha = lua_tonumber(L,-3);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+
+    }
+    m3d::Thread::sleep(STEP_TIME);
+    return 0;
+}
+   
+
+int UserAPI::delete_object(lua_State* L)
+{
+    lua_Number t_id = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+        return 0;
+    }
+
+    currObj->destroy();
+    currObj = nullptr;
+    m3d::Thread::sleep(STEP_TIME);
+    return 0;
+}
+ 
+       
