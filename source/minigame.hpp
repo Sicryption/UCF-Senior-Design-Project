@@ -64,6 +64,7 @@ class Minigame : public Scene
                 }
 
                 m_mutex_execution.unlock();
+                m3d::Thread::sleep(100);
             }
             //m_mutex_threadState.unlock();
         }
