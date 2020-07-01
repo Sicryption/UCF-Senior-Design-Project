@@ -56,6 +56,7 @@ class Minigame : public Scene
                 {
                    
                     onExecutionBegin();
+                    //  TODO: Disable Command Menu
                     sandbox->executeString(*m_luaChunk);
                     m_luaChunk = nullptr;
                     onExecutionBegin();
