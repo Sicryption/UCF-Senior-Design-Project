@@ -143,7 +143,7 @@ MenuHandler::MenuState MenuHandler::GetTransitionState()
 	if (instance == 0)
 		instance = MenuHandler::getInstance();
 
-	return instance->currentState;
+	return instance->transition;
 }
 
 void MenuHandler::AddCommand(CommandObject *com)
@@ -163,7 +163,6 @@ void MenuHandler::AddCommand(CommandObject *com)
 
 	menu->AddCommand(com);
 }
-
 
 void MenuHandler::RequestUserCode(std::vector<CommandObject*> commands, std::function<void(std::vector<CommandObject*>)> callbackFunction)
 {
