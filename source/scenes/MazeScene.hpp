@@ -50,7 +50,7 @@ class MazeScene : public Minigame
 		};
 		MazeState currentState;
 	public:
-		MazeScene()
+		MazeScene(): Minigame()
 		{
             //array traversers
             x = 1.0;
@@ -58,8 +58,7 @@ class MazeScene : public Minigame
 		}
 
 		void initialize(){
-            sandbox = new LuaSandbox();
-			sandbox->executeFile("lua/init_scene.lua");
+            
 
         //loads and gets maze texture
 			//texture = new m3dCI::Sprite(*(ResourceManager::getSprite("wall.png")));
@@ -175,11 +174,15 @@ class MazeScene : public Minigame
 
 		void SubmitMazeCode(std::vector<CommandObject*> luaCode)
 		{
-			std::string str = CommandObject::ConvertBulk(luaCode);
+			//std::string str = "coroutine.create(function ()" + CommandObject::ConvertBulk(luaCode) + " end)" ;
+            Util::PrintLine("execute commands");
+            std::string str = CommandObject::ConvertBulk(luaCode);
 
-			Util::getInstance()->PrintLine(str);
 
-			sandbox->executeString(str);
+			//Util::getInstance()->PrintLine(str);
+			executeInSandbox(str);
+            Util::PrintLine("done");
+
 			currentState = MazeState::Execute;
 		}
 
