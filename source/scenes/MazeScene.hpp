@@ -79,16 +79,19 @@ class MazeScene : public Minigame
 
        //initializes text and bottom screen background
 			winScreen = new m3d::Rectangle(0,0,320,240,*colorRec);
-			winPrompt = new m3dCI::Text("You Win!\n Select to Retry and/or Exit");
+			winPrompt = new m3dCI::Text("You Win!",*colorText);
+			winPrompt->setPosition(90,30);
+			winPrompt->setFontSize(.5);
+			winPrompt->setFontWeight(.5);
 			winPrompt->setPosition(160,120);
-			prompt->setFontSize(.5);
+			
 			prompt = new m3dCI::Text(" Use move commands to traverse \n the maze. In order to add a move \n command select Add, then go to\n the tab with the arrows. There\n you can select up, down, left \n or right as a direction to\n move in the maze. You can then\n change the amount of spaces you\n want to move by selecting it and\n clicking edit. Be sure to enter all\n commands you will need to get to\n the end of the maze before running.",*colorText);
 			prompt->setPosition(90,30);
 			prompt->setFontSize(.5);
 			prompt->setFontWeight(.5);
 			wallpaper   = new m3dCI::Sprite(*(ResourceManager::getSprite("maze1.png")));
             //  Initialize popup BG
-            popup       = new m3dCI::Sprite(*(ResourceManager::getSprite("menu_popup.png")));
+            popup  = new m3dCI::Sprite(*(ResourceManager::getSprite("menu_popup.png")));
             popup->setPosition(80,20);
 		    //wallpaper->setTexture(*texture);
 		    wallpaper->setCenter(0,0);
@@ -110,7 +113,7 @@ class MazeScene : public Minigame
 				//use m3dci for prompt
             }
 
-			if(currentState == MazeState::TutorialMessage)
+			if(currentState == MazeState::Win)
             {   
                 screen->drawTop(*popup);
 				screen->drawTop(*winPrompt);
@@ -123,16 +126,7 @@ class MazeScene : public Minigame
             runner->draw();
 
 		}
-		int winCond() {
-			if(x ==18 && y == 9 && walls[y][x] == 0)
-			{
-				return 1;
-			}
-			else
-			{
-				return 0;
-			}
-		}
+		
         void load(){}; //any data files
         
         void unload(){};
@@ -165,7 +159,7 @@ class MazeScene : public Minigame
 					}
 					break;
 				case MazeState::Execute:
-					if(winCond() == 1)
+					if(checkWinCond() == 1)
 					{
 						currentState = MazeState::Win;
 					}
@@ -191,7 +185,16 @@ class MazeScene : public Minigame
 
         void onEnter(){};
         void onExit(){};
-        bool checkWinCond(){return true;};
+        bool checkWinCond()
+		{
+			if(runner->winCond())
+				return true;
+			else
+			{
+				return false;
+			}
+			
+		};
         void loadScene(){};
         void loadWinScr(){};
         void loadLoseScr(){};

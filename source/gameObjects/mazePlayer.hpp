@@ -1,6 +1,10 @@
 #include "../gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
+#include "../util.hpp"
+#include <sstream>
+
+#define DEBUG
 
 class TerminalObject : public GameObject
 {
@@ -116,7 +120,23 @@ public:
                 }
             }
         }
+    /*
+        #ifdef DEBUG
+			std::stringstream coordinates;
+			coordinates << "x =" << x ;
+			Util::PrintLine(coordinates.str());
+		#endif*/
         
     };
     void Rotate(double deg){};
+    int winCond() {
+			if((x/20) == 18 && (y/20) == 9)
+			{
+				return 1;
+			}
+			else
+			{
+				return 0;
+			}
+		}
 };
