@@ -5,6 +5,7 @@
 #include <utility>
 #include <string>
 #include <sstream> 
+#include <math.h>
 
 #include <3ds.h>
 #include <m3dia.hpp>
@@ -16,6 +17,8 @@
 #include "gameObjects/objects.h"
 
 #define DEBUG
+
+#define STEP_TIME 100
 
 /**
  *  A namespace defining the functions bound to a Lua Sandbox
