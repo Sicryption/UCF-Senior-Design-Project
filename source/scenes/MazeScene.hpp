@@ -132,14 +132,14 @@ class MazeScene : public Minigame
 						std::vector<CommandObject*> startingCommands =
 						{
 							new SelectCommand("runner",true,true),
-							new DownCommand("5",false,true),
+							new RightCommand("18",false,true),
+							new DownCommand("5"),
 							new LeftCommand("18"),
 							new DownCommand("5"),
 							new RightCommand("18"),
 							new DownCommand("5"),
 							new LeftCommand("18"),
 							new DownCommand("5"),
-							new UpCommand("5"),
 							new RightCommand("18")
 						};
 
