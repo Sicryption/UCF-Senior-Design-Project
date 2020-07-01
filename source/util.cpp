@@ -88,6 +88,14 @@ void Util::OnUpdate()
 			this->PrintLine("Some Text.");
 	
 		//Draw the console
+		//scr->drawTop(*console, RenderContext::Mode::Flat);
+	}
+}
+
+void Util::OnDraw()
+{
+    if(IsConsoleDrawn())
+	{
 		scr->drawTop(*console, RenderContext::Mode::Flat);
 	}
 }

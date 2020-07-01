@@ -3,29 +3,40 @@
 #include <string.h>
 #include <m3dia.hpp>
 #include "scene.hpp"
+#include <sstream>
+
+#define DEBUG
 
 #define THREAD_HALT     1
 #define THREAD_RUNNING  0
 #define THREAD_CLOSE    -1
+
+#define setObjectName(name, id) executeInSandbox("name_table[\"" name "\"] = " + std::to_string(id))
 
 class Minigame : public Scene
 {
 	private:
         m3d::Thread* m_sandboxThread;
         m3d::Mutex  m_mutex_execution, m_mutex_sandbox, m_mutex_threadState;
-        int m_sandboxThreadState;
-        std::string* m_luaChunk;
+        int m_sandboxThreadState = THREAD_RUNNING;
+        std::string* m_luaChunk = nullptr;
 
-	protected:
-		static bool winCond;
-		
         void sandboxRuntime(m3d::Parameter param)
         {
+            m_mutex_sandbox.lock();
+            //Util::PrintLine("sandbox: start sandbox thread");
+            
             LuaSandbox* sandbox = new LuaSandbox();
             int* state = param.get<int*>();
+            if(state == NULL)
+            {
+                Util::PrintLine("Error: threadstate not defined");
+                return;
+            }
             
             while(true)
             {
+                //Util::PrintLine("sandbox: check thread state");
                 //  Lock access to Thread State
                 m_mutex_threadState.lock();
                 if(*state == THREAD_CLOSE)
@@ -39,17 +50,30 @@ class Minigame : public Scene
                 m_mutex_threadState.unlock();
 
                 // lock sandbox
-                m3d::Lock lock(m_mutex_sandbox);
+                m_mutex_sandbox.lock();
+                //Util::PrintLine("sandbox: executing...");
+                if(m_luaChunk != nullptr)
+                {
+                    Util::PrintLine("sandbox: chunk found");
+                    //sandbox->executeString("println(name_table)");
+                    sandbox->executeString(*m_luaChunk);
+                    m_luaChunk = nullptr;
+                    Util::PrintLine("sandbox: execution complete");
 
-                sandbox->executeString(*m_luaChunk);
+                }
 
                 m_mutex_execution.unlock();
             }
-            m_mutex_threadState.unlock();
+            //m_mutex_threadState.unlock();
         }
 
+	protected:
+		static bool winCond;
+		
+        
         void executeInSandbox(std::string chunk)
         {
+            
             //  Wait for any sandbox executions to complete
             m_mutex_execution.lock();
             
@@ -64,6 +88,7 @@ class Minigame : public Scene
 
             //  Allow sandbox thread to continue execution
             m_mutex_sandbox.unlock();
+            
         }
 
         void setThreadState(int state)
@@ -86,7 +111,15 @@ class Minigame : public Scene
 
         Minigame()
         {
+            #ifdef DEBUG
+            std::stringstream t_debug;
+            t_debug << "sandbox thread: " << m_sandboxThread ;
+            Util::PrintLine(t_debug.str() ) ;
+            #endif
 
+            
+            m_sandboxThread = new m3d::Thread( [this](m3d::Parameter p){sandboxRuntime(p);} , &m_sandboxThreadState);
+            m_sandboxThread->start();
         }
 
 		// origScene is the new default scene when the player loses
@@ -109,11 +142,7 @@ class Minigame : public Scene
 		virtual void requestUI() = 0;
 		virtual void closeGame() = 0;
 	//from scene
-		virtual void initialize()
-        {
-            m_sandboxThread = new m3d::Thread( [this](m3d::Parameter p){sandboxRuntime(p);} , &m_sandboxThreadState, true, false);
-        }
-
+		virtual void initialize() = 0;
 		virtual void load()=0;
 		virtual void unload()=0;
 		virtual void update()=0;

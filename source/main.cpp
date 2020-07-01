@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 		SceneManager::OnUpdate();
 
 		SceneManager::OnDraw();
-
+        util->OnDraw();
 		scr.render();
 	}
 

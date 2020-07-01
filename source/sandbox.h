@@ -113,6 +113,7 @@ public:
         luaopen_base(state);
         luaopen_table(state);
         bindAPI();
+        executeFile("lua/init_scene.lua");
     }
 
     ~LuaSandbox()
