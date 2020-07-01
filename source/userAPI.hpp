@@ -18,7 +18,7 @@
 
 #define DEBUG
 
-#define STEP_TIME 100
+#define STEP_TIME 150
 
 /**
  *  A namespace defining the functions bound to a Lua Sandbox

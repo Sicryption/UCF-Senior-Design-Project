@@ -67,6 +67,16 @@ class Minigame : public Scene
             //m_mutex_threadState.unlock();
         }
 
+        void onExecutionBegin()
+        {
+            // TODO: Disable Command Editor
+        }
+
+        void onExecutionEnd()
+        {
+            // TODO: Enable Command Editor
+        }
+
 	protected:
 		static bool winCond;
 		
@@ -122,6 +132,13 @@ class Minigame : public Scene
             m_sandboxThread->start();
         }
 
+        ~Minigame()
+        {
+            m3d::Lock lock(m_mutex_threadState);
+            m_sandboxThreadState = THREAD_CLOSE;
+            m_sandboxThread->join();
+        }
+
 		// origScene is the new default scene when the player loses
 		// returns true if successful, otherwise false 
 		/*bool reset(Scene *origScene)
@@ -150,7 +167,9 @@ class Minigame : public Scene
 
 		virtual void onEnter()=0;
 
-		virtual void onExit()=0;
+		virtual void onExit(){
+            
+        };
 
 	
 	

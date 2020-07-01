@@ -31,24 +31,21 @@ int UserAPI::move_object(lua_State* L)
         Util::PrintLine("Error: couldnt find object \'" + std::to_string(t_id) +"\' in Scene \'" + scene->getSceneName() + "\'");
         return 0;
     }
-    /*
-    obj->moveTo(x,y);
-    */
-    //Util::PrintLine("enter move cycle");
+    
     Util::PrintLine("move [" + std::to_string(t_id) + "]. x: " +  std::to_string(x) + ", y: " +  std::to_string(y) );
     
     while(!(x == 0 && y == 0))
     {
         x = x - sign(x);
         y = y - sign(y);
-        //Util::PrintLine("sign x: " +  std::to_string(sign(x)) + ", y: " +  std::to_string(sign(y)) );
+        
 
         Util::PrintLine("step [" + std::to_string(t_id) + "]. x: " +  std::to_string(sign(x)) + ", y: " +  std::to_string(sign(x)) );
         obj->moveTo(    sign(x),
                         sign(y));
         m3d::Thread::sleep(STEP_TIME);
     }
-    //Util::PrintLine("exit move cycle");
+    
 
     return 0;
 }
@@ -126,7 +123,7 @@ int UserAPI::set_position(lua_State* L)
     }
 
     currObj->setPosition(t_x, t_y);
-    
+    m3d::Thread::sleep(STEP_TIME);
     return 0;
 }
 
@@ -197,7 +194,7 @@ int UserAPI::rotate(lua_State* L)
     }
 
     currObj->Rotate(t_angle);
-
+    m3d::Thread::sleep(STEP_TIME);
     return 0;
 }
     
@@ -221,6 +218,7 @@ int UserAPI::set_angle(lua_State* L)
     }
 
     currObj->setAngle(t_angle);
+    m3d::Thread::sleep(STEP_TIME);
     return 0;
 }
     
@@ -269,6 +267,7 @@ int UserAPI::set_scale(lua_State* L)
     }
 
     currObj->setScale(t_width,t_height);
+    m3d::Thread::sleep(STEP_TIME);
     return 0;
 }
     
@@ -294,6 +293,7 @@ int UserAPI::set_color(lua_State* L)
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
 
     }
+    m3d::Thread::sleep(STEP_TIME);
     return 0;
 }
    
@@ -318,7 +318,7 @@ int UserAPI::delete_object(lua_State* L)
 
     currObj->destroy();
     currObj = nullptr;
-
+    m3d::Thread::sleep(STEP_TIME);
     return 0;
 }
  
