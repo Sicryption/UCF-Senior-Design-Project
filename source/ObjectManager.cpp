@@ -78,6 +78,8 @@ void ObjectManager::OnUpdate()
 	std::vector<m3dCI::Button*> buttonsClone(buttons);
 	std::vector<m3dCI::CodeEditor*> codeEditorsClone(codeEditors);
 	std::vector<m3dCI::CommandLister*> commandListersClone(commandListers);
+	std::vector<m3dCI::CommandEditor*> commandEditorsClone(commandEditors);
+
 
 	for (unsigned int i = 0; i < codeEditorsClone.size(); i++)
 	{
@@ -113,13 +115,13 @@ void ObjectManager::OnUpdate()
 			commandListersClone[i]->SelectPoint(lastFrameTouchX, lastFrameTouchY);
 		}
 
-		for (unsigned int i = 0; i < commandEditors.size(); i++)
+		for (unsigned int i = 0; i < commandEditorsClone.size(); i++)
 		{
-			if (commandEditors[i] == nullptr)
+			if (commandEditorsClone[i] == nullptr)
 				continue;
 
 			//only fires if point is actually inside the command lister
-			commandEditors[i]->HandleClick(lastFrameTouchX, lastFrameTouchY);
+			commandEditorsClone[i]->HandleClick(lastFrameTouchX, lastFrameTouchY);
 		}
 	}
 	
@@ -145,7 +147,7 @@ void ObjectManager::OnUpdate()
 				buttonsClone[i]->OnHeld();
 		}
 	}
-	
+
 	lastFrameTouchX = touchx;
 	lastFrameTouchY = touchy;
 
