@@ -17,7 +17,7 @@ class MazeScene : public Minigame
         m3d::Rectangle *loseScreen;
 		m3d::Color *colorRec;
 		m3d::Color *colorText;
-		m3d::Text *prompt;
+		m3dCI::Text *prompt;
         TerminalObject *runner;
 		int x, y, runnerID;
         bool walls[12][20] ={{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -77,7 +77,7 @@ class MazeScene : public Minigame
 
        //initializes text and bottom screen background
 			winScreen = new m3d::Rectangle(0,0,320,240,*colorRec);
-			prompt = new m3d::Text("Maze",*colorText);
+			prompt = new m3dCI::Text("Maze",*colorText);
 			prompt->setPosition(160,120);
 			wallpaper   = new m3dCI::Sprite(*(ResourceManager::getSprite("maze1.png")));
             //  Initialize popup BG
