@@ -9,7 +9,7 @@
 
 #define THREAD_HALT     1
 #define THREAD_RUNNING  0
-#define THREAD_CLOSE    -1
+#define THREAD_CLOSE   -1
 
 #define setObjectName(name, id) executeInSandbox("name_table[\"" name "\"] = " + std::to_string(id))
 
@@ -30,7 +30,7 @@ class Minigame : public Scene
             int* state = param.get<int*>();
             if(state == NULL)
             {
-                Util::PrintLine("Error: threadstate not defined");
+                Util::PrintLine("Error: threadstate not defined, sandbox thread closing.");
                 return;
             }
             
@@ -51,14 +51,14 @@ class Minigame : public Scene
 
                 // lock sandbox
                 m_mutex_sandbox.lock();
-                //Util::PrintLine("sandbox: executing...");
+                
                 if(m_luaChunk != nullptr)
                 {
-                    Util::PrintLine("sandbox: chunk found");
-                    //sandbox->executeString("println(name_table)");
+                   
+                   
                     sandbox->executeString(*m_luaChunk);
                     m_luaChunk = nullptr;
-                    Util::PrintLine("sandbox: execution complete");
+                   
 
                 }
 
@@ -121,14 +121,13 @@ class Minigame : public Scene
 
         Minigame()
         {
+                       
+            m_sandboxThread = new m3d::Thread( [this](m3d::Parameter p){sandboxRuntime(p);} , &m_sandboxThreadState);
             #ifdef DEBUG
             std::stringstream t_debug;
-            t_debug << "sandbox thread: " << m_sandboxThread ;
+            t_debug << "new sandbox thread: " << m_sandboxThread ;
             Util::PrintLine(t_debug.str() ) ;
             #endif
-
-            
-            m_sandboxThread = new m3d::Thread( [this](m3d::Parameter p){sandboxRuntime(p);} , &m_sandboxThreadState);
             m_sandboxThread->start();
         }
 
