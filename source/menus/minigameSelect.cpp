@@ -1,6 +1,10 @@
 #include "minigameSelect.hpp"
 #include "../scenes/MazeScene.hpp"
 
+
+#define xScale 1.3f
+#define yScale 1.3f
+
 MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 	Menu(screen)
 {
@@ -96,7 +100,17 @@ void MinigameSelect::OnUpdate()
 	if (Input::btnReleased(m3d::buttons::B))
 	{
 		if (selectedMinigame != -1)
+		{
+			int addedWidth = minigameOptions[selectedMinigame]->getWidth() * xScale - minigameOptions[selectedMinigame]->getWidth();
+			int x = minigameOptions[selectedMinigame]->getXPosition() + (addedWidth / 2);
+			int addedHeight = minigameOptions[selectedMinigame]->getHeight() * yScale - minigameOptions[selectedMinigame]->getHeight();
+			int y = minigameOptions[selectedMinigame]->getYPosition() + (addedHeight / 2);
+
+			minigameOptions[selectedMinigame]->setScale(1.0f, 1.0f);
+			minigameOptions[selectedMinigame]->setPosition(x, y);
+
 			selectedMinigame = -1;
+		}
 		else
 		{
 			mh->TransitionTo(MenuHandler::MenuState::MainMenu);
@@ -141,9 +155,6 @@ void MinigameSelect::SelectMinigame(int index)
 
 	if (index < 0 || index >= MINIGAME_COUNT)
 		return;
-
-	float xScale = 1.3f;
-	float yScale = 1.3f;
 
 	if (selectedMinigame != -1)
 	{
