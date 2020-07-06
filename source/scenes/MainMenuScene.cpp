@@ -1,9 +1,34 @@
-#include "mainMenu.hpp"
+#include "MainMenuScene.hpp"
 
-MainMenu::MainMenu(m3d::Screen* screen) :
-	Menu(screen)
+#include "MinigameSelectScene.hpp"
+
+MainMenuScene::MainMenuScene()
 {
+	m3d::Screen * screen = GameManager::getScreen();
+	ObjectManager* om = ObjectManager::getInstance();
+
+	int topScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
+	int bottomScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Bottom);
+	int screenHeight = screen->getScreenHeight();
+
 	StartupText = new m3dCI::Text("Seedlings");
+	whiteBackground = new m3d::Rectangle(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
+
+	int clickHereToContinueX = ((bottomScreenWidth)-(bottomScreenWidth*0.8)) / 2;
+	int clickHereToContinueY = ((screenHeight)-(screenHeight*0.3));
+	ClickHereToContinue = om->CreateButton(clickHereToContinueX, clickHereToContinueY, (bottomScreenWidth*0.8), (screenHeight*0.2), m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
+			
+	apple = new m3dCI::Sprite(*ResourceManager::getSprite("apple.png"));
+}
+
+void MainMenuScene::initialize()
+{
+	m3d::Screen * screen = GameManager::getScreen();
+
+	int topScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
+	int bottomScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Bottom);
+	int screenHeight = screen->getScreenHeight();
+
 	StartupText->setFontSize(2);
 	StartupText->setFontWeight(2);
 	StartupText->setColor(m3d::Color(0, 0, 0));
@@ -11,33 +36,23 @@ MainMenu::MainMenu(m3d::Screen* screen) :
 
 	int width = StartupText->getWidth();
 	int height = StartupText->getHeight();
-	
-	int topScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
-	int bottomScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Bottom);
-	int screenHeight = screen->getScreenHeight();
 
 	StartupText->setPosition((topScreenWidth / 2) - (width / 2) + 25, (screenHeight / 2) - (height / 2));
 
-	whiteBackground = new m3d::Rectangle(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
-
-	int clickHereToContinueX = ((bottomScreenWidth)-(bottomScreenWidth*0.8)) / 2;
-	int clickHereToContinueY = ((screenHeight)-(screenHeight*0.3));
-	
-	ClickHereToContinue = om->CreateButton(clickHereToContinueX, clickHereToContinueY, (bottomScreenWidth*0.8), (screenHeight*0.2), m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
 	ClickHereToContinue->SetText("Press start to Play!");
-	ClickHereToContinue->OnRelease = [this]() { MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameSelect); };
+	ClickHereToContinue->OnRelease = [this]() { SceneManager::transitionTo(new MinigameSelectScene()); };
 	ClickHereToContinue->SetEnabledState(false);
 
-	apple = new m3dCI::Sprite(*ResourceManager::getSprite("apple.png"));
 	apple->setCenter(apple->m_sprite.params.pos.w / 2, apple->m_sprite.params.pos.h / 2);
 	apple->setPosition(topScreenWidth * 0.75 + 25, -(apple->m_sprite.params.pos.h / 2));
 	apple->setScale(0.35f, 0.35f);
-
 }
 
-void MainMenu::OnUpdate()
+void MainMenuScene::draw()
 {
-	if (util->IsConsoleDrawn())
+	m3d::Screen * scr = GameManager::getScreen();
+
+	if (Util::IsConsoleDrawn())
 		return;
 
 	int topScreenWidth = scr->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
@@ -92,8 +107,7 @@ void MainMenu::OnUpdate()
 	scr->drawTop(*apple);
 }
 
-//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
-MainMenu::~MainMenu()
+void MainMenuScene::onExit()
 {
 	delete(StartupText);
 	//The following commented out object don't have deletion support. They *should* be grabbed by the garbage collector. 
@@ -101,5 +115,6 @@ MainMenu::~MainMenu()
 	//delete(whiteBackground);
 	//delete(whiteBottomBackground);
 	delete(apple);
+	ObjectManager* om = ObjectManager::getInstance();
 	om->DeleteButton(ClickHereToContinue);
-}
+};

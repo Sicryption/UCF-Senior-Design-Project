@@ -1,13 +1,12 @@
-#include "minigameSelect.hpp"
-#include "../scenes/MazeScene.hpp"
+#include "MinigameSelectScene.hpp"
 
+#include "MainMenuScene.hpp"
 
-#define xScale 1.3f
-#define yScale 1.3f
-
-MinigameSelect::MinigameSelect(m3d::Screen* screen) :
-	Menu(screen)
+MinigameSelectScene::MinigameSelectScene()
 {
+	m3d::Screen * screen = GameManager::getScreen();
+	ObjectManager* om = ObjectManager::getInstance();
+
 	MinigameSelectTopText = new m3dCI::Text("Select a minigame");
 	MinigameSelectTopText->setFontSize(1);
 	MinigameSelectTopText->setFontWeight(1);
@@ -15,13 +14,13 @@ MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 
 	int width = MinigameSelectTopText->getWidth();
 	int height = MinigameSelectTopText->getHeight();
-	
+
 	int topScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
 	int bottomScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Bottom);
 	int screenHeight = screen->getScreenHeight();
 
 	MinigameSelectTopText->setPosition((topScreenWidth / 2) - (width / 2), (screenHeight / 2) - (height / 2));
-	
+
 	MinigameName = new m3dCI::Text("[SELECTED MINIGAME]");
 	MinigameName->setFontSize(0.9);
 	MinigameName->setFontWeight(0.9);
@@ -32,7 +31,7 @@ MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 	MinigameDescription->setFontSize(0.6);
 	MinigameDescription->setFontWeight(0.6);
 	MinigameDescription->setColor(m3d::Color(0, 0, 0));
-	MinigameDescription->setPosition(20+100, 90);
+	MinigameDescription->setPosition(20 + 100, 90);
 
 	whiteBackground = new m3d::Rectangle(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
 
@@ -80,12 +79,19 @@ MinigameSelect::MinigameSelect(m3d::Screen* screen) :
 		minigameOptions[column + (row * Columns)] = newButton;
 	}
 
-	OnUpdate();
+	draw();
 }
 
-void MinigameSelect::OnUpdate()
+void MinigameSelectScene::initialize()
 {
-	if (util->IsConsoleDrawn())
+
+}
+
+void MinigameSelectScene::draw()
+{
+	m3d::Screen * scr = GameManager::getScreen();
+
+	if (Util::IsConsoleDrawn())
 		return;
 
 	if (Input::btnReleased(m3d::buttons::DPadRight))
@@ -113,7 +119,7 @@ void MinigameSelect::OnUpdate()
 		}
 		else
 		{
-			mh->TransitionTo(MenuHandler::MenuState::MainMenu);
+			SceneManager::transitionTo(new MainMenuScene());
 			return;
 		}
 	}
@@ -121,7 +127,7 @@ void MinigameSelect::OnUpdate()
 	scr->drawTop(*whiteBackground, RenderContext::Mode::Flat);
 	scr->drawBottom(*whiteBackground, RenderContext::Mode::Flat);
 
-	if(selectedMinigame == -1)
+	if (selectedMinigame == -1)
 		scr->drawTop(*MinigameSelectTopText, RenderContext::Mode::Flat);
 	else
 	{
@@ -130,15 +136,17 @@ void MinigameSelect::OnUpdate()
 		scr->drawTop(*selectedMinigameLargeSprite, RenderContext::Mode::Flat);
 	}
 
-	for(int i = 0; i < MINIGAME_COUNT; i++)
+	for (int i = 0; i < MINIGAME_COUNT; i++)
 		scr->drawBottom(*minigameOptions[i], RenderContext::Mode::Flat);
 
 	if (Input::btnReleased(m3d::buttons::A) && selectedMinigame != -1)
 		minigameOptions[selectedMinigame]->OnRelease();
 }
 
-MinigameSelect::~MinigameSelect()
+void MinigameSelectScene::onExit()
 {
+	ObjectManager* om = ObjectManager::getInstance();
+
 	for (int i = 0; i < MINIGAME_COUNT; i++)
 		om->DeleteButton(minigameOptions[i]);
 
@@ -147,11 +155,11 @@ MinigameSelect::~MinigameSelect()
 	delete(MinigameName);
 	delete(MinigameDescription);
 	delete(selectedMinigameLargeSprite);
-}
+};
 
-void MinigameSelect::SelectMinigame(int index)
+void MinigameSelectScene::SelectMinigame(int index)
 {
-	index = (index < 0?MINIGAME_COUNT + index : index) % MINIGAME_COUNT;
+	index = (index < 0 ? MINIGAME_COUNT + index : index) % MINIGAME_COUNT;
 
 	if (index < 0 || index >= MINIGAME_COUNT)
 		return;

@@ -19,6 +19,7 @@
 #include "sceneManager.hpp"
 #include "inputManager.hpp"
 #include "commands/commands.h"
+#include "scenes/MainMenuScene.hpp"
 
 using namespace m3d;
 
@@ -33,11 +34,11 @@ int main(int argc, char* argv[])
     GameManager::Initialize(&app, &scr);
 	Util *util = Util::createInstance(&scr, &app);
 	ObjectManager *om = ObjectManager::createInstance(&scr);
-	MenuHandler *mh = MenuHandler::createInstance(&scr);
+	//MenuHandler *mh = MenuHandler::createInstance(&scr);
 	ResourceManager::initialize();
     Input::initialize();
 	SceneManager::OnInitialize();
-
+	SceneManager::transitionTo(new MainMenuScene());
 
 	// Main loop
 	while (app.isRunning())
@@ -53,7 +54,7 @@ int main(int argc, char* argv[])
         GameManager::Update();
         Input::update();
 		om->OnUpdate();
-		mh->OnUpdate();
+		//mh->OnUpdate();
 		util->OnUpdate();
 		SceneManager::OnUpdate();
 
@@ -63,7 +64,7 @@ int main(int argc, char* argv[])
 	}
 
 	delete (util);
-	delete (mh);
+	//delete (mh);
 	delete (om);
 
 	return 0;

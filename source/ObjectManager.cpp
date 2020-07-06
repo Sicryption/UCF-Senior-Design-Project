@@ -67,9 +67,6 @@ ObjectManager::~ObjectManager()
 //The function which is called on every game frame.
 void ObjectManager::OnUpdate()
 {
-	if (MenuHandler::GetTransitionState() != MenuHandler::MenuState::NotTransitioning)
-		return;
-
 	int touchedThisFrame = hidKeysDown() & KEY_TOUCH,
 		touchReleasedThisFrame = hidKeysUp() & KEY_TOUCH,
 		touchx = m3d::touch::getXPosition(),

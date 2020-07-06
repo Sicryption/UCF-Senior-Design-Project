@@ -1,8 +1,6 @@
 #include "MenuHandler.hpp"
 
 #include "menus/menu.hpp"
-#include "menus/mainMenu.hpp"
-#include "menus/minigameSelect.hpp"
 #include "menus/minigameTemplateMenu.hpp"
 
 using namespace m3d;
@@ -91,32 +89,6 @@ void MenuHandler::TransitionTo(MenuState state)
 	switch (state)
 	{
 		//This could be written much more efficiently. I had a different idea in mind when originally developing this.
-		case MenuState::MainMenu:
-		{
-			//theres no way to convert from enum to string in C++... uggh
-			util->PrintLine("Attempting transition to: MainMenu");
-
-			MainMenu* menu = new MainMenu(scr);
-
-			if (currentMenu != nullptr)
-				delete(currentMenu);
-
-			currentMenu = menu;
-			currentState = state;
-			break;
-		}
-		case MenuState::MinigameSelect:
-		{
-			util->PrintLine("Attempting transition to: MinigameSelect");
-			MinigameSelect* menu = new MinigameSelect(scr);
-
-			if (currentMenu != nullptr)
-				delete(currentMenu);
-
-			currentMenu = menu;
-			currentState = state;
-			break;
-		}
 		case MenuState::MinigameTemplateMenu:
 		{
 			//need to figure out which minigame to switch to and tell it so here

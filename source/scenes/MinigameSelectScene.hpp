@@ -1,12 +1,20 @@
 #pragma once
 
-#include "menu.hpp"
+#include "../scene.hpp"
+#include "../menus/MinigameDescriptor.hpp"
+#include "MazeScene.hpp"
+
+#include "../ObjectManager.hpp"
+#include "../gameManager.hpp"
+#include "../inputManager.hpp"
 #include "../sceneManager.hpp"
-#include "MinigameDescriptor.hpp"
+#include "../resources.h"
 
 #define MINIGAME_COUNT 6
+#define xScale 1.3f
+#define yScale 1.3f
 
-class MinigameSelect : public Menu
+class MinigameSelectScene : public Scene
 {
 	private:
 		enum MINIGAME_LIST
@@ -24,19 +32,26 @@ class MinigameSelect : public Menu
 			MinigameDescriptor(),
 			MinigameDescriptor()
 		};
-		
+
 		int selectedMinigame = -1;
-		
+
 		m3d::Rectangle* whiteBackground;
 
 		m3dCI::Sprite *selectedMinigameLargeSprite = nullptr;
 		m3dCI::Text *MinigameSelectTopText = nullptr, *MinigameDescription = nullptr, *MinigameName = nullptr;
 		m3dCI::Button* minigameOptions[MINIGAME_COUNT];
+
 	public:
-		MinigameSelect(m3d::Screen* screen);
-		virtual ~MinigameSelect();
+		MinigameSelectScene();
+
+		void initialize();
+		void draw();
+		void onExit();    
+
+		void load() {};
+		void unload() {};
+		void update() {};
+		void onEnter() {};
 
 		void SelectMinigame(int index);
-		
-		void OnUpdate();
 };
