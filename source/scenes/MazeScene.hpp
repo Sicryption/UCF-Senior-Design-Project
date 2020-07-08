@@ -132,7 +132,7 @@ class MazeScene : public Minigame
         
         void update()
         {
-            if (buttons::buttonDown(buttons::X))
+            if (buttons::buttonPressed(buttons::X))
             {
                 if(getThreadState() == THREAD_HALT)
                 {

@@ -15,7 +15,9 @@ int UserAPI::move_object(lua_State* L)
 {
     int y = lua_tonumber(L,-1);
     int x = lua_tonumber(L,-2); 
-    lua_Number t_id = lua_tonumber(L,-3);
+    int t_id = lua_tonumber(L,-3);
+    
+    
     
     Scene* scene = SceneManager::getScene();
 
@@ -27,22 +29,39 @@ int UserAPI::move_object(lua_State* L)
     GameObject* obj = scene->findObject(t_id);
     if(obj == nullptr)
     {
-
         Util::PrintLine("Error: couldnt find object \'" + std::to_string(t_id) +"\' in Scene \'" + scene->getSceneName() + "\'");
         return 0;
     }
     
     Util::PrintLine("move [" + std::to_string(t_id) + "]. x: " +  std::to_string(x) + ", y: " +  std::to_string(y) );
-    
+    int t_runState;
     while(!(x == 0 && y == 0))
     {
         x = x - sign(x);
         y = y - sign(y);
+        do{
+            lua_getglobal(L,"_EXEC_STATE");
+            if(!lua_isnoneornil(L,-1))
+            {
+                Util::PrintLine("state: " + std::to_string(t_runState) );
+                t_runState = lua_tonumber(L,-1);
+                lua_remove(L,-1);                
+                if(t_runState < 0)
+                {
+                    return 0;
+                }
+            }
+            
+        }while(t_runState == 1);
+        /* 
+        */
+        Util::PrintLine("step [" + std::to_string(t_id) + "]. x: " +  std::to_string(sign(x)) + ", y: " +  std::to_string(sign(x)) );
+        obj->moveTo( sign(x), sign(y));
+        /*
+        */
+
         
 
-        Util::PrintLine("step [" + std::to_string(t_id) + "]. x: " +  std::to_string(sign(x)) + ", y: " +  std::to_string(sign(x)) );
-        obj->moveTo(    sign(x),
-                        sign(y));
         m3d::Thread::sleep(STEP_TIME);
     }
     

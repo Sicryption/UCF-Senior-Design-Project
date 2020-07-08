@@ -55,7 +55,7 @@ class Minigame : public Scene
                 
                 if(m_luaChunk != nullptr)
                 {
-                   
+                    
                     onExecutionBegin();
                     //  TODO: Disable Command Menu
                     std::string t_lua(m_luaChunk->c_str());
@@ -63,7 +63,7 @@ class Minigame : public Scene
                     m_sandbox->executeString(t_lua);
                     m_luaChunk = nullptr;
                     onExecutionEnd();
-
+                    
                 }
 
                 m_mutex_execution.unlock();
