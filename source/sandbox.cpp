@@ -157,7 +157,7 @@ int LuaSandbox::executeFile(std::string path)
     if(fp == NULL)
     {
         std::cerr << "Error: couldnt open file at '" << fullPath << "'" << std::endl;
-        return;
+        return 0;
     }
 
     fseek(fp,0L, SEEK_END);

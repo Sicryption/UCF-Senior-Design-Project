@@ -21,7 +21,7 @@ class Minigame : public Scene
 {
 	private:
         m3d::Thread* m_sandboxThread;
-        m3d::Mutex  m_mutex_execution, m_mutex_sandbox, m_mutex_threadState;
+        m3d::Mutex  m_mutex_execution, m_mutex_sandbox, m_mutex_threadState, m_mutex_lua;
         int m_sandboxThreadState = THREAD_RUNNING;
         std::string* m_luaChunk = nullptr;
         LuaSandbox* m_sandbox = nullptr;
@@ -46,39 +46,42 @@ class Minigame : public Scene
             
             while(true)
             {
-                //Util::PrintLine("sandbox: check thread state");
+                
                 //  Lock access to Thread State
-                m_mutex_threadState.lock();
+                m3d::Lock lock_state(m_mutex_threadState);
                 if(*state == THREAD_CLOSE)
                 {   //  close Thread
                     break;
                 }else if(*state == THREAD_HALT)
                 {   
-                    m_mutex_threadState.unlock();
                     continue;
                 }                
-                m_mutex_threadState.unlock();
+                lock_state.~Lock();
 
-                // lock sandbox
-                m_mutex_sandbox.lock();
                 
                 if(m_luaChunk != nullptr)
-                {
-                    
+                {                    
                     onExecutionBegin();
                     //  TODO: Disable Command Menu
                     std::string t_lua(m_luaChunk->c_str());
+                    
+                    #ifdef DEBUG
                     Util::PrintLine(t_lua);
+                    #endif
+                    
+                    m3d::Lock lock_sandbox(m_mutex_sandbox);
                     m_sandbox->executeString(t_lua);
                     m_luaChunk = nullptr;
+                    lock_sandbox.~Lock();
+
                     onExecutionEnd();
+
                     setThreadState(THREAD_RUNNING);
                 }
 
-                m_mutex_execution.unlock();
-                m3d::Thread::sleep(100);
+                m3d::Thread::sleep();
             }
-            //m_mutex_threadState.unlock();
+            
         }
 
         
@@ -122,7 +125,6 @@ class Minigame : public Scene
             m_sandboxThreadState = state;
             lock_state.~Lock();
 
-            m3d::Lock lock_sandbox(m_mutex_sandbox);
             m_sandbox->executeString("_EXEC_STATE = " + std::to_string(state));
         }
 
@@ -168,11 +170,13 @@ class Minigame : public Scene
         Minigame()
         {                       
             m_sandboxThread = new m3d::Thread( [this](m3d::Parameter p){sandboxRuntime(p);} , &m_sandboxThreadState);
+            
             #ifdef DEBUG
             std::stringstream t_debug;
             t_debug << "new sandbox thread: " << m_sandboxThread ;
             Util::PrintLine(t_debug.str() ) ;
             #endif
+
             m_sandboxThread->start();
         }
 
@@ -200,10 +204,6 @@ class Minigame : public Scene
 
 		virtual void onEnter()=0;
 		virtual void onExit()=0;
-
-	
-	
-
 };
 
 
