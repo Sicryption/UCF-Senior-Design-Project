@@ -63,7 +63,7 @@ class Minigame : public Scene
                     m_sandbox->executeString(t_lua);
                     m_luaChunk = nullptr;
                     onExecutionEnd();
-                    
+                    setThreadState(THREAD_RUNNING);
                 }
 
                 m_mutex_execution.unlock();

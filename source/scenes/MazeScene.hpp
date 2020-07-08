@@ -139,6 +139,10 @@ class MazeScene : public Minigame
                     setThreadState(THREAD_RUNNING);
                 }else{setThreadState(THREAD_HALT);}
             }
+            if (buttons::buttonPressed(buttons::Y))
+            {
+                setThreadState(THREAD_CLOSE);
+            }
 
 			switch (currentState)
 			{
@@ -151,7 +155,7 @@ class MazeScene : public Minigame
 						std::vector<CommandObject*> startingCommands =
 						{
 							new SelectCommand("runner",true,true),
-							new RightCommand("18",false,true),
+							new RightCommand("18"),
 							new DownCommand("5"),
 							new LeftCommand("18"),
 							new DownCommand("5"),
