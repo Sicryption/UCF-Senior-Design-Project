@@ -57,9 +57,11 @@ class Minigame : public Scene
                    
                     onExecutionBegin();
                     //  TODO: Disable Command Menu
-                    sandbox->executeString(*m_luaChunk);
+                    std::string t_lua(m_luaChunk->c_str());
+                    Util::PrintLine(t_lua);
+                    sandbox->executeString(t_lua);
                     m_luaChunk = nullptr;
-                    onExecutionBegin();
+                    onExecutionEnd();
 
                 }
 
@@ -87,7 +89,7 @@ class Minigame : public Scene
             }
             else 
             {
-                m_luaChunk->assign(chunk);
+                Util::PrintLine("warning: wait for previous lua code to complete execution");
             }
 
             //  Allow sandbox thread to continue execution
