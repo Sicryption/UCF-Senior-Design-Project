@@ -5,8 +5,10 @@
 #include <string.h>
 #include <map>
 #include <memory>
-#include "gameObject.hpp"
-#include "sandbox.h"
+
+#include "../gameObject.hpp"
+#include "../sandbox.h"
+#include "../util.hpp"
 
 class Scene : public Updateable
 {

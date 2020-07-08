@@ -72,7 +72,7 @@ class ObjectManager
 
 		void DeleteCodeEditor(m3dCI::CodeEditor* ce);
 
-		m3dCI::CommandLister* CreateCommandLister();
+		m3dCI::CommandLister* CreateCommandLister(Minigame* minigame);
 
 		void DeleteCommandLister(m3dCI::CommandLister* cl);
 

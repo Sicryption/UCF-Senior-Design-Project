@@ -1,8 +1,110 @@
-#include "minigameTemplateMenu.hpp"
+#include "minigame.hpp"
 
-MinigameTemplateMenu::MinigameTemplateMenu(m3d::Screen* screen) :
-	Menu(screen)
+void Minigame::sandboxRuntime(m3d::Parameter param)
 {
+	m_mutex_sandbox.lock();
+	//Util::PrintLine("sandbox: start sandbox thread");
+
+	LuaSandbox* sandbox = new LuaSandbox();
+	int* state = param.get<int*>();
+	if (state == NULL)
+	{
+		Util::PrintLine("Error: threadstate not defined, sandbox thread closing.");
+		return;
+	}
+
+	while (true)
+	{
+		//Util::PrintLine("sandbox: check thread state");
+		//  Lock access to Thread State
+		m_mutex_threadState.lock();
+		if (*state == THREAD_CLOSE)
+		{   //  close Thread
+			break;
+		}
+		else if (*state == THREAD_HALT)
+		{
+			m_mutex_threadState.unlock();
+			continue;
+		}
+		m_mutex_threadState.unlock();
+
+		// lock sandbox
+		m_mutex_sandbox.lock();
+
+		if (m_luaChunk != nullptr)
+		{
+
+			onExecutionBegin();
+			//  TODO: Disable Command Menu
+			sandbox->executeString(*m_luaChunk);
+			m_luaChunk = nullptr;
+			onExecutionBegin();
+
+		}
+
+		m_mutex_execution.unlock();
+		m3d::Thread::sleep(100);
+	}
+	//m_mutex_threadState.unlock();
+}
+
+void Minigame::executeInSandbox(std::string chunk)
+{
+
+	//  Wait for any sandbox executions to complete
+	m_mutex_execution.lock();
+
+	if (m_luaChunk == nullptr)
+	{
+		m_luaChunk = new std::string(chunk);
+	}
+	else
+	{
+		m_luaChunk->assign(chunk);
+	}
+
+	//  Allow sandbox thread to continue execution
+	m_mutex_sandbox.unlock();
+
+}
+
+void Minigame::setThreadState(int state)
+{
+	//  Wait for thread state access
+	m3d::Lock lock(m_mutex_threadState);
+	m_sandboxThreadState = state;
+
+}
+
+void Minigame::onExecutionBegin()
+{
+
+}
+
+void Minigame::onExecutionEnd()
+{
+
+}
+
+void Minigame::toggleWinCond()
+{
+	winCond = !winCond;
+}
+
+Minigame::Minigame()
+{
+	m3d::Screen * screen = GameManager::getScreen();
+	ObjectManager* om = ObjectManager::getInstance();
+
+	m_sandboxThread = new m3d::Thread([this](m3d::Parameter p) {sandboxRuntime(p); }, &m_sandboxThreadState);
+#ifdef DEBUG
+	std::stringstream t_debug;
+	t_debug << "new sandbox thread: " << m_sandboxThread;
+	Util::PrintLine(t_debug.str());
+#endif
+	m_sandboxThread->start();
+
 	int margin = 5;
 
 	codeEditor = om->CreateCodeEditor(margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), 1);
@@ -12,7 +114,7 @@ MinigameTemplateMenu::MinigameTemplateMenu(m3d::Screen* screen) :
 	int buttonWidth = BOTTOMSCREEN_WIDTH * 0.25 - (margin * 2);
 	int buttonHeight = (BOTTOMSCREEN_HEIGHT - buttonWidth - (margin * 2)) / 3;
 
-	AddButton = om->CreateButton(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin, buttonWidth, buttonHeight, m3d::Color(255,255,255), m3d::Color(0, 0, 0), 1);
+	AddButton = om->CreateButton(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	AddButton->SetText("ADD");
 	AddButton->OnRelease = [this]() { this->AddButton_OnClick(); };
 
@@ -27,17 +129,37 @@ MinigameTemplateMenu::MinigameTemplateMenu(m3d::Screen* screen) :
 	closeButton = om->CreateButton(48 + BOTTOMSCREEN_WIDTH * 0.5, 0, new m3dCI::Sprite(*ResourceManager::getSprite("tabClose.png")));
 	closeButton->OnRelease = [this]() { this->CloseButton_OnClick(); };
 	closeButton->SetEnabledState(false);
-	
+
 	submitButton = om->CreateButton(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight * 3, buttonWidth, buttonWidth, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	submitButton->SetText("Run");
 	submitButton->OnRelease = [this]() { this->SubmitButton_OnClick(); };
 
-	commandLister = om->CreateCommandLister();
+	commandLister = om->CreateCommandLister(this);
 }
 
-void MinigameTemplateMenu::OnUpdate()
+Minigame::~Minigame()
 {
-	if (util->IsConsoleDrawn())
+	ObjectManager* om = ObjectManager::getInstance();
+
+	m3d::Lock lock(m_mutex_threadState);
+	m_sandboxThreadState = THREAD_CLOSE;
+	m_sandboxThread->join();
+
+	om->DeleteCodeEditor(codeEditor);
+	om->DeleteCommandLister(commandLister);
+	om->DeleteButton(AddButton);
+	om->DeleteButton(EditButton);
+	om->DeleteButton(RemoveButton);
+	om->DeleteButton(closeButton);
+	om->DeleteButton(submitButton);
+}
+
+void Minigame::update()
+{
+	m3d::Screen * scr = GameManager::getScreen();
+	ObjectManager* om = ObjectManager::getInstance();
+
+	if (Util::IsConsoleDrawn())
 		return;
 
 	if (commandEditor != nullptr && showCommandEditor)
@@ -69,7 +191,7 @@ void MinigameTemplateMenu::OnUpdate()
 
 	if (codeEditor != nullptr)
 	{
-		if(showCommandLister)
+		if (showCommandLister)
 			scr->drawTop(*codeEditor);
 		else if (!showCommandEditor)
 		{
@@ -107,19 +229,7 @@ void MinigameTemplateMenu::OnUpdate()
 	}
 }
 
-//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
-MinigameTemplateMenu::~MinigameTemplateMenu()
-{
-	om->DeleteCodeEditor(codeEditor);
-	om->DeleteCommandLister(commandLister);
-	om->DeleteButton(AddButton);
-	om->DeleteButton(EditButton);
-	om->DeleteButton(RemoveButton);
-	om->DeleteButton(closeButton);
-	om->DeleteButton(submitButton);
-}
-
-void MinigameTemplateMenu::AddButton_OnClick()
+void Minigame::AddButton_OnClick()
 {
 	showCommandLister = true;
 	commandLister->SetActive(true);
@@ -133,14 +243,15 @@ void MinigameTemplateMenu::AddButton_OnClick()
 	codeEditor->ShiftToTop();
 }
 
-void MinigameTemplateMenu::SubmitButton_OnClick()
+void Minigame::SubmitButton_OnClick()
 {
 	if (submitFunction != nullptr)
 		submitFunction(codeEditor->GetCommands());
 }
 
-void MinigameTemplateMenu::EditButton_OnClick()
+void Minigame::EditButton_OnClick()
 {
+	ObjectManager* om = ObjectManager::getInstance();
 	if (codeEditor == nullptr || codeEditor->getSelectedObject() == nullptr)
 		return;
 
@@ -157,13 +268,16 @@ void MinigameTemplateMenu::EditButton_OnClick()
 	showCommandEditor = true;
 }
 
-void MinigameTemplateMenu::DeleteButton_OnClick()
+void Minigame::DeleteButton_OnClick()
 {
 	codeEditor->removeCommand();
 }
 
-void MinigameTemplateMenu::CloseButton_OnClick()
+void Minigame::CloseButton_OnClick()
 {
+	m3d::Screen * scr = GameManager::getScreen();
+	ObjectManager* om = ObjectManager::getInstance();
+
 	commandLister->SetActive(false);
 	codeEditor->SetActive(true);
 	codeEditor->ShiftToBottom();
@@ -183,14 +297,16 @@ void MinigameTemplateMenu::CloseButton_OnClick()
 	showCommandLister = false;
 }
 
-void MinigameTemplateMenu::AddStartCommands(std::vector<CommandObject*> commands)
+void Minigame::AddStartCommands(std::vector<CommandObject*> commands)
 {
 	for (unsigned int i = 0; i < commands.size(); i++)
 		codeEditor->addCommand(commands[i]);
 }
 
-void MinigameTemplateMenu::AddCommand(CommandObject* command)
+void Minigame::AddCommand(CommandObject* command)
 {
+	m3d::Screen * scr = GameManager::getScreen();
+
 	codeEditor->addCommand(command);
 	commandLister->SetActive(false);
 	codeEditor->SetActive(true);
@@ -206,12 +322,12 @@ void MinigameTemplateMenu::AddCommand(CommandObject* command)
 	showCommandLister = false;
 }
 
-void MinigameTemplateMenu::ClearCommands()
+void Minigame::ClearCommands()
 {
 	codeEditor->ClearCommands();
 }
 
-void MinigameTemplateMenu::SetSubmitFunction(std::function<void(std::vector<CommandObject*>)> callbackFunction)
+void Minigame::SetSubmitFunction(std::function<void(std::vector<CommandObject*>)> callbackFunction)
 {
 	submitFunction = callbackFunction;
 }

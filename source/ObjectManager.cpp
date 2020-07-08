@@ -230,9 +230,9 @@ void ObjectManager::DeleteCodeEditor(m3dCI::CodeEditor* ce)
 	}
 }
 
-m3dCI::CommandLister* ObjectManager::CreateCommandLister()
+m3dCI::CommandLister* ObjectManager::CreateCommandLister(Minigame* minigame)
 {
-	m3dCI::CommandLister* cl = new m3dCI::CommandLister();
+	m3dCI::CommandLister* cl = new m3dCI::CommandLister(minigame);
 
 	commandListers.push_back(cl);
 

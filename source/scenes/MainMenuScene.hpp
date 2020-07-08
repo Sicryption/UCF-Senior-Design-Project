@@ -1,5 +1,5 @@
 #pragma once
-#include "../scene.hpp"
+#include "scene.hpp"
 
 #include "../ObjectManager.hpp"
 #include "../gameManager.hpp"

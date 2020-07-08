@@ -4,7 +4,7 @@
 #include <3ds.h>
 #include <m3dia.hpp>
 
-#include "scene.hpp"
+#include "scenes/scene.hpp"
 
 
 

@@ -1,5 +1,8 @@
 #pragma once
-#include "scene.hpp"
+#include "scenes/scene.hpp"
+#include "scenes/minigame.hpp"
+
+#include "commands/commands.h"
 
 class SceneManager
 {
@@ -20,5 +23,6 @@ public:
     static void OnUpdate();
     static void OnDraw();
 
-
+	static void AddCommand(CommandObject *command);
+	static void RequestUserCode(std::vector<CommandObject*> commands, std::function<void(std::vector<CommandObject*>)> callbackFunction);
 };

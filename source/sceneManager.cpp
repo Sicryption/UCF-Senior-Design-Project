@@ -55,10 +55,37 @@ void  SceneManager::OnUpdate()
     }
 }
 
-void  SceneManager::OnDraw()
+void SceneManager::OnDraw()
 {
     if(m_currentScene != nullptr)
     {
         m_currentScene->draw();
     }
+}
+
+void SceneManager::AddCommand(CommandObject *com)
+{
+	if (com == nullptr || m_currentScene == nullptr)
+		return;
+
+	Minigame* minigame = static_cast<Minigame*>(m_currentScene);
+
+	if (minigame != nullptr)
+	{
+		minigame->AddCommand(com);
+	}
+}
+
+void SceneManager::RequestUserCode(std::vector<CommandObject*> commands, std::function<void(std::vector<CommandObject*>)> callbackFunction)
+{
+	Minigame* minigame = static_cast<Minigame*>(m_currentScene);
+
+	if (minigame != nullptr)
+	{
+		minigame->ClearCommands();
+
+		minigame->AddStartCommands(commands);
+
+		minigame->SetSubmitFunction(callbackFunction);
+	}
 }

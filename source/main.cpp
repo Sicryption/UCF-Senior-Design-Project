@@ -12,7 +12,6 @@
 
 #include "util.hpp"
 #include "ObjectManager.hpp"
-#include "MenuHandler.hpp"
 #include "sandbox.h"
 #include "resources.h"
 #include "gameManager.hpp"
@@ -34,7 +33,6 @@ int main(int argc, char* argv[])
     GameManager::Initialize(&app, &scr);
 	Util *util = Util::createInstance(&scr, &app);
 	ObjectManager *om = ObjectManager::createInstance(&scr);
-	//MenuHandler *mh = MenuHandler::createInstance(&scr);
 	ResourceManager::initialize();
     Input::initialize();
 	SceneManager::OnInitialize();
@@ -54,7 +52,6 @@ int main(int argc, char* argv[])
         GameManager::Update();
         Input::update();
 		om->OnUpdate();
-		//mh->OnUpdate();
 		util->OnUpdate();
 		SceneManager::OnUpdate();
 
@@ -64,7 +61,6 @@ int main(int argc, char* argv[])
 	}
 
 	delete (util);
-	//delete (mh);
 	delete (om);
 
 	return 0;

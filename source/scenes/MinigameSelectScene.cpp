@@ -67,8 +67,8 @@ MinigameSelectScene::MinigameSelectScene()
 			{
 				if (i == MINIGAME_LIST::MAZE)
 					SceneManager::transitionTo(new MazeScene());
-
-				MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameTemplateMenu);
+				else
+					SceneManager::transitionTo(new Minigame());
 			}
 			else
 			{

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../scene.hpp"
-#include "../menus/MinigameDescriptor.hpp"
+#include "scene.hpp"
+#include "MinigameDescriptor.hpp"
 #include "MazeScene.hpp"
 
 #include "../ObjectManager.hpp"
