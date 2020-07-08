@@ -20,13 +20,14 @@ class Minigame : public Scene
         m3d::Mutex  m_mutex_execution, m_mutex_sandbox, m_mutex_threadState;
         int m_sandboxThreadState = THREAD_RUNNING;
         std::string* m_luaChunk = nullptr;
+        LuaSandbox* m_sandbox = nullptr;
 
         void sandboxRuntime(m3d::Parameter param)
         {
             m_mutex_sandbox.lock();
             //Util::PrintLine("sandbox: start sandbox thread");
             
-            LuaSandbox* sandbox = new LuaSandbox();
+            m_sandbox = new LuaSandbox();
             int* state = param.get<int*>();
             if(state == NULL)
             {
@@ -59,7 +60,7 @@ class Minigame : public Scene
                     //  TODO: Disable Command Menu
                     std::string t_lua(m_luaChunk->c_str());
                     Util::PrintLine(t_lua);
-                    sandbox->executeString(t_lua);
+                    m_sandbox->executeString(t_lua);
                     m_luaChunk = nullptr;
                     onExecutionEnd();
 
@@ -101,8 +102,13 @@ class Minigame : public Scene
         {
             //  Wait for thread state access
             m3d::Lock lock(m_mutex_threadState);
+            m_sandbox->executeString("_EXEC_STATE = " + std::to_string(state));
             m_sandboxThreadState = state;
-            
+        }
+
+        int getThreadState()
+        {
+            return m_sandboxThreadState;
         }
 
         virtual void onExecutionBegin()
