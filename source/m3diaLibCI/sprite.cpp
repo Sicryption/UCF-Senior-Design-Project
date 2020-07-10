@@ -244,6 +244,14 @@ namespace m3dCI {
         m_imageTint = { tint, tint, tint, tint };
     }
 
+	m3d::BoundingBox m3dCI::Sprite::getBoundingBox()
+	{
+		int p_w = m_sprite.params.pos.w;
+		int p_h = m_sprite.params.pos.h;
+
+		return m3d::BoundingBox(m_posX, m_posY, p_w, p_h);
+	}
+
 
     m3dCI::Sprite* m3dCI::Sprite::createFromSheet(C2D_SpriteSheet& t_sheet,int t_index)
     {

@@ -6,7 +6,6 @@
 
 #include <m3dia.hpp>
 
-#include "../ObjectManager.hpp"
 #include "../gameManager.hpp"
 #include "../inputManager.hpp"
 #include "../sceneManager.hpp"
@@ -36,9 +35,9 @@ class Minigame : public Scene
 			*RemoveButton = nullptr,
 			*closeButton = nullptr,
 			*submitButton = nullptr;
-		m3dCI::CodeEditor* codeEditor = nullptr;
-		m3dCI::CommandLister* commandLister = nullptr;
-		m3dCI::CommandEditor* commandEditor = nullptr;
+		CodeEditorMenuItem* codeEditor = nullptr;
+		CommandListerMenuItem* commandLister = nullptr;
+		CommandEditorMenuItem* commandEditor = nullptr;
 
 		std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
 
@@ -106,13 +105,4 @@ class Minigame : public Scene
 		virtual void onEnter() {};
 
 		virtual void onExit() {};
-
-	
-	
-
 };
-
-
-
-
-

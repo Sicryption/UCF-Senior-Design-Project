@@ -12,8 +12,8 @@ namespace m3dCI
 	class commandListerItem
 	{
 	private:
-		m3d::Rectangle* backgroundRectangle;
-		m3dCI::Text* commandTextObject;
+		m3d::Rectangle* backgroundRectangle = nullptr;
+		m3dCI::Text* commandTextObject = nullptr;
 
 	public:
 		commandListerItem(int x, int y, int w, int h, std::string command, bool selected);

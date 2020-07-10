@@ -1,7 +1,6 @@
 #pragma once
 #include "scene.hpp"
 
-#include "../ObjectManager.hpp"
 #include "../gameManager.hpp"
 #include "../inputManager.hpp"
 #include "../sceneManager.hpp"
@@ -11,11 +10,11 @@
 class MainMenuScene : public Scene
 {
 	private:
-		m3d::Rectangle* whiteBackground;
+		RectangleMenuItem* whiteBackground;
 
-		m3dCI::Text* StartupText;
+		TextMenuItem* StartupText;
 		ButtonMenuItem* ClickHereToContinue = nullptr;
-		m3dCI::Sprite* apple;
+		SpriteMenuItem* apple;
 
 	public:
 		MainMenuScene();

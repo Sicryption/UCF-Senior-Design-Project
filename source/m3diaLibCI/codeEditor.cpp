@@ -1,17 +1,19 @@
 #include "codeEditor.hpp"
 
+#include "../commands/commands.h"
+
+#define TOPSCREEN_WIDTH 400
+#define BOTTOMSCREEN_WIDTH 320
+#define TOPSCREEN_HEIGHT 240
+#define BOTTOMSCREEN_HEIGHT 240
+
+#define CELL_HEIGHT 20
+#define CELLS_TALL 12
+
+#define LEAST_CELLS_ON_SCREEN 12
+
 namespace m3dCI
 {
-	#define TOPSCREEN_WIDTH 400
-	#define BOTTOMSCREEN_WIDTH 320
-	#define TOPSCREEN_HEIGHT 240
-	#define BOTTOMSCREEN_HEIGHT 240
-
-	#define CELL_HEIGHT 20
-	#define CELLS_TALL 12
-
-	#define LEAST_CELLS_ON_SCREEN 12
-
 	CodeEditor::CodeEditor(int px, int pw, int p_borderWidth)
 		: m3d::Drawable()
 	{
@@ -38,29 +40,6 @@ namespace m3dCI
 		{
 			delete(commands[i]);
 		}
-	}
-
-	void CodeEditor::ShiftToTop()
-	{
-		int change = (TOPSCREEN_WIDTH - BOTTOMSCREEN_WIDTH) / 2;
-		xShift = change;
-
-		innerRectangle->setXPosition(x + xShift + borderWidth);
-		borderRectangle->setXPosition(x + xShift);
-		SetActive(false);
-
-		refreshCommandList();
-	}
-
-	void CodeEditor::ShiftToBottom()
-	{
-		xShift = 0;
-
-		innerRectangle->setXPosition(x + xShift + borderWidth);
-		borderRectangle->setXPosition(x + xShift);
-		SetActive(true);
-
-		refreshCommandList();
 	}
 
 	void CodeEditor::draw(m3d::RenderContext t_context)
@@ -157,9 +136,9 @@ namespace m3dCI
 		return px >= x && px <= x + w && py >= y && py < y + h;
 	}
 
-	void CodeEditor::SelectCommand(int px, int py)
+	void CodeEditor::InternalSelectCommand(int px, int py)
 	{
-		if (!active || !isPointInside(px, py))
+		if (!isPointInside(px, py))
 			return;
 
 		int commandIndexToSelect = (py + scrollY) / CELL_HEIGHT;
@@ -172,9 +151,6 @@ namespace m3dCI
 
 	void CodeEditor::SelectCommand(int index)
 	{
-		if (!active)
-			return;
-
 		if (index == -1 || index >= (int)commands.size())
 			currentSelectedCommand = nullptr;
 		else
@@ -210,16 +186,6 @@ namespace m3dCI
 		return index;
 	}
 
-	void CodeEditor::SetActive(bool state)
-	{
-		active = state;
-	}
-
-	bool CodeEditor::GetActive()
-	{
-		return active;
-	}
-
 	bool CodeEditor::IsBlankCommandSelected()
 	{
 		int index = GetSelectedCommandIndex();
@@ -230,11 +196,11 @@ namespace m3dCI
 		return GetSelectedCommandIndex() == (int)commands.size() - 1;
 	}
 
-	void CodeEditor::DoDrag(m3d::Vector2f dragVector)
+	void CodeEditor::InternalDoDrag(int u, int v)
 	{
-		double change = dragVector.v - thisScrollChange;
+		double change = v - thisScrollChange;
 
-		thisScrollChange = dragVector.v;
+		thisScrollChange = v;
 		scrollY -= change;
 
 		int maxScroll = (commands.size() - (commands.size() > LEAST_CELLS_ON_SCREEN?LEAST_CELLS_ON_SCREEN:commands.size())) * CELL_HEIGHT;
@@ -252,7 +218,7 @@ namespace m3dCI
 		refreshCommandList();
 	}
 
-	void CodeEditor::DragComplete()
+	void CodeEditor::InternalDragComplete()
 	{
 		thisScrollChange = 0;
 	}

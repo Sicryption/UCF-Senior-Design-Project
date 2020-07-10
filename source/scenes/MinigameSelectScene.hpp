@@ -4,7 +4,6 @@
 #include "MinigameDescriptor.hpp"
 #include "MazeScene.hpp"
 
-#include "../ObjectManager.hpp"
 #include "../gameManager.hpp"
 #include "../inputManager.hpp"
 #include "../sceneManager.hpp"
@@ -35,10 +34,10 @@ class MinigameSelectScene : public Scene
 
 		int selectedMinigame = -1;
 
-		m3d::Rectangle* whiteBackground;
+		RectangleMenuItem *whiteBackground;
 
-		m3dCI::Sprite *selectedMinigameLargeSprite = nullptr;
-		m3dCI::Text *MinigameSelectTopText = nullptr, *MinigameDescription = nullptr, *MinigameName = nullptr;
+		SpriteMenuItem *selectedMinigameLargeSprite = nullptr;
+		TextMenuItem *MinigameSelectTopText = nullptr, *MinigameDescription = nullptr, *MinigameName = nullptr;
 		ButtonMenuItem* minigameOptions[MINIGAME_COUNT];
 
 	public:

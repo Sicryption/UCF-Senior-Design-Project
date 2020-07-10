@@ -5,6 +5,12 @@
 
 #include "MenuItem.hpp"
 #include "MenuItems/ButtonMenuItem.hpp"
+#include "MenuItems/CodeEditorMenuItem.hpp"
+#include "MenuItems/CommandEditorMenuItem.hpp"
+#include "MenuItems/CommandListerMenuItem.hpp"
+#include "MenuItems/RectangleMenuItem.hpp"
+#include "MenuItems/SpriteMenuItem.hpp"
+#include "MenuItems/TextMenuItem.hpp"
 #include "../util.hpp"
 
 class Menu

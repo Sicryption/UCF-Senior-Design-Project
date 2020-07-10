@@ -5,12 +5,12 @@
 MinigameSelectScene::MinigameSelectScene()
 {
 	m3d::Screen * screen = GameManager::getScreen();
-	ObjectManager* om = ObjectManager::getInstance();
 
-	MinigameSelectTopText = new m3dCI::Text("Select a minigame");
+	MinigameSelectTopText = new TextMenuItem("Select a minigame");
 	MinigameSelectTopText->setFontSize(1);
 	MinigameSelectTopText->setFontWeight(1);
 	MinigameSelectTopText->setColor(m3d::Color(0, 0, 0));
+	menu->AddItem(MinigameSelectTopText);
 
 	int width = MinigameSelectTopText->getWidth();
 	int height = MinigameSelectTopText->getHeight();
@@ -21,19 +21,22 @@ MinigameSelectScene::MinigameSelectScene()
 
 	MinigameSelectTopText->setPosition((topScreenWidth / 2) - (width / 2), (screenHeight / 2) - (height / 2));
 
-	MinigameName = new m3dCI::Text("[SELECTED MINIGAME]");
+	MinigameName = new TextMenuItem("[SELECTED MINIGAME]");
 	MinigameName->setFontSize(0.9);
 	MinigameName->setFontWeight(0.9);
 	MinigameName->setColor(m3d::Color(0, 0, 0));
 	MinigameName->setPosition(20 + 100, 45);
+	menu->AddItem(MinigameName);
 
-	MinigameDescription = new m3dCI::Text("If you see this then\n I made a mistake..");
+	MinigameDescription = new TextMenuItem("If you see this then\n I made a mistake..");
 	MinigameDescription->setFontSize(0.6);
 	MinigameDescription->setFontWeight(0.6);
 	MinigameDescription->setColor(m3d::Color(0, 0, 0));
 	MinigameDescription->setPosition(20 + 100, 90);
+	menu->AddItem(MinigameDescription);
 
-	whiteBackground = new m3d::Rectangle(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
+	whiteBackground = new RectangleMenuItem(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
+	menu->AddItem(whiteBackground);
 
 	int ButtonWidth = 50;
 	int ButtonHeight = 50;
@@ -60,7 +63,7 @@ MinigameSelectScene::MinigameSelectScene()
 		else
 			newButton = new ButtonMenuItem(x, y, w, h, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
 
-		newButton->SetOnRelease([&, i]()
+		newButton->SetOnRelease([&, i](int x, int y)
 		{
 			Util::PrintLine("CLICKED");
 
@@ -88,11 +91,7 @@ MinigameSelectScene::MinigameSelectScene()
 
 MinigameSelectScene::~MinigameSelectScene()
 {
-	delete(whiteBackground);
-	delete(MinigameSelectTopText);
-	delete(MinigameName);
-	delete(MinigameDescription);
-	delete(selectedMinigameLargeSprite);
+
 }
 
 void MinigameSelectScene::initialize()
@@ -106,6 +105,26 @@ void MinigameSelectScene::draw()
 
 	if (Util::IsConsoleDrawn())
 		return;
+	
+	scr->drawTop(*whiteBackground, RenderContext::Mode::Flat);
+	scr->drawBottom(*whiteBackground, RenderContext::Mode::Flat);
+
+	if (selectedMinigame == -1)
+		scr->drawTop(*MinigameSelectTopText, RenderContext::Mode::Flat);
+	else
+	{
+		scr->drawTop(*MinigameName, RenderContext::Mode::Flat);
+		scr->drawTop(*MinigameDescription, RenderContext::Mode::Flat);
+		scr->drawTop(*selectedMinigameLargeSprite, RenderContext::Mode::Flat);
+	}
+
+	for (int i = 0; i < MINIGAME_COUNT; i++)
+		scr->drawBottom(*minigameOptions[i], RenderContext::Mode::Flat);
+}
+
+void MinigameSelectScene::update()
+{
+	menu->OnUpdate();
 
 	if (Input::btnReleased(m3d::buttons::DPadRight))
 		SelectMinigame(selectedMinigame == -1 ? 0 : selectedMinigame + 1);
@@ -137,28 +156,8 @@ void MinigameSelectScene::draw()
 		}
 	}
 
-	scr->drawTop(*whiteBackground, RenderContext::Mode::Flat);
-	scr->drawBottom(*whiteBackground, RenderContext::Mode::Flat);
-
-	if (selectedMinigame == -1)
-		scr->drawTop(*MinigameSelectTopText, RenderContext::Mode::Flat);
-	else
-	{
-		scr->drawTop(*MinigameName, RenderContext::Mode::Flat);
-		scr->drawTop(*MinigameDescription, RenderContext::Mode::Flat);
-		scr->drawTop(*selectedMinigameLargeSprite, RenderContext::Mode::Flat);
-	}
-
-	for (int i = 0; i < MINIGAME_COUNT; i++)
-		scr->drawBottom(*minigameOptions[i], RenderContext::Mode::Flat);
-
 	if (Input::btnReleased(m3d::buttons::A) && selectedMinigame != -1)
-		minigameOptions[selectedMinigame]->CallOnRelease();
-}
-
-void MinigameSelectScene::update()
-{
-	menu->OnUpdate();
+		minigameOptions[selectedMinigame]->CallOnRelease(0,0);
 }
 
 void MinigameSelectScene::SelectMinigame(int index)
@@ -177,11 +176,14 @@ void MinigameSelectScene::SelectMinigame(int index)
 
 		minigameOptions[selectedMinigame]->setScale(1.0f, 1.0f);
 		minigameOptions[selectedMinigame]->setPosition(x, y);
+
+		menu->RemoveItem(selectedMinigameLargeSprite);
 	}
 
 	selectedMinigame = index;
 
-	selectedMinigameLargeSprite = new m3dCI::Sprite(*ResourceManager::getSprite(minigames[index].getLargeSpriteLocation()));
+	selectedMinigameLargeSprite = new SpriteMenuItem(*ResourceManager::getSprite(minigames[index].getLargeSpriteLocation()));
+	menu->AddItem(selectedMinigameLargeSprite);
 	selectedMinigameLargeSprite->setPosition(10, 45);
 
 	int addedWidth = minigameOptions[index]->getWidth() * xScale - minigameOptions[index]->getWidth();

@@ -208,20 +208,7 @@ void m3dCI::Button::SetTextColor(m3d::Color color)
 	if (text != nullptr)
 		text->setColor(color);
 }
-
-void m3dCI::Button::SetEnabledState(bool state)
-{
-	if(buttonType == ButtonType::Rectangle)
-		innerRectangle->setColor(state ? innerColor : *disabledColor);
-
-	enabled = state;
-}
-
-bool m3dCI::Button::GetEnabledState()
-{
-	return enabled;
-}
-			
+		
 /*
 
 	The following functions are all child functions of Rectangle/Circle objects which are used here.
@@ -308,12 +295,7 @@ m3d::BoundingBox m3dCI::Button::getBoundingBox ()
 	else if (buttonType == Circle && outerCircle != nullptr)
 		return outerCircle->getBoundingBox();
 	else if (buttonType == SpriteObject && sprite != nullptr)
-	{
-		int p_w = sprite->m_sprite.params.pos.w;
-		int p_h = sprite->m_sprite.params.pos.h;
-
-		return m3d::BoundingBox(x,y, p_w, p_h);
-	}
+		return sprite->getBoundingBox();
 		
 	return m3d::BoundingBox(0,0,0,0);
 }

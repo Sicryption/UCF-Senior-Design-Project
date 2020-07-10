@@ -11,7 +11,6 @@
 #include "lua/lua.hpp"
 
 #include "util.hpp"
-#include "ObjectManager.hpp"
 #include "sandbox.h"
 #include "resources.h"
 #include "gameManager.hpp"
@@ -31,7 +30,6 @@ int main(int argc, char* argv[])
 	//  Create default Singleton instances of Utility class and ObjectManager class
 	GameManager::Initialize(&app, &scr);
 	Util *util = Util::createInstance(&scr, &app);
-	ObjectManager *om = ObjectManager::createInstance(&scr);
 	ResourceManager::initialize();
 	Input::initialize();
 	SceneManager::OnInitialize();
@@ -50,11 +48,10 @@ int main(int argc, char* argv[])
 		//  Call OnUpdate Function for all Singletons.
 		GameManager::Update();
 		Input::update();
-		om->OnUpdate();
+
 		util->OnUpdate();
 		SceneManager::OnUpdate();
-
-
+		
 		SceneManager::OnDraw();
 		util->OnDraw();
 
@@ -62,7 +59,6 @@ int main(int argc, char* argv[])
 	}
 
 	delete (util);
-	delete (om);
 
 	return 0;
 }

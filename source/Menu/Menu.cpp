@@ -12,7 +12,6 @@ Menu::~Menu()
 		if (menuItems[i] == nullptr)
 			continue;
 
-		Util::PrintLine("Destroying object");
 		delete(menuItems[i]);
 	}
 }
@@ -28,18 +27,32 @@ void Menu::OnUpdate()
 
 	for (unsigned int i = 0; i < menuItemsClone.size(); i++)
 	{
-		if (menuItemsClone[i] == nullptr || !menuItemsClone[i]->GetActive())
-			continue;
-
 		MenuItem* currentItem = menuItemsClone[i];
+
+		if (currentItem == nullptr || !currentItem->GetActive())
+			continue;
 
 		//Check for touch event on Button
 		if (touchedThisFrame && currentItem->PointIntersection(touchx, touchy))
-			currentItem->CallOnTouch();
+			currentItem->CallOnTouch(touchx, touchy);
 		else if (touchReleasedThisFrame && currentItem->PointIntersection(lastFrameTouchX, lastFrameTouchY))
-			currentItem->CallOnRelease();
+			currentItem->CallOnRelease(lastFrameTouchX, lastFrameTouchY);
 		else if (touchReleasedThisFrame && currentItem->PointIntersection(touchx, touchy))
-			currentItem->CallOnHeld();
+			currentItem->CallOnHeld(touchx, touchy);
+
+		if (draggedLastFrame && touchReleasedThisFrame)
+			currentItem->CallOnDragComplete();
+
+		if (Input::isTouchDragging() && Input::getTouchDragOrigin() != nullptr)
+		{
+			int tX = Input::getTouchDragOrigin()->u;
+			int tY = Input::getTouchDragOrigin()->v;
+
+			if (currentItem->PointIntersection(tX, tY))
+			{
+				currentItem->CallOnDrag(Input::getTouchDragVector().u, Input::getTouchDragVector().v);
+			}
+		}
 	}
 
 	lastFrameTouchX = touchx;
@@ -52,6 +65,8 @@ MenuItem* Menu::AddItem(MenuItem* item)
 {
 	if(item != nullptr)
 		menuItems.push_back(item);
+
+	Util::PrintLine("MenuSize: " + std::to_string(menuItems.size()));
 
 	return item;
 }

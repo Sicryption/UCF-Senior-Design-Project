@@ -1,9 +1,6 @@
 #include "commandEditor.hpp"
 
-#define XStart 15
-#define YStart 6
-#define CELL_WIDTH 274
-#define CELL_HEIGHT 57
+#include "../commands/commands.h"
 
 namespace m3dCI
 {
@@ -57,41 +54,5 @@ namespace m3dCI
 		for (int i = 0; i < MAX_PARAMS; i++)
 			if (params[i] != nullptr)
 				params[i]->draw(t_context);
-	}
-
-	void CommandEditor::HandleClick(int x, int y)
-	{
-		if (x >= XStart && x <= XStart + CELL_WIDTH && y >= YStart && y <= YStart + (CELL_HEIGHT * (command->getParamNames().size() + 1)))
-		{
-			int selected = (y - YStart) / CELL_HEIGHT;
-
-			if (selected > 0)
-			{
-				m3d::SoftwareKeyboard sk;
-
-				sk.darkenTop(false);
-				sk.allowBlank(false);
-				sk.allowEmpty(false);
-				sk.allowHome(false);
-				sk.setInitialText(command->getParams()[selected - 1]);
-				sk.display();
-
-				if (sk.getLastButton() != m3d::SoftwareKeyboard::Button::Right)
-				{
-					Util::PrintLine("Keyboard Canceled");
-					return;
-				}
-				else
-				{
-					command->setParam(selected - 1, sk.getLastInput());
-
-					isComplete = true;
-				}
-			}
-			else
-			{
-
-			}
-		}
 	}
 }

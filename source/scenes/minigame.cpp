@@ -95,7 +95,6 @@ void Minigame::toggleWinCond()
 Minigame::Minigame()
 {
 	m3d::Screen * screen = GameManager::getScreen();
-	ObjectManager* om = ObjectManager::getInstance();
 
 	m_sandboxThread = new m3d::Thread([this](m3d::Parameter p) {sandboxRuntime(p); }, &m_sandboxThreadState);
 #ifdef DEBUG
@@ -107,8 +106,8 @@ Minigame::Minigame()
 
 	int margin = 5;
 
-	codeEditor = om->CreateCodeEditor(margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), 1);
-
+	codeEditor = new CodeEditorMenuItem(margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), 1);
+	menu->AddItem(codeEditor);
 	codeEditor->SetActive(true);
 
 	int buttonWidth = BOTTOMSCREEN_WIDTH * 0.25 - (margin * 2);
@@ -116,23 +115,23 @@ Minigame::Minigame()
 
 	AddButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	AddButton->SetText("ADD");
-	AddButton->SetOnRelease([this]() { this->AddButton_OnClick(); });
+	AddButton->SetOnRelease([this](int x, int y) { this->AddButton_OnClick(); });
 
 	EditButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	EditButton->SetText("EDIT");
-	EditButton->SetOnRelease([this]() { this->EditButton_OnClick(); });
+	EditButton->SetOnRelease([this](int x, int y) { this->EditButton_OnClick(); });
 
 	RemoveButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight * 2, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	RemoveButton->SetText("DEL");
-	RemoveButton->SetOnRelease([this]() { this->DeleteButton_OnClick(); });
+	RemoveButton->SetOnRelease([this](int x, int y) { this->DeleteButton_OnClick(); });
 
 	closeButton = new ButtonMenuItem(48 + BOTTOMSCREEN_WIDTH * 0.5, 0, new m3dCI::Sprite(*ResourceManager::getSprite("tabClose.png")));
-	closeButton->SetOnRelease([this]() { this->CloseButton_OnClick(); });
+	closeButton->SetOnRelease([this](int x, int y) { this->CloseButton_OnClick(); });
 	closeButton->SetActive(false);
 
 	submitButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight * 3, buttonWidth, buttonWidth, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	submitButton->SetText("Run");
-	submitButton->SetOnRelease([this]() { this->SubmitButton_OnClick(); });
+	submitButton->SetOnRelease([this](int x, int y) { this->SubmitButton_OnClick(); });
 	
 	menu->AddItem(submitButton);
 	menu->AddItem(closeButton);
@@ -140,25 +139,21 @@ Minigame::Minigame()
 	menu->AddItem(RemoveButton);
 	menu->AddItem(AddButton);
 
-	commandLister = om->CreateCommandLister(this);
+	commandLister = new CommandListerMenuItem(this);
+	commandLister->SetActive(false);
+	menu->AddItem(commandLister);
 }
 
 Minigame::~Minigame()
 {
-	ObjectManager* om = ObjectManager::getInstance();
-
 	m3d::Lock lock(m_mutex_threadState);
 	m_sandboxThreadState = THREAD_CLOSE;
 	m_sandboxThread->join();
-
-	/*om->DeleteCodeEditor(codeEditor);
-	om->DeleteCommandLister(commandLister);*/
 }
 
 void Minigame::update()
 {
 	m3d::Screen * scr = GameManager::getScreen();
-	ObjectManager* om = ObjectManager::getInstance();
 
 	if (Util::IsConsoleDrawn())
 		return;
@@ -169,7 +164,7 @@ void Minigame::update()
 		{
 			showCommandEditor = false;
 
-			om->DeleteCommandEditor(commandEditor);
+			menu->RemoveItem(commandEditor);
 
 			commandLister->SetActive(false);
 			codeEditor->SetActive(true);
@@ -228,6 +223,8 @@ void Minigame::update()
 		if (submitButton != nullptr)
 			scr->drawBottom(*submitButton);
 	}
+
+	menu->OnUpdate();
 }
 
 void Minigame::AddButton_OnClick()
@@ -252,11 +249,11 @@ void Minigame::SubmitButton_OnClick()
 
 void Minigame::EditButton_OnClick()
 {
-	ObjectManager* om = ObjectManager::getInstance();
 	if (codeEditor == nullptr || codeEditor->getSelectedObject() == nullptr)
 		return;
 
-	commandEditor = om->CreateCommandEditor(codeEditor->getSelectedObject());
+	commandEditor = new CommandEditorMenuItem(codeEditor->getSelectedObject());
+	menu->AddItem(commandEditor);
 
 	commandLister->SetActive(false);
 	codeEditor->SetActive(false);
@@ -277,8 +274,6 @@ void Minigame::DeleteButton_OnClick()
 void Minigame::CloseButton_OnClick()
 {
 	m3d::Screen * scr = GameManager::getScreen();
-	ObjectManager* om = ObjectManager::getInstance();
-
 	commandLister->SetActive(false);
 	codeEditor->SetActive(true);
 	codeEditor->ShiftToBottom();
@@ -292,7 +287,7 @@ void Minigame::CloseButton_OnClick()
 
 	if (showCommandEditor)
 	{
-		om->DeleteCommandEditor(commandEditor);
+		menu->RemoveItem(commandEditor);
 		showCommandEditor = false;
 	}
 	showCommandLister = false;

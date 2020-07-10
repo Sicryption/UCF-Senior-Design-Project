@@ -6,8 +6,10 @@ MainMenuScene::MainMenuScene()
 {
 	m3d::Screen * screen = GameManager::getScreen();
 
-	StartupText = new m3dCI::Text("Seedlings");
-	whiteBackground = new m3d::Rectangle(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
+	StartupText = new TextMenuItem("Seedlings");
+	menu->AddItem(StartupText);
+	whiteBackground = new RectangleMenuItem(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
+	menu->AddItem(whiteBackground);
 
 	int topScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
 	int bottomScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Bottom);
@@ -18,19 +20,13 @@ MainMenuScene::MainMenuScene()
 	ClickHereToContinue = new ButtonMenuItem(clickHereToContinueX, clickHereToContinueY, (bottomScreenWidth*0.8), (screenHeight*0.2), m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
 	menu->AddItem(ClickHereToContinue);
 
-	apple = new m3dCI::Sprite(*ResourceManager::getSprite("apple.png"));
+	apple = new SpriteMenuItem(*ResourceManager::getSprite("apple.png"));
+	menu->AddItem(apple);
 }
 
 MainMenuScene::~MainMenuScene()
 {
-	//The following commented out object don't have deletion support. They *should* be grabbed by the garbage collector. 
-	//Ideally, we would change these objects to support a default virtual deconstructor
-	//delete(whiteBackground);
-	//delete(whiteBottomBackground);
-
 	Util::PrintLine("Destroying mainmenuscene");
-	delete(StartupText);
-	delete(apple);
 }
 
 void MainMenuScene::initialize()
@@ -55,7 +51,7 @@ void MainMenuScene::initialize()
 	int clickHereToContinueY = ((screenHeight)-(screenHeight*0.3));
 
 	ClickHereToContinue->SetText("Press start to Play!");
-	ClickHereToContinue->SetOnRelease([this]() { SceneManager::setTransition(new MinigameSelectScene()); });
+	ClickHereToContinue->SetOnRelease([this](int x, int y) { SceneManager::setTransition(new MinigameSelectScene()); });
 	ClickHereToContinue->SetActive(false);
 
 	apple->setCenter(apple->m_sprite.params.pos.w / 2, apple->m_sprite.params.pos.h / 2);

@@ -4,7 +4,6 @@
 #include "text.hpp"
 #include "button.hpp"
 #include "commandListerItem.hpp"
-#include "../commands/commands.h"
 #include "../resources.h"
 
 #include <citro2d.h>
@@ -29,6 +28,7 @@
 #define CONTROL_STATEMENTS 4
 
 class Minigame;
+class CommandObject;
 
 using namespace std;
 
@@ -48,19 +48,19 @@ namespace m3dCI
 			int currentlySelectedTab = -1;
 			commandListerItem* currentSelectedCommand = nullptr;
 
-			bool active = false;
 			int x, y, w, h;
 
 			std::string getTabSpriteStringID(int index, bool selected);
 			m3dCI::Sprite* getTabSprite(int index, bool selected);
 
-			int getCurrentlySelectedTab();
-
 			void CreateTabCommandObjects(int index);
 
 			void SelectTab(int tabIndex);
+		protected:
+			int getCurrentlySelectedTab();
 			void SelectTab(int px, int py);
 			void SelectCommandObject(int px, int py);
+
 		public:
 			//Create the CodeEditor.
 			/*
@@ -76,10 +76,6 @@ namespace m3dCI
 			//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
 			virtual ~CommandLister();
 
-			void SelectPoint(int px, int py);
-
 			void draw(m3d::RenderContext t_context);
-
-			void SetActive(bool state);
 	};
 }

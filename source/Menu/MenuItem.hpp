@@ -4,30 +4,32 @@
 class MenuItem
 {
 protected:
-	int x, y, layer;
+	int layer;
 	bool isActive = true;
-	std::function<void()> OnHeld = nullptr, OnTouch = nullptr, OnRelease = nullptr;
+	std::function<void(int, int)> OnHeld = nullptr, OnTouch = nullptr, OnRelease = nullptr, OnDrag = nullptr;
+	std::function<void()> OnDragComplete = nullptr;
 public:
-	MenuItem(int px, int py, int player)
+	MenuItem(int player = 0)
 	{
-		x = px;
-		y = py;
 		layer = player;
 	}
 
 	virtual ~MenuItem() { }
 
-	void SetOnHeld(std::function<void()> onHeld) { OnHeld = onHeld; };
-	void SetOnTouch(std::function<void()> onTouch) { OnTouch = onTouch; };
-	void SetOnRelease(std::function<void()> onRelease) { OnRelease = onRelease; };
+	void SetOnHeld(std::function<void(int, int)> onHeld) { OnHeld = onHeld; };
+	void SetOnTouch(std::function<void(int, int)> onTouch) { OnTouch = onTouch; };
+	void SetOnRelease(std::function<void(int, int)> onRelease) { OnRelease = onRelease; };
+	void SetOnDrag(std::function<void(int, int)> onDrag) { OnDrag = onDrag; };
+	void SetOnDragComplete(std::function<void()> onDragComplete) { OnDragComplete = onDragComplete; };
 
-	void CallOnHeld() { if(OnHeld != nullptr) OnHeld(); }
-	void CallOnTouch() { if (OnTouch != nullptr)  OnTouch(); }
-	void CallOnRelease() { if (OnRelease != nullptr) OnRelease(); }
+	void CallOnHeld(int x, int y) { if(OnHeld != nullptr) OnHeld(x, y); }
+	void CallOnTouch(int x, int y) { if (OnTouch != nullptr)  OnTouch(x, y); }
+	void CallOnRelease(int x, int y) { if (OnRelease != nullptr) OnRelease(x, y); }
+	void CallOnDrag(int x, int y) { if (OnDrag != nullptr) OnDrag(x, y); }
+	void CallOnDragComplete() { if (OnDragComplete != nullptr) OnDragComplete(); }
 
-	void SetActive(bool state) { isActive = state; }
+	virtual void SetActive(bool state) { isActive = state; }
 	bool GetActive() { return isActive; }
 
-	virtual m3d::BoundingBox getBoundingBox() { return m3d::BoundingBox(x, y, 0, 0); };
 	virtual bool PointIntersection(int x, int y) { return false; };
 };

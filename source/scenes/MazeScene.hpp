@@ -10,15 +10,10 @@
 class MazeScene : public Minigame
 {
 	private:
-		m3dCI::Sprite *wallpaper;
-		m3dCI::Sprite *texture;
-        m3dCI::Sprite* popup;
-		m3d::Rectangle *winScreen;
-        m3d::Rectangle *loseScreen;
-		m3d::Color *colorRec;
-		m3d::Color *colorText;
-		m3dCI::Text *prompt;
-		m3dCI::Text *winPrompt;
+		SpriteMenuItem *wallpaper, *texture, *popup;
+		RectangleMenuItem *winScreen, *loseScreen;
+		m3d::Color *colorRec, *colorText;
+		TextMenuItem *prompt, *winPrompt;
         TerminalObject *runner;
 		int x, y, runnerID;
         bool walls[12][20] ={{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
