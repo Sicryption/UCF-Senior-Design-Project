@@ -26,7 +26,6 @@ CodeEditorMenuItem::~CodeEditorMenuItem()
 
 bool CodeEditorMenuItem::PointIntersection(int px, int py)
 {
-	return true;
 	return isPointInside(px, py);
 }
 

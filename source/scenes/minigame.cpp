@@ -274,23 +274,21 @@ void Minigame::DeleteButton_OnClick()
 void Minigame::CloseButton_OnClick()
 {
 	m3d::Screen * scr = GameManager::getScreen();
-	commandLister->SetActive(false);
-	codeEditor->SetActive(true);
-	codeEditor->ShiftToBottom();
-	AddButton->SetActive(true);
-	EditButton->SetActive(true);
-	RemoveButton->SetActive(true);
-	closeButton->SetActive(false);
-	submitButton->SetActive(true);
-
-	scr->clear();
-
-	if (showCommandEditor)
+	if(showCommandEditor)
+		commandEditor->ForceComplete();
+	else
 	{
-		menu->RemoveItem(commandEditor);
-		showCommandEditor = false;
+		showCommandLister = false;
+
+		commandLister->SetActive(false);
+		codeEditor->SetActive(true);
+		AddButton->SetActive(true);
+		EditButton->SetActive(true);
+		RemoveButton->SetActive(true);
+		submitButton->SetActive(true);
+
+		codeEditor->ShiftToBottom();
 	}
-	showCommandLister = false;
 }
 
 void Minigame::AddStartCommands(std::vector<CommandObject*> commands)

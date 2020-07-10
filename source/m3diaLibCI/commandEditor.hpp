@@ -54,5 +54,10 @@ namespace m3dCI
 			{
 				return isComplete;
 			}
+
+			void ForceComplete()
+			{
+				isComplete = true;
+			}
 	};
 }
