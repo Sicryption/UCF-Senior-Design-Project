@@ -54,32 +54,45 @@ MinigameSelectScene::MinigameSelectScene()
 			w = ButtonWidth,
 			h = ButtonHeight;
 
-		m3dCI::Button* newButton;
+		ButtonMenuItem* newButton;
 		if (minigames[i].getSmallSpriteLocation() != "NULL")
-			newButton = om->CreateButton(x, y, new m3dCI::Sprite(*ResourceManager::getSprite(minigames[i].getSmallSpriteLocation())));
+			newButton = new ButtonMenuItem(x, y, new m3dCI::Sprite(*ResourceManager::getSprite(minigames[i].getSmallSpriteLocation())));
 		else
-			newButton = om->CreateButton(x, y, w, h, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
+			newButton = new ButtonMenuItem(x, y, w, h, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
 
-		newButton->OnRelease = [&, i]()
+		newButton->SetOnRelease([&, i]()
 		{
+			Util::PrintLine("CLICKED");
+
 			//second touch
 			if (selectedMinigame == i)
 			{
 				if (i == MINIGAME_LIST::MAZE)
-					SceneManager::transitionTo(new MazeScene());
+					SceneManager::setTransition(new MazeScene());
 				else
-					SceneManager::transitionTo(new Minigame());
+					SceneManager::setTransition(new Minigame());
 			}
 			else
 			{
 				SelectMinigame(i);
 			}
-		};
+		});
+
+		menu->AddItem(newButton);
 
 		minigameOptions[column + (row * Columns)] = newButton;
 	}
 
 	draw();
+}
+
+MinigameSelectScene::~MinigameSelectScene()
+{
+	delete(whiteBackground);
+	delete(MinigameSelectTopText);
+	delete(MinigameName);
+	delete(MinigameDescription);
+	delete(selectedMinigameLargeSprite);
 }
 
 void MinigameSelectScene::initialize()
@@ -119,7 +132,7 @@ void MinigameSelectScene::draw()
 		}
 		else
 		{
-			SceneManager::transitionTo(new MainMenuScene());
+			SceneManager::setTransition(new MainMenuScene());
 			return;
 		}
 	}
@@ -140,22 +153,13 @@ void MinigameSelectScene::draw()
 		scr->drawBottom(*minigameOptions[i], RenderContext::Mode::Flat);
 
 	if (Input::btnReleased(m3d::buttons::A) && selectedMinigame != -1)
-		minigameOptions[selectedMinigame]->OnRelease();
+		minigameOptions[selectedMinigame]->CallOnRelease();
 }
 
-void MinigameSelectScene::onExit()
+void MinigameSelectScene::update()
 {
-	ObjectManager* om = ObjectManager::getInstance();
-
-	for (int i = 0; i < MINIGAME_COUNT; i++)
-		om->DeleteButton(minigameOptions[i]);
-
-	delete(whiteBackground);
-	delete(MinigameSelectTopText);
-	delete(MinigameName);
-	delete(MinigameDescription);
-	delete(selectedMinigameLargeSprite);
-};
+	menu->OnUpdate();
+}
 
 void MinigameSelectScene::SelectMinigame(int index)
 {

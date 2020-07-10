@@ -39,19 +39,20 @@ class MinigameSelectScene : public Scene
 
 		m3dCI::Sprite *selectedMinigameLargeSprite = nullptr;
 		m3dCI::Text *MinigameSelectTopText = nullptr, *MinigameDescription = nullptr, *MinigameName = nullptr;
-		m3dCI::Button* minigameOptions[MINIGAME_COUNT];
+		ButtonMenuItem* minigameOptions[MINIGAME_COUNT];
 
 	public:
 		MinigameSelectScene();
+		~MinigameSelectScene();
 
 		void initialize();
 		void draw();
-		void onExit();    
+		void update();
 
 		void load() {};
 		void unload() {};
-		void update() {};
 		void onEnter() {};
+		void onExit() {};
 
 		void SelectMinigame(int index);
 };

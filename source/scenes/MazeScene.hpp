@@ -51,6 +51,7 @@ class MazeScene : public Minigame
 		MazeState currentState;
 	public:
 		MazeScene();
+		~MazeScene();
 
 		void initialize();
 

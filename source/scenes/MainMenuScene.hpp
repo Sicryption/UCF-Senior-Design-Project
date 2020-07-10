@@ -6,6 +6,7 @@
 #include "../inputManager.hpp"
 #include "../sceneManager.hpp"
 #include "../resources.h"
+#include "../Menu/MenuItems/ButtonMenuItem.hpp"
 
 class MainMenuScene : public Scene
 {
@@ -13,18 +14,19 @@ class MainMenuScene : public Scene
 		m3d::Rectangle* whiteBackground;
 
 		m3dCI::Text* StartupText;
-		m3dCI::Button* ClickHereToContinue;
+		ButtonMenuItem* ClickHereToContinue = nullptr;
 		m3dCI::Sprite* apple;
 
 	public:
 		MainMenuScene();
+		~MainMenuScene();
 
 		void initialize();
 		void draw();
-		void onExit();
+		void update();
 
 		void load() {};
 		void unload() {};
-		void update() {};
 		void onEnter() {};
+		void onExit() {};
 };

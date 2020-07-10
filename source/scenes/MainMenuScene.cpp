@@ -5,20 +5,32 @@
 MainMenuScene::MainMenuScene()
 {
 	m3d::Screen * screen = GameManager::getScreen();
-	ObjectManager* om = ObjectManager::getInstance();
-
-	int topScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
-	int bottomScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Bottom);
-	int screenHeight = screen->getScreenHeight();
 
 	StartupText = new m3dCI::Text("Seedlings");
 	whiteBackground = new m3d::Rectangle(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
 
+	int topScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
+	int bottomScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Bottom);
+	int screenHeight = screen->getScreenHeight();
 	int clickHereToContinueX = ((bottomScreenWidth)-(bottomScreenWidth*0.8)) / 2;
 	int clickHereToContinueY = ((screenHeight)-(screenHeight*0.3));
-	ClickHereToContinue = om->CreateButton(clickHereToContinueX, clickHereToContinueY, (bottomScreenWidth*0.8), (screenHeight*0.2), m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
-			
+
+	ClickHereToContinue = new ButtonMenuItem(clickHereToContinueX, clickHereToContinueY, (bottomScreenWidth*0.8), (screenHeight*0.2), m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
+	menu->AddItem(ClickHereToContinue);
+
 	apple = new m3dCI::Sprite(*ResourceManager::getSprite("apple.png"));
+}
+
+MainMenuScene::~MainMenuScene()
+{
+	//The following commented out object don't have deletion support. They *should* be grabbed by the garbage collector. 
+	//Ideally, we would change these objects to support a default virtual deconstructor
+	//delete(whiteBackground);
+	//delete(whiteBottomBackground);
+
+	Util::PrintLine("Destroying mainmenuscene");
+	delete(StartupText);
+	delete(apple);
 }
 
 void MainMenuScene::initialize()
@@ -39,9 +51,12 @@ void MainMenuScene::initialize()
 
 	StartupText->setPosition((topScreenWidth / 2) - (width / 2) + 25, (screenHeight / 2) - (height / 2));
 
+	int clickHereToContinueX = ((bottomScreenWidth)-(bottomScreenWidth*0.8)) / 2;
+	int clickHereToContinueY = ((screenHeight)-(screenHeight*0.3));
+
 	ClickHereToContinue->SetText("Press start to Play!");
-	ClickHereToContinue->OnRelease = [this]() { SceneManager::transitionTo(new MinigameSelectScene()); };
-	ClickHereToContinue->SetEnabledState(false);
+	ClickHereToContinue->SetOnRelease([this]() { SceneManager::setTransition(new MinigameSelectScene()); });
+	ClickHereToContinue->SetActive(false);
 
 	apple->setCenter(apple->m_sprite.params.pos.w / 2, apple->m_sprite.params.pos.h / 2);
 	apple->setPosition(topScreenWidth * 0.75 + 25, -(apple->m_sprite.params.pos.h / 2));
@@ -63,7 +78,7 @@ void MainMenuScene::draw()
 		|| m3d::buttons::buttonReleased(m3d::buttons::Button::A)
 		|| Input::btnReleased(m3d::buttons::Touch))
 	{
-		if (!ClickHereToContinue->GetEnabledState())
+		if (!ClickHereToContinue->GetActive())
 		{
 			apple->setXPosition(topScreenWidth * 0.1 + 25);
 			apple->setYPosition((screenHeight / 2) - 10);
@@ -96,25 +111,21 @@ void MainMenuScene::draw()
 		else if (StartupText->getOpacity() < 255)
 		{
 			apple->setRotation(0.0f);
+			apple->setXPosition(topScreenWidth * 0.1 + 25);
+			apple->setYPosition((screenHeight / 2) - 10);
 			StartupText->setOpacity(std::min((int)StartupText->getOpacity() + 3, 255));
 		}
 		else
 		{
-			ClickHereToContinue->SetEnabledState(true);
-			scr->drawBottom(*ClickHereToContinue, RenderContext::Mode::Flat);
+			ClickHereToContinue->SetActive(true);
+			scr->drawBottom(*ClickHereToContinue);
 		}
 	}
+
 	scr->drawTop(*apple);
 }
 
-void MainMenuScene::onExit()
+void MainMenuScene::update()
 {
-	delete(StartupText);
-	//The following commented out object don't have deletion support. They *should* be grabbed by the garbage collector. 
-	//Ideally, we would change these objects to support a default virtual deconstructor
-	//delete(whiteBackground);
-	//delete(whiteBottomBackground);
-	delete(apple);
-	ObjectManager* om = ObjectManager::getInstance();
-	om->DeleteButton(ClickHereToContinue);
-};
+	menu->OnUpdate();
+}

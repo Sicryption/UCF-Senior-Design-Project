@@ -9,36 +9,27 @@ Scene* SceneManager::getScene()
     return m_currentScene;
 }
 
-void  SceneManager::transitionTo(Scene* t_next)
+void SceneManager::finishTransition()
 {
+	m_nextScene->initialize();
 
-    if(t_next == nullptr)
-    {
-        m_currentScene->unload();
-        m_currentScene->onExit();
-        m_currentScene = nullptr;
-        m_nextScene = nullptr;
-        return;
-    }
+	if (m_currentScene != nullptr)
+	{
+		m_currentScene->unload();
+		m_currentScene->onExit();
+	}
 
-    m_nextScene = t_next;
-    m_nextScene->initialize();
+	m_nextScene->load();
 
+	//  TODO: swap scenes
+	delete(m_currentScene);
+	m_currentScene = m_nextScene;
+	m_nextScene = nullptr;
+}
 
-    
-    if(m_currentScene != nullptr)
-    {
-        m_currentScene->unload();
-        m_currentScene->onExit();
-    }
-
-    m_nextScene->load();
-    
-    //  TODO: swap scenes
-    delete(m_currentScene);
-    m_currentScene = m_nextScene;
-    m_nextScene = nullptr;
-
+void  SceneManager::setTransition(Scene* t_next)
+{
+	m_nextScene = t_next;
 }
 
 void  SceneManager::OnInitialize()
@@ -49,6 +40,9 @@ void  SceneManager::OnInitialize()
 
 void  SceneManager::OnUpdate()
 {
+	if (m_nextScene != nullptr)
+		finishTransition();
+
     if(m_currentScene != nullptr)
     {
         m_currentScene->update();

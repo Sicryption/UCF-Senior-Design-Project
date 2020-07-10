@@ -9,6 +9,7 @@
 #include "../gameObject.hpp"
 #include "../sandbox.h"
 #include "../util.hpp"
+#include "../Menu/Menu.hpp"
 
 class Scene : public Updateable
 {
@@ -19,20 +20,25 @@ protected:
     std::string m_name;
 	//LuaSandbox *sandbox;
 
+	Menu* menu;
 public:
 
     Scene()
     {
         m_hashmap.empty();
         m_idCounter = 0;
+
+		menu = new Menu();
     }
-    ~Scene()
+    virtual ~Scene()
     {
         auto it =  m_hashmap.cbegin();
         for(;it != m_hashmap.cend(); it++)
         {
             it->second->destroy();
         }
+
+		delete(menu);
     }
 
     virtual void initialize()=0;

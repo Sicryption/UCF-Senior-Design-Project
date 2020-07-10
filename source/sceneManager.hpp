@@ -14,10 +14,12 @@ private:
     //static SceneManager* m_instance;
     //static SceneManager* getInstance();
 
+	static void finishTransition();
+
 public:
 
     static Scene* getScene();
-    static void transitionTo(Scene*);
+    static void setTransition(Scene*);
 
     static void OnInitialize();
     static void OnUpdate();

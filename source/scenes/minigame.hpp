@@ -31,7 +31,7 @@ class Minigame : public Scene
         int m_sandboxThreadState = THREAD_RUNNING;
         std::string* m_luaChunk = nullptr;
 
-		m3dCI::Button *AddButton = nullptr,
+		ButtonMenuItem* AddButton = nullptr,
 			*EditButton = nullptr,
 			*RemoveButton = nullptr,
 			*closeButton = nullptr,
@@ -63,7 +63,7 @@ class Minigame : public Scene
 		void toggleWinCond();
 
 		Minigame();
-        ~Minigame();
+        virtual ~Minigame();
 
 		void AddCommand(CommandObject* command);
 		void AddStartCommands(std::vector<CommandObject*> obj);

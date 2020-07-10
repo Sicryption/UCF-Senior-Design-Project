@@ -2,12 +2,16 @@
 
 #include "MinigameSelectScene.hpp"
 
-
-MazeScene::MazeScene(): Minigame()
+MazeScene::MazeScene()
 {
     //array traversers
     x = 1.0;
 	y = 0.0;
+}
+
+MazeScene::~MazeScene()
+{
+
 }
 
 void MazeScene::initialize(){
@@ -125,6 +129,8 @@ void MazeScene::update()
 		case MazeState::Lose:
 			break;
 		case MazeState::Requesting:
+			if (Input::btnReleased(m3d::buttons::B))
+				SceneManager::setTransition(new MinigameSelectScene());
 			break;
 	}
 };
@@ -144,7 +150,7 @@ void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)
 }
 
 void MazeScene::onEnter(){ Minigame::onEnter(); };
-void MazeScene::onExit(){ Minigame::onExit(); };
+void MazeScene::onExit() { Minigame::onExit(); };
 bool MazeScene::checkWinCond()
 {
 	if(runner->winCond())

@@ -114,25 +114,31 @@ Minigame::Minigame()
 	int buttonWidth = BOTTOMSCREEN_WIDTH * 0.25 - (margin * 2);
 	int buttonHeight = (BOTTOMSCREEN_HEIGHT - buttonWidth - (margin * 2)) / 3;
 
-	AddButton = om->CreateButton(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
+	AddButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	AddButton->SetText("ADD");
-	AddButton->OnRelease = [this]() { this->AddButton_OnClick(); };
+	AddButton->SetOnRelease([this]() { this->AddButton_OnClick(); });
 
-	EditButton = om->CreateButton(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
+	EditButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	EditButton->SetText("EDIT");
-	EditButton->OnRelease = [this]() { this->EditButton_OnClick(); };
+	EditButton->SetOnRelease([this]() { this->EditButton_OnClick(); });
 
-	RemoveButton = om->CreateButton(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight * 2, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
+	RemoveButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight * 2, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	RemoveButton->SetText("DEL");
-	RemoveButton->OnRelease = [this]() { this->DeleteButton_OnClick(); };
+	RemoveButton->SetOnRelease([this]() { this->DeleteButton_OnClick(); });
 
-	closeButton = om->CreateButton(48 + BOTTOMSCREEN_WIDTH * 0.5, 0, new m3dCI::Sprite(*ResourceManager::getSprite("tabClose.png")));
-	closeButton->OnRelease = [this]() { this->CloseButton_OnClick(); };
-	closeButton->SetEnabledState(false);
+	closeButton = new ButtonMenuItem(48 + BOTTOMSCREEN_WIDTH * 0.5, 0, new m3dCI::Sprite(*ResourceManager::getSprite("tabClose.png")));
+	closeButton->SetOnRelease([this]() { this->CloseButton_OnClick(); });
+	closeButton->SetActive(false);
 
-	submitButton = om->CreateButton(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight * 3, buttonWidth, buttonWidth, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
+	submitButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight * 3, buttonWidth, buttonWidth, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	submitButton->SetText("Run");
-	submitButton->OnRelease = [this]() { this->SubmitButton_OnClick(); };
+	submitButton->SetOnRelease([this]() { this->SubmitButton_OnClick(); });
+	
+	menu->AddItem(submitButton);
+	menu->AddItem(closeButton);
+	menu->AddItem(EditButton);
+	menu->AddItem(RemoveButton);
+	menu->AddItem(AddButton);
 
 	commandLister = om->CreateCommandLister(this);
 }
@@ -145,13 +151,8 @@ Minigame::~Minigame()
 	m_sandboxThreadState = THREAD_CLOSE;
 	m_sandboxThread->join();
 
-	om->DeleteCodeEditor(codeEditor);
-	om->DeleteCommandLister(commandLister);
-	om->DeleteButton(AddButton);
-	om->DeleteButton(EditButton);
-	om->DeleteButton(RemoveButton);
-	om->DeleteButton(closeButton);
-	om->DeleteButton(submitButton);
+	/*om->DeleteCodeEditor(codeEditor);
+	om->DeleteCommandLister(commandLister);*/
 }
 
 void Minigame::update()
@@ -172,10 +173,10 @@ void Minigame::update()
 
 			commandLister->SetActive(false);
 			codeEditor->SetActive(true);
-			AddButton->SetEnabledState(true);
-			EditButton->SetEnabledState(true);
-			RemoveButton->SetEnabledState(true);
-			submitButton->SetEnabledState(true);
+			AddButton->SetActive(true);
+			EditButton->SetActive(true);
+			RemoveButton->SetActive(true);
+			submitButton->SetActive(true);
 		}
 		else
 		{
@@ -196,9 +197,9 @@ void Minigame::update()
 		else if (!showCommandEditor)
 		{
 			scr->drawBottom(*codeEditor);
-			AddButton->SetEnabledState(codeEditor->canAdd());
-			EditButton->SetEnabledState(codeEditor->canEdit());
-			RemoveButton->SetEnabledState(codeEditor->canRemove());
+			AddButton->SetActive(codeEditor->canAdd());
+			EditButton->SetActive(codeEditor->canEdit());
+			RemoveButton->SetActive(codeEditor->canRemove());
 		}
 	}
 
@@ -234,11 +235,11 @@ void Minigame::AddButton_OnClick()
 	showCommandLister = true;
 	commandLister->SetActive(true);
 	codeEditor->SetActive(false);
-	AddButton->SetEnabledState(false);
-	EditButton->SetEnabledState(false);
-	RemoveButton->SetEnabledState(false);
-	closeButton->SetEnabledState(true);
-	submitButton->SetEnabledState(false);
+	AddButton->SetActive(false);
+	EditButton->SetActive(false);
+	RemoveButton->SetActive(false);
+	closeButton->SetActive(true);
+	submitButton->SetActive(false);
 
 	codeEditor->ShiftToTop();
 }
@@ -259,11 +260,11 @@ void Minigame::EditButton_OnClick()
 
 	commandLister->SetActive(false);
 	codeEditor->SetActive(false);
-	AddButton->SetEnabledState(false);
-	EditButton->SetEnabledState(false);
-	RemoveButton->SetEnabledState(false);
-	closeButton->SetEnabledState(true);
-	submitButton->SetEnabledState(false);
+	AddButton->SetActive(false);
+	EditButton->SetActive(false);
+	RemoveButton->SetActive(false);
+	closeButton->SetActive(true);
+	submitButton->SetActive(false);
 
 	showCommandEditor = true;
 }
@@ -281,11 +282,11 @@ void Minigame::CloseButton_OnClick()
 	commandLister->SetActive(false);
 	codeEditor->SetActive(true);
 	codeEditor->ShiftToBottom();
-	AddButton->SetEnabledState(true);
-	EditButton->SetEnabledState(true);
-	RemoveButton->SetEnabledState(true);
-	closeButton->SetEnabledState(false);
-	submitButton->SetEnabledState(true);
+	AddButton->SetActive(true);
+	EditButton->SetActive(true);
+	RemoveButton->SetActive(true);
+	closeButton->SetActive(false);
+	submitButton->SetActive(true);
 
 	scr->clear();
 
@@ -311,11 +312,11 @@ void Minigame::AddCommand(CommandObject* command)
 	commandLister->SetActive(false);
 	codeEditor->SetActive(true);
 	codeEditor->ShiftToBottom();
-	AddButton->SetEnabledState(true);
-	EditButton->SetEnabledState(true);
-	RemoveButton->SetEnabledState(true);
-	closeButton->SetEnabledState(false);
-	submitButton->SetEnabledState(true);
+	AddButton->SetActive(true);
+	EditButton->SetActive(true);
+	RemoveButton->SetActive(true);
+	closeButton->SetActive(false);
+	submitButton->SetActive(true);
 
 	scr->clear();
 
