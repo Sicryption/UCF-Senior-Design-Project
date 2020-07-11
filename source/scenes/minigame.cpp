@@ -15,38 +15,45 @@ void Minigame::sandboxRuntime(m3d::Parameter param)
 
 	while (true)
 	{
-		//Util::PrintLine("sandbox: check thread state");
 		//  Lock access to Thread State
-		m_mutex_threadState.lock();
+		m3d::Lock lock_state(m_mutex_threadState);
 		if (*state == THREAD_CLOSE)
 		{   //  close Thread
 			break;
 		}
 		else if (*state == THREAD_HALT)
 		{
-			m_mutex_threadState.unlock();
 			continue;
 		}
-		m_mutex_threadState.unlock();
-
 		// lock sandbox
-		m_mutex_sandbox.lock();
+		lock_state.~Lock();
+
 
 		if (m_luaChunk != nullptr)
 		{
-
 			onExecutionBegin();
 			//  TODO: Disable Command Menu
-			sandbox->executeString(*m_luaChunk);
-			m_luaChunk = nullptr;
-			onExecutionBegin();
+			std::string t_lua(m_luaChunk->c_str());
 
+#ifdef DEBUG
+			Util::PrintLine(t_lua);
+#endif
+
+			m3d::Lock lock_sandbox(m_mutex_sandbox);
+
+			m3d::Thread::sleep();
+			continue;
+			m_sandbox->executeString(t_lua);
+			m_luaChunk = nullptr;
+			lock_sandbox.~Lock();
+
+			onExecutionEnd();
+
+			setThreadState(THREAD_RUNNING);
 		}
 
-		m_mutex_execution.unlock();
-		m3d::Thread::sleep(100);
+		m3d::Thread::sleep();
 	}
-	//m_mutex_threadState.unlock();
 }
 
 void Minigame::executeInSandbox(std::string chunk)
@@ -61,7 +68,7 @@ void Minigame::executeInSandbox(std::string chunk)
 	}
 	else
 	{
-		m_luaChunk->assign(chunk);
+		Util::PrintLine("warning: wait for previous lua code to complete execution");
 	}
 
 	//  Allow sandbox thread to continue execution
@@ -72,9 +79,21 @@ void Minigame::executeInSandbox(std::string chunk)
 void Minigame::setThreadState(int state)
 {
 	//  Wait for thread state access
-	m3d::Lock lock(m_mutex_threadState);
+	m3d::Lock lock_state(m_mutex_threadState);
 	m_sandboxThreadState = state;
+	lock_state.~Lock();
 
+	m_sandbox->executeString("_EXEC_STATE = " + std::to_string(state));
+}
+
+
+/**
+ *  @brief Get the state of the sandbox thread
+ */
+int Minigame::getThreadState()
+{
+	m3d::Lock lock_state(m_mutex_threadState);
+	return m_sandboxThreadState;
 }
 
 void Minigame::onExecutionBegin()
@@ -132,7 +151,7 @@ Minigame::Minigame()
 	submitButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight * 3, buttonWidth, buttonWidth, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	submitButton->SetText("Run");
 	submitButton->SetOnRelease([this](int x, int y) { this->SubmitButton_OnClick(); });
-	
+
 	menu->AddItem(submitButton);
 	menu->AddItem(closeButton);
 	menu->AddItem(EditButton);
@@ -274,7 +293,7 @@ void Minigame::DeleteButton_OnClick()
 void Minigame::CloseButton_OnClick()
 {
 	m3d::Screen * scr = GameManager::getScreen();
-	if(showCommandEditor)
+	if (showCommandEditor)
 		commandEditor->ForceComplete();
 	else
 	{

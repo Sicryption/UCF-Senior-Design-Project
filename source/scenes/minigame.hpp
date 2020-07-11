@@ -1,10 +1,14 @@
+/**
+ *  @file minigame.hpp
+ *  @brief Defines the minigame inherited class
+ */
 #pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <m3dia.hpp>
+#include <sstream>
 
 #include "../gameManager.hpp"
 #include "../inputManager.hpp"
@@ -24,85 +28,106 @@
 
 class Minigame : public Scene
 {
-	private:
-        m3d::Thread* m_sandboxThread;
-        m3d::Mutex  m_mutex_execution, m_mutex_sandbox, m_mutex_threadState;
-        int m_sandboxThreadState = THREAD_RUNNING;
-        std::string* m_luaChunk = nullptr;
+private:
+	m3d::Thread* m_sandboxThread;
+	m3d::Mutex  m_mutex_execution, m_mutex_sandbox, m_mutex_threadState, m_mutex_lua;
+	int m_sandboxThreadState = THREAD_RUNNING;
+	std::string* m_luaChunk = nullptr;
+	LuaSandbox* m_sandbox = nullptr;
 
-		ButtonMenuItem* AddButton = nullptr,
-			*EditButton = nullptr,
-			*RemoveButton = nullptr,
-			*closeButton = nullptr,
-			*submitButton = nullptr;
-		CodeEditorMenuItem* codeEditor = nullptr;
-		CommandListerMenuItem* commandLister = nullptr;
-		CommandEditorMenuItem* commandEditor = nullptr;
+	ButtonMenuItem* AddButton = nullptr,
+		*EditButton = nullptr,
+		*RemoveButton = nullptr,
+		*closeButton = nullptr,
+		*submitButton = nullptr;
+	CodeEditorMenuItem* codeEditor = nullptr;
+	CommandListerMenuItem* commandLister = nullptr;
+	CommandEditorMenuItem* commandEditor = nullptr;
 
-		std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
+	std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
 
-		bool showCommandLister = false, showCommandEditor = false;
+	bool showCommandLister = false, showCommandEditor = false;
 
-		void sandboxRuntime(m3d::Parameter param);        
+	/**
+	 * @brief Sandbox thread's main  function.
+	 * Only called by the minigameclass to initialize the sandboxThread
+	 * @param param m3d::Parameter, recieves a pointer to the threadState variable
+	 */
+	void sandboxRuntime(m3d::Parameter param);
 
-	protected:
-		static bool winCond;
-		
-		void executeInSandbox(std::string chunk);
-		void setThreadState(int state);
+protected:
+	static bool winCond;
 
-		virtual void onExecutionBegin();
-		virtual void onExecutionEnd();
+	/**
+	* @brief Send code to the sandbox thread.
+	* @param chunk valid lua code.
+	*/
+	void executeInSandbox(std::string chunk);
 
-	public:
-		//virtual void initialize() = 0;
-		//virtual void update() = 0;
-		virtual bool checkWinCond() {};
+	/**
+	*  @brief Set the state of the sandbox thread.
+	*  Sets the state within both the native and lua environment
+	*  @param state state to set
+	*/
+	void setThreadState(int state);
 
-		void toggleWinCond();
+	/**
+	 *  @brief Get the state of the sandbox thread
+	 */
+	int getThreadState();
 
-		Minigame();
-        virtual ~Minigame();
+	/**
+	 *  @brief Function called before a sandbox execution
+	 *  onExecutionBegin is called right before the sandbox executes a chunk
+	 */
+	virtual void onExecutionBegin();
 
-		void AddCommand(CommandObject* command);
-		void AddStartCommands(std::vector<CommandObject*> obj);
-		void ClearCommands();
+	/**
+	 *  @brief Function called before a sandbox execution
+	 *  onExecutionEnd is called right after the sandbox executes a chunk.
+	 */
+	virtual void onExecutionEnd();
 
-		void SetSubmitFunction(std::function<void(std::vector<CommandObject*>)> callbackFunction);
+public:
+	void toggleWinCond();
 
-		void AddButton_OnClick();
-		void EditButton_OnClick();
-		void DeleteButton_OnClick();
-		void SubmitButton_OnClick();
-		void CloseButton_OnClick();
+	/**
+	 *  @brief Default Constructor, should be inherited by child class constructors
+	 */
 
-		// origScene is the new default scene when the player loses
-		// returns true if successful, otherwise false 
-		/*bool reset(Scene *origScene)
-		{
-			if (!winCond)
-			{
-				 m_currentScene = origScene;
-				 m_currentScene->initialize();
-				 return true;
-			}
+	Minigame();
+	/**
+	 *  @brief Default Destructor, should be inherited by child class destructor
+	 */
+	virtual ~Minigame();
 
-			return false; 
-		}*/
+	void AddCommand(CommandObject* command);
+	void AddStartCommands(std::vector<CommandObject*> obj);
+	void ClearCommands();
 
-		virtual void loadScene() {};
-		virtual void loadWinScr() {};
-		virtual void loadLoseScr() {};
-		virtual void requestUI() {};
-		virtual void closeGame() {};
-	//from scene
-		virtual void initialize() {};
-		virtual void load() {};
-		virtual void unload() {};
-		virtual void update();
-		virtual void draw() {};
+	void SetSubmitFunction(std::function<void(std::vector<CommandObject*>)> callbackFunction);
 
-		virtual void onEnter() {};
+	void AddButton_OnClick();
+	void EditButton_OnClick();
+	void DeleteButton_OnClick();
+	void SubmitButton_OnClick();
+	void CloseButton_OnClick();
 
-		virtual void onExit() {};
+	virtual bool checkWinCond() {};
+
+
+	virtual void loadScene() {};
+	virtual void loadWinScr() {};
+	virtual void loadLoseScr() {};
+	virtual void requestUI() {};
+	virtual void closeGame() {};
+
+	virtual void initialize() {};
+	virtual void load() {};
+	virtual void unload() {};
+	virtual void update();
+	virtual void draw() {};
+
+	virtual void onEnter() {};
+	virtual void onExit() {};
 };
