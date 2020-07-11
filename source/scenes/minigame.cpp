@@ -5,7 +5,7 @@ void Minigame::sandboxRuntime(m3d::Parameter param)
 	m_mutex_sandbox.lock();
 	//Util::PrintLine("sandbox: start sandbox thread");
 
-	LuaSandbox* sandbox = new LuaSandbox();
+	m_sandbox = new LuaSandbox();
 	int* state = param.get<int*>();
 	if (state == NULL)
 	{
@@ -41,8 +41,6 @@ void Minigame::sandboxRuntime(m3d::Parameter param)
 
 			m3d::Lock lock_sandbox(m_mutex_sandbox);
 
-			m3d::Thread::sleep();
-			continue;
 			m_sandbox->executeString(t_lua);
 			m_luaChunk = nullptr;
 			lock_sandbox.~Lock();
@@ -173,10 +171,7 @@ Minigame::~Minigame()
 void Minigame::update()
 {
 	m3d::Screen * scr = GameManager::getScreen();
-
-	if (Util::IsConsoleDrawn())
-		return;
-
+	
 	if (commandEditor != nullptr && showCommandEditor)
 	{
 		if (commandEditor->getComplete())

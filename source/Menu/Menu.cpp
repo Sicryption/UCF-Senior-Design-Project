@@ -66,8 +66,6 @@ MenuItem* Menu::AddItem(MenuItem* item)
 	if(item != nullptr)
 		menuItems.push_back(item);
 
-	Util::PrintLine("MenuSize: " + std::to_string(menuItems.size()));
-
 	return item;
 }
 

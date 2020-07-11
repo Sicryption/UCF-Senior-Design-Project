@@ -103,9 +103,6 @@ void MinigameSelectScene::draw()
 {
 	m3d::Screen * scr = GameManager::getScreen();
 
-	if (Util::IsConsoleDrawn())
-		return;
-	
 	scr->drawTop(*whiteBackground, RenderContext::Mode::Flat);
 	scr->drawBottom(*whiteBackground, RenderContext::Mode::Flat);
 
