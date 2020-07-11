@@ -97,6 +97,18 @@ void MazeScene::unload(){ Minigame::unload(); };
 void MazeScene::update()
 {
 	Minigame::update();
+	
+	if (buttons::buttonPressed(buttons::X))
+	{
+		if(getThreadState() == THREAD_HALT)
+		{
+			setThreadState(THREAD_RUNNING);
+		}else{setThreadState(THREAD_HALT);}
+	}
+	if (buttons::buttonPressed(buttons::Y))
+	{
+		setThreadState(THREAD_CLOSE);
+	}
 
 	switch (currentState)
 	{
