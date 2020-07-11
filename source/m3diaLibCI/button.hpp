@@ -15,9 +15,7 @@ namespace m3dCI
 	
     class Button: public m3d::Drawable
 	{
-		private:
-			ButtonType buttonType;
-			
+		protected:
 			m3d::Rectangle* innerRectangle = nullptr;
 			m3d::Rectangle* outerRectangle = nullptr;
 			m3d::Circle* innerCircle = nullptr;
@@ -26,12 +24,11 @@ namespace m3dCI
 			m3dCI::Sprite* sprite = nullptr;
 
 			m3dCI::Text* text = nullptr;
+			ButtonType buttonType;
 
 			m3d::Color innerColor, outerColor, *disabledColor = nullptr;
 
 			int x, y, borderWidth, w, h, r;
-
-			bool enabled = true;
 
 			void UpdateShape();
 		public:
@@ -69,10 +66,6 @@ namespace m3dCI
 			
 			void SetText(std::string txt);
 			void SetTextColor(m3d::Color color);
-
-			bool GetEnabledState();
-			void SetEnabledState(bool state);
-
 			/*
 			
 				The following functions are all child functions of Rectangle/Circle objects which are used here.

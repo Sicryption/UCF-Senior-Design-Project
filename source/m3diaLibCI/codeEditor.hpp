@@ -1,9 +1,5 @@
 #pragma once
 
-#include "sprite.hpp"
-#include "text.hpp"
-#include "../commands/commands.h"
-
 #include <citro2d.h>
 #include <string>
 #include <3ds.h>
@@ -12,11 +8,13 @@
 #include <vector>
 #include <m3dia.hpp>
 
+class CommandObject;
+
 namespace m3dCI 
 {
     class CodeEditor: public m3d::Drawable
 	{
-		private:
+		protected:
 			m3d::Rectangle *borderRectangle,
 				*innerRectangle;
 			std::vector<CommandObject*> commands;
@@ -26,13 +24,19 @@ namespace m3dCI
 
 			double scrollY = 0;
 			double thisScrollChange = 0;
-			bool active = false;
 			
 			void refreshCommandList();
 
 			int GetSelectedCommandIndex();
 
 			void SelectCommand(int index);
+
+			bool isPointInside(int px, int py);
+			void InternalSelectCommand(int px, int py);
+
+			void InternalDoDrag(int u, int v);
+			void InternalDragComplete();
+
 		public:
 			//Create the CodeEditor.
 			/*
@@ -50,7 +54,6 @@ namespace m3dCI
 			
 			//need a way to insert at specified line
 			void addCommand(CommandObject* command, int position = -1);
-			void SelectCommand(int px, int py);
 			void removeCommand(int position = -1);
 			void ClearCommands();
 
@@ -63,14 +66,6 @@ namespace m3dCI
 			bool IsBlankCommandSelected();
 
 			void draw(m3d::RenderContext t_context);
-
-			bool isPointInside(int px, int py);
-
-			bool GetActive();
-			void SetActive(bool state);
-
-			void DoDrag(m3d::Vector2f dragVector);
-			void DragComplete();
 
 			void ShiftToTop();
 			void ShiftToBottom();

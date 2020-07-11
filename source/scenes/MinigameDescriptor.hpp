@@ -21,8 +21,8 @@ public:
 
 	MinigameDescriptor() : MinigameDescriptor("NULL", "NULL", "blankMinigameSmall.png", "blankMinigameLarge.png") {}
 
-	string getName() { return name; };
-	string getDescription() { return description; };
-	string getSmallSpriteLocation() { return smallSprite; };
-	string getLargeSpriteLocation() { return largeSprite; };
+	std::string getName() { return name; };
+	std::string getDescription() { return description; };
+	std::string getSmallSpriteLocation() { return smallSprite; };
+	std::string getLargeSpriteLocation() { return largeSprite; };
 };

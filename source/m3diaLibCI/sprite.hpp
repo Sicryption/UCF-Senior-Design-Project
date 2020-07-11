@@ -258,6 +258,8 @@ namespace m3dCI {
          */
         void draw(m3d::RenderContext t_context);
 
+		m3d::BoundingBox getBoundingBox();
+
         static Sprite* createFromSheet(C2D_SpriteSheet&,int);
 
 		C2D_Sprite m_sprite;

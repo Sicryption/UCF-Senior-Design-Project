@@ -4,7 +4,6 @@
 #include "text.hpp"
 #include "button.hpp"
 #include "../resources.h"
-#include "../commands/commands.h"
 
 #include <citro2d.h>
 #include <string>
@@ -18,7 +17,15 @@
 #define TOPSCREEN_HEIGHT 240
 #define BOTTOMSCREEN_HEIGHT 240
 
+#define XStart 15
+#define YStart 6
+#define CELL_WIDTH 274
+#define CELL_HEIGHT 57
+#define MAX_PARAMS 3
+
 using namespace std;
+
+class CommandObject;
 
 namespace m3dCI 
 {
@@ -27,10 +34,13 @@ namespace m3dCI
 		private:
 
 			m3dCI::Sprite* background = nullptr;
-			CommandObject* command;
 
 			m3dCI::Text *name = nullptr;
 			m3dCI::Text *params[MAX_PARAMS] = { nullptr, nullptr, nullptr };
+		protected:
+			CommandObject* command;
+
+			bool isComplete = false;
 		public:
 			
 			CommandEditor(CommandObject* command);
@@ -40,6 +50,14 @@ namespace m3dCI
 
 			void draw(m3d::RenderContext t_context);
 
-			void HandleClick(int x, int y);
+			bool getComplete()
+			{
+				return isComplete;
+			}
+
+			void ForceComplete()
+			{
+				isComplete = true;
+			}
 	};
 }

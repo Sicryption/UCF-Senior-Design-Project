@@ -1,9 +1,42 @@
-#include "mainMenu.hpp"
+#include "MainMenuScene.hpp"
 
-MainMenu::MainMenu(m3d::Screen* screen) :
-	Menu(screen)
+#include "MinigameSelectScene.hpp"
+
+MainMenuScene::MainMenuScene()
 {
-	StartupText = new m3dCI::Text("Seedlings");
+	m3d::Screen * screen = GameManager::getScreen();
+
+	StartupText = new TextMenuItem("Seedlings");
+	menu->AddItem(StartupText);
+	whiteBackground = new RectangleMenuItem(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
+	menu->AddItem(whiteBackground);
+
+	int topScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
+	int bottomScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Bottom);
+	int screenHeight = screen->getScreenHeight();
+	int clickHereToContinueX = ((bottomScreenWidth)-(bottomScreenWidth*0.8)) / 2;
+	int clickHereToContinueY = ((screenHeight)-(screenHeight*0.3));
+
+	ClickHereToContinue = new ButtonMenuItem(clickHereToContinueX, clickHereToContinueY, (bottomScreenWidth*0.8), (screenHeight*0.2), m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
+	menu->AddItem(ClickHereToContinue);
+
+	apple = new SpriteMenuItem(*ResourceManager::getSprite("apple.png"));
+	menu->AddItem(apple);
+}
+
+MainMenuScene::~MainMenuScene()
+{
+	Util::PrintLine("Destroying mainmenuscene");
+}
+
+void MainMenuScene::initialize()
+{
+	m3d::Screen * screen = GameManager::getScreen();
+
+	int topScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
+	int bottomScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Bottom);
+	int screenHeight = screen->getScreenHeight();
+
 	StartupText->setFontSize(2);
 	StartupText->setFontWeight(2);
 	StartupText->setColor(m3d::Color(0, 0, 0));
@@ -11,33 +44,26 @@ MainMenu::MainMenu(m3d::Screen* screen) :
 
 	int width = StartupText->getWidth();
 	int height = StartupText->getHeight();
-	
-	int topScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
-	int bottomScreenWidth = screen->getScreenWidth(m3d::RenderContext::ScreenTarget::Bottom);
-	int screenHeight = screen->getScreenHeight();
 
 	StartupText->setPosition((topScreenWidth / 2) - (width / 2) + 25, (screenHeight / 2) - (height / 2));
 
-	whiteBackground = new m3d::Rectangle(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
-
 	int clickHereToContinueX = ((bottomScreenWidth)-(bottomScreenWidth*0.8)) / 2;
 	int clickHereToContinueY = ((screenHeight)-(screenHeight*0.3));
-	
-	ClickHereToContinue = om->CreateButton(clickHereToContinueX, clickHereToContinueY, (bottomScreenWidth*0.8), (screenHeight*0.2), m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 3);
-	ClickHereToContinue->SetText("Press start to Play!");
-	ClickHereToContinue->OnRelease = [this]() { MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameSelect); };
-	ClickHereToContinue->SetEnabledState(false);
 
-	apple = new m3dCI::Sprite(*ResourceManager::getSprite("apple.png"));
+	ClickHereToContinue->SetText("Press start to Play!");
+	ClickHereToContinue->SetOnRelease([this](int x, int y) { SceneManager::setTransition(new MinigameSelectScene()); });
+	ClickHereToContinue->SetActive(false);
+
 	apple->setCenter(apple->m_sprite.params.pos.w / 2, apple->m_sprite.params.pos.h / 2);
 	apple->setPosition(topScreenWidth * 0.75 + 25, -(apple->m_sprite.params.pos.h / 2));
 	apple->setScale(0.35f, 0.35f);
-
 }
 
-void MainMenu::OnUpdate()
+void MainMenuScene::draw()
 {
-	if (util->IsConsoleDrawn())
+	m3d::Screen * scr = GameManager::getScreen();
+
+	if (Util::IsConsoleDrawn())
 		return;
 
 	int topScreenWidth = scr->getScreenWidth(m3d::RenderContext::ScreenTarget::Top);
@@ -48,7 +74,7 @@ void MainMenu::OnUpdate()
 		|| m3d::buttons::buttonReleased(m3d::buttons::Button::A)
 		|| Input::btnReleased(m3d::buttons::Touch))
 	{
-		if (!ClickHereToContinue->GetEnabledState())
+		if (!ClickHereToContinue->GetActive())
 		{
 			apple->setXPosition(topScreenWidth * 0.1 + 25);
 			apple->setYPosition((screenHeight / 2) - 10);
@@ -81,25 +107,21 @@ void MainMenu::OnUpdate()
 		else if (StartupText->getOpacity() < 255)
 		{
 			apple->setRotation(0.0f);
+			apple->setXPosition(topScreenWidth * 0.1 + 25);
+			apple->setYPosition((screenHeight / 2) - 10);
 			StartupText->setOpacity(std::min((int)StartupText->getOpacity() + 3, 255));
 		}
 		else
 		{
-			ClickHereToContinue->SetEnabledState(true);
-			scr->drawBottom(*ClickHereToContinue, RenderContext::Mode::Flat);
+			ClickHereToContinue->SetActive(true);
+			scr->drawBottom(*ClickHereToContinue);
 		}
 	}
+
 	scr->drawTop(*apple);
 }
 
-//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
-MainMenu::~MainMenu()
+void MainMenuScene::update()
 {
-	delete(StartupText);
-	//The following commented out object don't have deletion support. They *should* be grabbed by the garbage collector. 
-	//Ideally, we would change these objects to support a default virtual deconstructor
-	//delete(whiteBackground);
-	//delete(whiteBottomBackground);
-	delete(apple);
-	om->DeleteButton(ClickHereToContinue);
+	menu->OnUpdate();
 }
