@@ -133,17 +133,17 @@ size_t LuaSandbox::getTotalMemoryUsed()
 }
 
 
-void LuaSandbox::executeString(std::string text)
+int LuaSandbox::executeString(std::string text)
 {
 //  TODO: Needs a more thorough test
     // Temporary implementation, unprotected
     const char* temp = text.c_str();
     //Util::getInstance()->PrintLine(temp);
-    luaL_dostring(state,temp);
-    return;
+    
+    return luaL_dostring(state,temp);
 }
 
-void LuaSandbox::executeFile(std::string path)
+int LuaSandbox::executeFile(std::string path)
 {
     //  TODO: Needs a more thorough test
     // Temporary implementation, unprotected
@@ -157,7 +157,7 @@ void LuaSandbox::executeFile(std::string path)
     if(fp == NULL)
     {
         std::cerr << "Error: couldnt open file at '" << fullPath << "'" << std::endl;
-        return;
+        return 0;
     }
 
     fseek(fp,0L, SEEK_END);
@@ -169,8 +169,8 @@ void LuaSandbox::executeFile(std::string path)
 
     fclose(fp);
     
-    luaL_dostring(state,buffer);
-    return;
+    
+    return luaL_dostring(state,buffer);
 }
 
 double LuaSandbox::tryGetDouble(std::string id)

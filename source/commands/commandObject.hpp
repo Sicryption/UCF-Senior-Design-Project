@@ -1,6 +1,7 @@
 #pragma once
 #include <stdlib.h>
 #include <string>
+#include <sstream>
 #include <vector>
 
 #include <m3dia.hpp>
@@ -104,13 +105,15 @@ public:
     }
 
     static std::string ConvertBulk(std::vector<CommandObject*> t_list)
-    {
-        std::string chunk;
+    {   
+        std::stringstream stream;
+        //std::string chunk;
         for (CommandObject* cmd : t_list)
         {
-            chunk.append(cmd->convertToLua());
+            stream << "if (not IsRunning()) then return end\n" << cmd->convertToLua() ;
+            //chunk.append(cmd->convertToLua());
         }
-        return chunk;
+        return stream.str();
     }
 
     virtual void draw(double t_x, double t_y, m3d::RenderContext t_context)
