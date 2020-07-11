@@ -121,7 +121,7 @@ void MazeScene::update()
 				std::vector<CommandObject*> startingCommands =
 				{
 					new SelectCommand("runner",true,true),
-					new RightCommand("18",false,true),
+					new RightCommand("18"),
 					new DownCommand("5"),
 					new LeftCommand("18"),
 					new DownCommand("5"),
