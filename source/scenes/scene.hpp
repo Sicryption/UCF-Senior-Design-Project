@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "../gameObject.hpp"
-#include "../sandbox.h"
+#include "../sandbox.hpp"
 #include "../util.hpp"
 #include "../Menu/Menu.hpp"
 

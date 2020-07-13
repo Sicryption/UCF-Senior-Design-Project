@@ -107,11 +107,9 @@ public:
     static std::string ConvertBulk(std::vector<CommandObject*> t_list)
     {   
         std::stringstream stream;
-        //std::string chunk;
         for (CommandObject* cmd : t_list)
         {
-            stream << "if (not IsRunning()) then return end\n" << cmd->convertToLua() ;
-            //chunk.append(cmd->convertToLua());
+            stream << /*"if (not IsRunning()) then return end\n" <<*/ cmd->convertToLua() ;
         }
         return stream.str();
     }

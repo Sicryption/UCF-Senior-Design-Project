@@ -11,7 +11,7 @@
 #include "lua/lua.hpp"
 
 #include "util.hpp"
-#include "sandbox.h"
+#include "sandbox.hpp"
 #include "resources.h"
 #include "gameManager.hpp"
 #include "sceneManager.hpp"

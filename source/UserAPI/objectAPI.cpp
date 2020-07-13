@@ -4,8 +4,9 @@
 #include "../userAPI.hpp"
 
 /**
- * 
- * https://stackoverflow.com/questions/1903954/is-there-a-standard-sign-function-signum-sgn-in-c-c
+ * @brief sign function
+ * @returns positive (1), negative (-1), or zero (0) depending on the value of the parameter.
+ * @ref https://stackoverflow.com/questions/1903954/is-there-a-standard-sign-function-signum-sgn-in-c-c
  */
 template <typename T> int sign(T val) {
     return (T(0) < val) - (val < T(0));
@@ -15,8 +16,7 @@ int UserAPI::move_object(lua_State* L)
 {
     int y = lua_tonumber(L,-1);
     int x = lua_tonumber(L,-2); 
-    int t_id = lua_tonumber(L,-3);
-    
+    int t_id = lua_tonumber(L,-3); 
     
     
     Scene* scene = SceneManager::getScene();
@@ -53,12 +53,12 @@ int UserAPI::move_object(lua_State* L)
             }
             
         }while(t_runState == 1);
-        /* 
-        */
+        
+        #ifdef DEBUG
         Util::PrintLine("step [" + std::to_string(t_id) + "]. x: " +  std::to_string(sign(x)) + ", y: " +  std::to_string(sign(x)) );
+        #endif
         obj->moveTo( sign(x), sign(y));
-        /*
-        */
+        
 
         
 

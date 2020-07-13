@@ -11,7 +11,7 @@ end
 function IsRunning()
     ::HALT_LOOP::
     if(_EXEC_STATE < 0) then
-        return false;
+        return false
     elseif (_EXEC_STATE == 0) then
         return true
     elseif (_EXEC_STATE == 1) then

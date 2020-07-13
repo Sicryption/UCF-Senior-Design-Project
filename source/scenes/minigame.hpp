@@ -15,8 +15,8 @@
 #include "../sceneManager.hpp"
 #include "../resources.h"
 #include "scene.hpp"
+#include "../sandbox.hpp"
 
-#include <sstream>
 
 #define DEBUG
 
@@ -24,22 +24,16 @@
 #define THREAD_RUNNING  0
 #define THREAD_CLOSE   -1
 
-#define setObjectName(name, id) executeInSandbox("name_table[\"" name "\"] = " + std::to_string(id))
+#define setObjectName(name, id) m_sandbox->executeStringQueued("name_table[\"" name "\"] = " + std::to_string(id))
 
 class Minigame : public Scene
 {
 private:
-	m3d::Thread* m_sandboxThread;
-	m3d::Mutex  m_mutex_execution, m_mutex_sandbox, m_mutex_threadState, m_mutex_lua;
-	int m_sandboxThreadState = THREAD_RUNNING;
-	std::string* m_luaChunk = nullptr;
-	LuaSandbox* m_sandbox = nullptr;
-
-	ButtonMenuItem* AddButton = nullptr,
-		*EditButton = nullptr,
-		*RemoveButton = nullptr,
-		*closeButton = nullptr,
-		*submitButton = nullptr;
+	ButtonMenuItem  *AddButton = nullptr,
+                    *EditButton = nullptr,
+                    *RemoveButton = nullptr,
+                    *closeButton = nullptr,
+                    *submitButton = nullptr;
 	CodeEditorMenuItem* codeEditor = nullptr;
 	CommandListerMenuItem* commandLister = nullptr;
 	CommandEditorMenuItem* commandEditor = nullptr;
@@ -48,45 +42,23 @@ private:
 
 	bool showCommandLister = false, showCommandEditor = false;
 
-	/**
-	 * @brief Sandbox thread's main  function.
-	 * Only called by the minigameclass to initialize the sandboxThread
-	 * @param param m3d::Parameter, recieves a pointer to the threadState variable
-	 */
-	void sandboxRuntime(m3d::Parameter param);
-
 protected:
+    LuaSandbox* m_sandbox;
 	static bool winCond;
 
-	/**
-	* @brief Send code to the sandbox thread.
-	* @param chunk valid lua code.
-	*/
-	void executeInSandbox(std::string chunk);
-
-	/**
-	*  @brief Set the state of the sandbox thread.
-	*  Sets the state within both the native and lua environment
-	*  @param state state to set
-	*/
-	void setThreadState(int state);
-
-	/**
-	 *  @brief Get the state of the sandbox thread
-	 */
-	int getThreadState();
+    
 
 	/**
 	 *  @brief Function called before a sandbox execution
 	 *  onExecutionBegin is called right before the sandbox executes a chunk
 	 */
-	virtual void onExecutionBegin();
+	virtual void onExecutionBegin(){}
 
 	/**
 	 *  @brief Function called before a sandbox execution
 	 *  onExecutionEnd is called right after the sandbox executes a chunk.
 	 */
-	virtual void onExecutionEnd();
+	virtual void onExecutionEnd(){}
 
 public:
 	void toggleWinCond();

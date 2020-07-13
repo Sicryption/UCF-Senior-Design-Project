@@ -100,14 +100,21 @@ void MazeScene::update()
 	
 	if (buttons::buttonPressed(buttons::X))
 	{
-		if(getThreadState() == THREAD_HALT)
+		if(m_sandbox->getThreadState() == THREAD_HALT)
 		{
-			setThreadState(THREAD_RUNNING);
-		}else{setThreadState(THREAD_HALT);}
+            Util::PrintLine("Thread Running");
+			m_sandbox->setThreadState(THREAD_RUNNING);
+		}else
+        {
+            Util::PrintLine("Thread Halted");
+            m_sandbox->setThreadState(THREAD_HALT);
+        }
 	}
 	if (buttons::buttonPressed(buttons::Y))
 	{
-		setThreadState(THREAD_CLOSE);
+		//m_sandbox->setThreadState(THREAD_CLOSE);
+        Util::PrintLine("Hello,");
+        m_sandbox->executeFileQueued("println(\"World\")");
 	}
 
 	switch (currentState)
@@ -154,13 +161,15 @@ void MazeScene::update()
 
 void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)
 {
-	//std::string str = "coroutine.create(function ()" + CommandObject::ConvertBulk(luaCode) + " end)" ;
-    Util::PrintLine("execute commands");
+	
+    Util::PrintLine("maze: queue commands");
     std::string str = CommandObject::ConvertBulk(luaCode);
 
 
 	//Util::getInstance()->PrintLine(str);
-	executeInSandbox(str);
+	//executeInSandbox(str);
+    m_sandbox->executeStringQueued(str);
+
     Util::PrintLine("done");
 
 	currentState = MazeState::Execute;

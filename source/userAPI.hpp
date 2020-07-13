@@ -16,7 +16,7 @@
 #include "sceneManager.hpp"
 #include "gameObjects/objects.h"
 
-#define DEBUG
+//#define DEBUG
 
 #define STEP_TIME 150
 
