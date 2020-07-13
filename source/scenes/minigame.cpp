@@ -60,6 +60,27 @@ Minigame::~Minigame()
 
 void Minigame::update()
 {
+    #ifdef DEBUG_THREAD
+	if (buttons::buttonPressed(buttons::X))
+	{
+		if(m_sandbox->getThreadState() == THREAD_HALT)
+		{
+            Util::PrintLine("Thread Running");
+			m_sandbox->setThreadState(THREAD_RUNNING);
+		}else
+        {
+            Util::PrintLine("Thread Halted");
+            m_sandbox->setThreadState(THREAD_HALT);
+        }
+	}
+	if (buttons::buttonPressed(buttons::Y))
+	{
+        Util::PrintLine("Thread Stopped");
+		m_sandbox->setThreadState(THREAD_CLOSE);
+
+	}
+    #endif
+    
 	m3d::Screen * scr = GameManager::getScreen();
 	
 	if (commandEditor != nullptr && showCommandEditor)
@@ -147,8 +168,19 @@ void Minigame::AddButton_OnClick()
 
 void Minigame::SubmitButton_OnClick()
 {
-	if (submitFunction != nullptr)
-		submitFunction(codeEditor->GetCommands());
+    if(m_sandbox->getThreadState() != THREAD_CLOSE)
+    {
+        if (submitFunction != nullptr)
+        {
+            submitFunction(codeEditor->GetCommands());
+        }
+    }
+    #ifdef DEBUG
+    else
+    {
+        Util::PrintLine("warning: thread closed");
+    }
+    #endif 
 }
 
 void Minigame::EditButton_OnClick()

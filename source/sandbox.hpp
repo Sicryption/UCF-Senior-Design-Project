@@ -10,13 +10,16 @@
 
 #include "lua/lua.hpp"
 
-#define DEBUG
-#define SANDBOX_MEM_CAPACITY 4096 /// Memory capacity of the  sandbox in bytes
-#define THREAD_STACK (unsigned long long) 4096 /// Memory capacity of the sandbox thread stack in bytes
+#ifdef DEBUG
+#define DEBUG_SANDBOX
+#endif
 
-#define THREAD_HALT     1
-#define THREAD_RUNNING  0
-#define THREAD_CLOSE   -1
+#define SANDBOX_MEM_CAPACITY 4096 /** Memory capacity of the  sandbox in bytes*/
+#define THREAD_STACK (unsigned long long) 4096 /** Memory capacity of the sandbox thread stack in bytes*/
+
+#define THREAD_HALT     1 /**Thread State Value. Pauses thread execution*/
+#define THREAD_RUNNING  0 /**Thread State Value. Continues thread execution*/
+#define THREAD_CLOSE   -1 /**Thread State Value. Closes the thread*/
 
 
 
@@ -142,13 +145,6 @@ public:
      *  @throw exception if variable either does not exist or, is of a different memory type
      */
     bool tryGetBool( std::string, bool* );
-
-    /**
-     *  try to return a table with the given identifier
-     *  @returns value assigned to the identifier in the lua environment
-     *  @throw exception if variable either does not exist or, is of a different memory type
-     */
-    //
 
     /**
      *  Declare or Assign a value in the environment

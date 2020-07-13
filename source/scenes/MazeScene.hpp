@@ -1,11 +1,15 @@
 #pragma once
 #include "../gameManager.hpp"
 #include "../sceneManager.hpp"
-#include "scene.hpp"
 #include "../resources.h"
 #include "../gameObjects/mazePlayer.hpp"
+#include "../scenes/scene.hpp"
+#include "../scenes/MainMenuScene.hpp"
 
-#include "MainMenuScene.hpp"
+#ifdef DEBUG
+#define DEBUG_MAZE
+#endif
+
 
 class MazeScene : public Minigame
 {

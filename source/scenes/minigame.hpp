@@ -10,19 +10,21 @@
 #include <m3dia.hpp>
 #include <sstream>
 
+#include "../util.hpp"
 #include "../gameManager.hpp"
 #include "../inputManager.hpp"
 #include "../sceneManager.hpp"
 #include "../resources.h"
-#include "scene.hpp"
+#include "../scenes/scene.hpp"
 #include "../sandbox.hpp"
 
 
-#define DEBUG
+#ifdef DEBUG
+#define DEBUG_THREAD
+#endif
 
-#define THREAD_HALT     1
-#define THREAD_RUNNING  0
-#define THREAD_CLOSE   -1
+
+
 
 #define setObjectName(name, id) m_sandbox->executeStringQueued("name_table[\"" name "\"] = " + std::to_string(id))
 

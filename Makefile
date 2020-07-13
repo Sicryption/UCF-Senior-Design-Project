@@ -54,7 +54,7 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \
 			$(ARCH) 
 
-CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS -DLUA_32BITS -DLUA_C89_NUMBERS
+CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS -DLUA_32BITS -DLUA_C89_NUMBERS -DDEBUG
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -std=gnu++11 
 # removed flag -fno-exceptions

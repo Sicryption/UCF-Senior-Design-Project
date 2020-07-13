@@ -1,5 +1,4 @@
 #include "MazeScene.hpp"
-
 #include "MinigameSelectScene.hpp"
 
 MazeScene::MazeScene()
@@ -97,25 +96,6 @@ void MazeScene::unload(){ Minigame::unload(); };
 void MazeScene::update()
 {
 	Minigame::update();
-	
-	if (buttons::buttonPressed(buttons::X))
-	{
-		if(m_sandbox->getThreadState() == THREAD_HALT)
-		{
-            Util::PrintLine("Thread Running");
-			m_sandbox->setThreadState(THREAD_RUNNING);
-		}else
-        {
-            Util::PrintLine("Thread Halted");
-            m_sandbox->setThreadState(THREAD_HALT);
-        }
-	}
-	if (buttons::buttonPressed(buttons::Y))
-	{
-		//m_sandbox->setThreadState(THREAD_CLOSE);
-        Util::PrintLine("Hello,");
-        m_sandbox->executeFileQueued("println(\"World\")");
-	}
 
 	switch (currentState)
 	{

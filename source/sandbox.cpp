@@ -2,12 +2,7 @@
 #include "util.hpp"
 #include "sandbox.hpp"
 
-/*
-    Comparison oparations for the memBlock object.
-    all comparisons are dependent on == and <
-*/
-
-/// The array of lua accessible user API functions, paired with their lua global name
+/**The array of lua accessible user API functions, paired with their lua global name*/
 std::pair<std::string, lua_CFunction> enabledFunctions[] = {
     std::make_pair( "println" , UserAPI::print_line),
     std::make_pair( "print" , UserAPI::print),
@@ -61,7 +56,7 @@ LuaSandbox::~LuaSandbox()
 
 void LuaSandbox::sandboxRuntime(m3d::Parameter param)
 {
-	#ifdef DEBUG
+	#ifdef DEBUG_SANDBOX
     Util::PrintLine("thread: start");
     #endif
 	int* state = param.get<int*>();
@@ -73,7 +68,7 @@ void LuaSandbox::sandboxRuntime(m3d::Parameter param)
 
     
 
-    #ifdef DEBUG
+    #ifdef DEBUG_SANDBOX
     Util::PrintLine("thread: sandbox initialized");
     #endif
 	
@@ -103,18 +98,18 @@ void LuaSandbox::sandboxRuntime(m3d::Parameter param)
             m_luaQueue.pop();
             lock_queue.~Lock();
 
-            #ifdef DEBUG
+            #ifdef DEBUG_SANDBOX
 			Util::PrintLine("thread: read \'"+t_lua.substr(0,30)+"\'");
             #endif
 
 			m3d::Lock lock_sandbox(m_mutex_sandbox);
             if(luaL_dostring(m_luaState,t_lua.c_str()) > 0)
             {
-                #ifdef DEBUG
+                #ifdef DEBUG_SANDBOX
                 Util::PrintLine("lua:execution failed on \'" + t_lua.substr(0,30) + "\'");
                 #endif
             } 
-            #ifdef DEBUG
+            #ifdef DEBUG_SANDBOX
             else
             { 
                 Util::PrintLine("lua: success on \'" + t_lua.substr(0,30) + "\'");
@@ -131,7 +126,7 @@ void LuaSandbox::sandboxRuntime(m3d::Parameter param)
 	}
 
     //setThreadState(THREAD_RUNNING);
-    #ifdef DEBUG
+    #ifdef DEBUG_SANDBOX
     Util::PrintLine("thread: exit");
     #endif
 }
@@ -149,7 +144,7 @@ void* LuaSandbox::allocator(void *ud, void *ptr, size_t osize, size_t nsize)
 
 bool LuaSandbox::executeString(std::string text)
 {
-    #ifdef DEBUG
+    #ifdef DEBUG_SANDBOX
     Util::PrintLine("executing: " + text.substr(0,20) + "...");
     #endif
     const char* temp = text.c_str();    
@@ -184,7 +179,7 @@ bool LuaSandbox::executeFile(std::string path)
 
 int LuaSandbox::executeStringQueued(std::string text)
 {
-    #ifdef DEBUG
+    #ifdef DEBUG_SANDBOX
     Util::PrintLine("queuing: " + text.substr(0,20) + "...");
     #endif
 
@@ -221,15 +216,25 @@ int LuaSandbox::executeFileQueued(std::string path)
 
 void LuaSandbox::setThreadState(int state)
 {
-    m3d::Lock lock(m_mutex_threadState);
-    m_threadState = state;
-    executeString("_EXEC_STATE=" + std::to_string(state));
+    if(m_thread->isRunning())
+    {
+        m3d::Lock lock(m_mutex_threadState);
+        m_threadState = state;
+        executeString("_EXEC_STATE=" + std::to_string(state));
+    }else
+    {
+        m_threadState = THREAD_CLOSE;
+        executeString("_EXEC_STATE=" + std::to_string(THREAD_CLOSE));
+    }
 }
 
 int LuaSandbox::getThreadState()
 {
-    m3d::Lock lock(m_mutex_threadState);
-    return m_threadState;
+    if(m_thread->isRunning())
+    {
+        m3d::Lock lock(m_mutex_threadState);
+        return m_threadState;
+    }else{ return THREAD_CLOSE; }
 }
 
 bool LuaSandbox::tryGetDouble(std::string id, double* ptr)
