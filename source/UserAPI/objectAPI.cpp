@@ -1,6 +1,3 @@
-
-
-
 #include "../userAPI.hpp"
 
 /**
@@ -33,7 +30,10 @@ int UserAPI::move_object(lua_State* L)
         return 0;
     }
     
+    #ifdef DEBUG
     Util::PrintLine("move [" + std::to_string(t_id) + "]. x: " +  std::to_string(x) + ", y: " +  std::to_string(y) );
+    #endif
+
     int t_runState;
     while(!(x == 0 && y == 0))
     {
@@ -43,7 +43,10 @@ int UserAPI::move_object(lua_State* L)
             lua_getglobal(L,"_EXEC_STATE");
             if(!lua_isnoneornil(L,-1))
             {
+                #ifdef DEBUG
                 Util::PrintLine("state: " + std::to_string(t_runState) );
+                #endif
+                
                 t_runState = lua_tonumber(L,-1);
                 lua_remove(L,-1);                
                 if(t_runState < 0)

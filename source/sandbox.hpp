@@ -30,20 +30,20 @@ class LuaSandbox final
 
 private:
     
-    unsigned long int memCapacity; ///  Maximum memory size in bytes
-    unsigned long int memSize; ///  Current memory in use, in bytes
+    unsigned long int memCapacity; /// Maximum memory size in bytes
+    unsigned long int memSize; /// Current memory in use, in bytes
     
-    lua_State * m_luaState; ///  Lua state object
-    m3d::Thread * m_thread;
-    int m_threadState;
-    std::queue<std::string> m_luaQueue;
-    m3d::Mutex  m_mutex_sandbox,
-                m_mutex_threadState,
-                m_mutex_allocation,
-                m_mutex_lua;
+    lua_State * m_luaState; /// Lua state object
+    m3d::Thread * m_thread; /// Thread pointer
+    int m_threadState; /// Thread State
+    std::queue<std::string> m_luaQueue; /// Queue of lua chunks to execute
+    m3d::Mutex  m_mutex_sandbox /**Control Access to lua_State object*/,
+                m_mutex_threadState /**Control Access to thread state*/,
+                m_mutex_allocation /**Control Access to sandbox's memory allocation*/,
+                m_mutex_lua /**Control Access to lua queue*/;
     
-    std::function<void()>   m_execBefore = [](){},
-                            m_execAfter = [](){};
+    std::function<void()>   m_execBefore = [](){} /**Function executed before each queued sandbox execution*/,
+                            m_execAfter = [](){} /**Function executed after each queued sandbox execution*/;
 
     /**
 	 * @brief Sandbox thread's main  function.
@@ -62,14 +62,27 @@ private:
      */
     static void * allocator(void *ud, void *ptr, size_t osize, size_t nsize);
     
-    /**  Bind all User API functions to the Lua state */
+    /** @brief Bind all User API functions to the Lua state 
+     *  Adds all functions defined in @ref enabledFunctions to the sandbox environment
+    */
     void bindAPI();
 
+    void initialize(std::function<void()> before, std::function<void()> after);
 
 public:
 
+    /** Constructor for LuaSandbox
+     *  @brief Constructs a LuaSandbox defining the pre and post execution functions.
+     *  @param before function to be executed before queued Lua code
+     *  @param after function to be executed after queued Lua code
+     */
     LuaSandbox(std::function<void()>,std::function<void()>);
 
+    /** Destructor function for the LuaSandbox
+     *  @brief handles the destruction of data structures within the Lua sandbox
+     *  
+     *  @warning Triggers the closure of the running thread, then waits for the thread to exit.
+     */
     ~LuaSandbox();
 
     /**
@@ -99,6 +112,9 @@ public:
 	 */
 	int getThreadState();
 
+    /**
+     * @brief Change the pre and post execution functions
+     */
     void setExecutionContext(   std::function<void()> before = [](){},
                                 std::function<void()> after  = [](){})
     {
@@ -185,9 +201,11 @@ public:
      */
     int executeFileQueued(std::string path);
 
+
     void close();
 
-    void clean();
+    void resetSandbox();
+
 };
 
 

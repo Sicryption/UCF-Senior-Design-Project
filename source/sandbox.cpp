@@ -26,14 +26,15 @@ std::pair<std::string, lua_CFunction> enabledFunctions[] = {
     std::make_pair( "delete" , UserAPI::delete_object)
 };
 
-LuaSandbox::LuaSandbox(std::function<void()> before,std::function<void()> after)
+void LuaSandbox::initialize(std::function<void()> before = 0, std::function<void()> after = 0)
 {
-    
     memSize = 0;
     memCapacity = SANDBOX_MEM_CAPACITY;
 
-    m_execBefore = before;
-    m_execAfter = after;    
+    if(before != 0)
+        m_execBefore = before;
+    if(after != 0)
+        m_execAfter = after;    
 
     m3d::Lock lock_sandbox(m_mutex_sandbox);
 	m_luaState = lua_newstate(allocator,nullptr);
@@ -46,6 +47,11 @@ LuaSandbox::LuaSandbox(std::function<void()> before,std::function<void()> after)
     m_thread = new m3d::Thread( [this](m3d::Parameter p){sandboxRuntime(p);}, 
                                 &m_threadState, false, false, THREAD_STACK);
     m_thread->start();
+}
+
+LuaSandbox::LuaSandbox(std::function<void()> before, std::function<void()> after)
+{    
+    initialize(before, after);
 }
 
 LuaSandbox::~LuaSandbox()
@@ -305,16 +311,19 @@ void LuaSandbox::bindAPI()
 
 void LuaSandbox::close()
 {
-    lua_close(m_luaState);
-    return;
-}
-
-void LuaSandbox::clean()
-{
     if(m_thread->isRunning())
     {
         setThreadState(THREAD_CLOSE);   
         m_thread->join();
     }
     lua_close(m_luaState);
+    
 }
+
+void LuaSandbox::resetSandbox()
+{
+    close();
+    initialize();
+    
+}
+
