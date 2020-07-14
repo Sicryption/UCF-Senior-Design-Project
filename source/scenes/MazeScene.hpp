@@ -14,7 +14,9 @@
 class MazeScene : public Minigame
 {
 	private:
-		SpriteMenuItem *wallpaper, *texture, *popup;
+		SpriteMenuItem *wallpaper, *texture, *popup, *wPopup;
+		SpriteMenuItem *tutorial[5];
+		int tutCount;
 		RectangleMenuItem *winScreen, *loseScreen;
 		m3d::Color *colorRec, *colorText;
 		TextMenuItem *prompt, *winPrompt;

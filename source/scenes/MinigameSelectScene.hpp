@@ -36,6 +36,9 @@ class MinigameSelectScene : public Scene
 
 		RectangleMenuItem *whiteBackground;
 
+		SpriteMenuItem* grass;
+		SpriteMenuItem* bGrass;
+
 		SpriteMenuItem *selectedMinigameLargeSprite = nullptr;
 		TextMenuItem *MinigameSelectTopText = nullptr, *MinigameDescription = nullptr, *MinigameName = nullptr;
 		ButtonMenuItem* minigameOptions[MINIGAME_COUNT];

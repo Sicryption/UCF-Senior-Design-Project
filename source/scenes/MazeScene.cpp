@@ -35,27 +35,41 @@ void MazeScene::initialize(){
 //initializes text and bottom screen background
 	winScreen = new RectangleMenuItem(0,0,320,240,*colorRec);
 	menu->AddItem(winScreen);
-	winPrompt = new TextMenuItem("You Win!",*colorText);
-	menu->AddItem(winPrompt);
-	winPrompt->setPosition(90,30);
-	winPrompt->setFontSize(.5);
-	winPrompt->setFontWeight(.5);
-	winPrompt->setPosition(160,120);
+	//winPrompt = new TextMenuItem("You Win!",*colorText);
+	//menu->AddItem(winPrompt);
+	//winPrompt->setPosition(90,30);
+	//winPrompt->setFontSize(.5);
+	//winPrompt->setFontWeight(.5);
+	//winPrompt->setPosition(160,120);
 			
-	prompt = new TextMenuItem(" Use move commands to traverse \n the maze. In order to add a move \n command select Add, then go to\n the tab with the arrows. There\n you can select up, down, left \n or right as a direction to\n move in the maze. You can then\n change the amount of spaces you\n want to move by selecting it and\n clicking edit. Be sure to enter all\n commands you will need to get to\n the end of the maze before running.",*colorText);
-	menu->AddItem(prompt);
-	prompt->setPosition(90,30);
-	prompt->setFontSize(.5);
-	prompt->setFontWeight(.5);
+	//prompt = new TextMenuItem(" Use move commands to traverse \n the maze. In order to add a move \n command select Add, then go to\n the tab with the arrows. There\n you can select up, down, left \n or right as a direction to\n move in the maze. You can then\n change the amount of spaces you\n want to move by selecting it and\n clicking edit. Be sure to enter all\n commands you will need to get to\n the end of the maze before running.",*colorText);
+	//menu->AddItem(prompt);
+	//prompt->setPosition(90,30);
+	//prompt->setFontSize(.5);
+	//prompt->setFontWeight(.5);
 	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("maze1.png")));
 	menu->AddItem(wallpaper);
 	//  Initialize popup BG
-    popup = new SpriteMenuItem(*(ResourceManager::getSprite("menu_popup.png")));
-	menu->AddItem(popup);
-	popup->setPosition(80,20);
+    wPopup = new SpriteMenuItem(*(ResourceManager::getSprite("win_popup.png")));
+	menu->AddItem(wPopup);
+	wPopup->setPosition(80,20);
 	//wallpaper->setTexture(*texture);
 	wallpaper->setCenter(0,0);
 	wallpaper->setScale(1,1);
+	//tutorial
+	tutorial[0] = new SpriteMenuItem(*(ResourceManager::getSprite("maze_tutorial_1.png")));
+	menu->AddItem(tutorial[0]);
+	tutorial[1] = new SpriteMenuItem(*(ResourceManager::getSprite("maze_tutorial_2.png")));
+	menu->AddItem(tutorial[1]);
+	tutorial[2] = new SpriteMenuItem(*(ResourceManager::getSprite("maze_tutorial_3.png")));
+	menu->AddItem(tutorial[2]);
+	tutorial[3] = new SpriteMenuItem(*(ResourceManager::getSprite("maze_tutorial_4.png")));
+	menu->AddItem(tutorial[3]);
+	tutorial[4] = new SpriteMenuItem(*(ResourceManager::getSprite("maze_tutorial_5.png")));
+	menu->AddItem(tutorial[4]);
+	tutCount = 0;
+	popup = tutorial[tutCount++];
+	popup->setPosition(80,20);
 
 	currentState = MazeState::TutorialMessage;
 }
@@ -71,14 +85,14 @@ void MazeScene::draw(){
     if(currentState == MazeState::TutorialMessage)
     {   
         screen->drawTop(*popup);
-		screen->drawTop(*prompt);
+		//screen->drawTop(*prompt);
 		//use m3dci for prompt
     }
 
 	if(currentState == MazeState::Win)
     {   
-        screen->drawTop(*popup);
-		screen->drawTop(*winPrompt);
+        screen->drawTop(*wPopup);
+		//screen->drawTop(*winPrompt);
 		//use m3dci for prompt
     }
 
@@ -101,6 +115,31 @@ void MazeScene::update()
 	{
 		case MazeState::TutorialMessage:
 
+			if (buttons::buttonPressed(buttons::A)){
+				if(tutCount >= 5)
+				{
+					currentState = MazeState::Requesting;
+
+					std::vector<CommandObject*> startingCommands =
+					{
+						new SelectCommand("runner",true,true),
+						new RightCommand("18"),
+						new DownCommand("5"),
+						new LeftCommand("18"),
+						new DownCommand("5"),
+						new RightCommand("18"),
+						new DownCommand("5"),
+						new LeftCommand("18"),
+						new DownCommand("5"),
+						new RightCommand("18")
+					};
+
+					SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
+					break;
+				}
+				popup = tutorial[tutCount++];
+				popup->setPosition(80,20);
+			}
 			if (buttons::buttonDown(buttons::Start))
 			{
 				currentState = MazeState::Requesting;

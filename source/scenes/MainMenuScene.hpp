@@ -16,6 +16,10 @@ class MainMenuScene : public Scene
 		ButtonMenuItem* ClickHereToContinue = nullptr;
 		SpriteMenuItem* apple;
 
+		SpriteMenuItem* grass;
+		SpriteMenuItem* bGrass;
+		
+
 	public:
 		MainMenuScene();
 		~MainMenuScene();
