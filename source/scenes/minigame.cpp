@@ -87,6 +87,11 @@ void Minigame::update()
 	{
 		scr->drawBottom(*commandEditor);
 
+		if (commandEditor->getComplete())
+		{
+			AddButton->SetActive(true);
+		}
+
 		if (closeButton != nullptr)
 		{
 			closeButton->setPosition(BOTTOMSCREEN_WIDTH - 37, 0);
@@ -210,17 +215,18 @@ void Minigame::CloseButton_OnClick()
 	if (showCommandEditor)
 	{
 		showCommandEditor = false;
+		showCommandLister = false;
 
 		menu->RemoveItem(commandEditor);
 
-		if (editCommandFromCommandEditor)
-		{
-			codeEditor->SetActive(true);
-			AddButton->SetActive(true);
-			EditButton->SetActive(true);
-			RemoveButton->SetActive(true);
-			submitButton->SetActive(true);
-		}
+		codeEditor->SetActive(true);
+		commandLister->SetActive(false);
+
+		AddButton->SetActive(false);
+		EditButton->SetActive(true);
+		RemoveButton->SetActive(true);
+		submitButton->SetActive(true);
+
 		commandEditor->ForceComplete();
 	}
 	else
@@ -228,11 +234,22 @@ void Minigame::CloseButton_OnClick()
 		showCommandLister = false;
 
 		commandLister->SetActive(false);
-		codeEditor->SetActive(true);
-		AddButton->SetActive(true);
-		EditButton->SetActive(true);
-		RemoveButton->SetActive(true);
-		submitButton->SetActive(true);
+
+		if (editCommandFromCommandEditor)
+		{
+			editCommandFromCommandEditor = false;
+			codeEditor->SetActive(true);
+			EditButton_OnClick();
+		}
+		else
+		{
+			codeEditor->SetActive(true);
+			AddButton->SetActive(true);
+			EditButton->SetActive(true);
+			RemoveButton->SetActive(true);
+			submitButton->SetActive(true);
+
+		}
 
 		codeEditor->ShiftToBottom();
 	}

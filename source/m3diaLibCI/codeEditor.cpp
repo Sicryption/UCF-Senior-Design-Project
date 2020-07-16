@@ -133,7 +133,10 @@ namespace m3dCI
 			return;
 
 		if (currentSelectedCommand == commands[index])
+		{
 			currentSelectedCommand = newCommand;
+			currentSelectedCommand->setSelected(true);
+		}
 
 		delete(commands[index]);
 		commands[index] = newCommand;
