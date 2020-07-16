@@ -13,5 +13,7 @@ public:
 	//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
 	~CommandEditorMenuItem();
 
+	void SetEditFunction(std::function<void()> function);
+
 	bool PointIntersection(int px, int py);
 };

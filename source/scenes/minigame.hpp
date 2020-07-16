@@ -42,7 +42,7 @@ private:
 
 	std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
 
-	bool showCommandLister = false, showCommandEditor = false;
+	bool showCommandLister = false, showCommandEditor = false, editCommandFromCommandEditor = false;
 
 protected:
     LuaSandbox* m_sandbox;

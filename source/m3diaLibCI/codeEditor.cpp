@@ -122,6 +122,23 @@ namespace m3dCI
 		SelectCommand(commandToRemoveIndex == (int)commands.size()?commandToRemoveIndex - 1:commandToRemoveIndex-1);
 	}
 
+	void CodeEditor::replaceCommand(CommandObject* current, CommandObject* newCommand)
+	{
+		int index = -1;
+		for (unsigned int i = 0; i < commands.size(); i++)
+			if (commands[i] == current)
+				index = i;
+
+		if (index == -1)
+			return;
+
+		if (currentSelectedCommand == commands[index])
+			currentSelectedCommand = newCommand;
+
+		delete(commands[index]);
+		commands[index] = newCommand;
+	}
+
 	void CodeEditor::ClearCommands()
 	{
 		for (int i = (int)commands.size() - 1; i >= 0; i--)
