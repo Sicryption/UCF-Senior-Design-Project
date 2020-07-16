@@ -39,7 +39,7 @@ void TicTacToeScene::initialize() {
 	wallpaper->setCenter(0,0);
 	wallpaper->setScale(1,1);
 
-	currentState = MazeState::TutorialMessage;
+	currentState = TTTState::TutorialMessage;
 }
 
 void TicTacToeScene::draw() {
@@ -50,7 +50,7 @@ void TicTacToeScene::draw() {
     wallpaper->setPosition(0,0);
     screen->drawTop(*wallpaper);
 
-    if(currentState == MazeState::TutorialMessage)
+    if(currentState == TTTState::TutorialMessage)
     {   
         screen->drawTop(*popup);
 		screen->drawTop(*prompt);
@@ -102,7 +102,7 @@ bool TicTacToeScene::checkWinCond()
     return false;
 }
 
-oid TicTacToeScene::loadScene() { Minigame::loadScene(); };
+void TicTacToeScene::loadScene() { Minigame::loadScene(); };
 void TicTacToeScene::loadWinScr() { Minigame::loadWinScr(); };
 void TicTacToeScene::loadLoseScr() { Minigame::loadLoseScr(); };
 void TicTacToeScene::requestUI() { Minigame::requestUI(); };
