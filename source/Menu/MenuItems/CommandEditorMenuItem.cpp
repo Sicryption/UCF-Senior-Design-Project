@@ -50,8 +50,8 @@ void CommandEditorMenuItem::HandleClick(int x, int y)
 			else
 			{
 				command->setParam(selected - 1, sk.getLastInput());
-
-				isComplete = true;
+				
+				params[selected - 1]->setText(command->getParamNames()[selected -1] + ": " + command->getParams()[selected -1]);
 			}
 		}
 		else

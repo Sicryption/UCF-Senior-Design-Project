@@ -31,16 +31,16 @@ namespace m3dCI
 {
     class CommandEditor : public m3d::Drawable
 	{
-		private:
-
-			m3dCI::Sprite* background = nullptr;
-
-			m3dCI::Text *name = nullptr;
-			m3dCI::Text *params[MAX_PARAMS] = { nullptr, nullptr, nullptr };
 		protected:
 			CommandObject* command;
 
 			bool isComplete = false;
+
+			m3dCI::Sprite* background = nullptr;
+
+			m3dCI::Text *name = nullptr;
+
+			m3dCI::Text *params[MAX_PARAMS] = { nullptr, nullptr, nullptr };
 		public:
 			
 			CommandEditor(CommandObject* command);
