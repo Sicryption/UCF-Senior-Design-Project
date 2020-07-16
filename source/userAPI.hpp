@@ -21,6 +21,7 @@
 #endif
 
 #define STEP_TIME 150
+#define STR_LEN 255
 
 /**
  *  A namespace defining the functions bound to a Lua Sandbox
@@ -57,6 +58,7 @@ namespace UserAPI
 
     int make_rectangle(lua_State* L);  
     int make_circle(lua_State* L);  
+    int make_text(lua_State* L);
     int make_paddle(lua_State* L); 
 
     int move_object(lua_State* L);   
@@ -70,10 +72,13 @@ namespace UserAPI
 
     int scale(lua_State* L);    
     int set_scale(lua_State* L);    
+    int get_x_scale(lua_State* L);    
+    int get_y_scale(lua_State* L);    
       
     int set_color(lua_State* L);   
     
     int delete_object(lua_State* L);   
+    int change_color(lua_State* L);
 
     //========== Hardware API
 
