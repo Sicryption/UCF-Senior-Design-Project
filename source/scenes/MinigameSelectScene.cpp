@@ -72,6 +72,8 @@ MinigameSelectScene::MinigameSelectScene()
 			{
 				if (i == MINIGAME_LIST::MAZE)
 					SceneManager::setTransition(new MazeScene());
+				if(i == MINIGAME_LIST::TIC_TAC_TOE)
+					SceneManager::setTransition(new TicTacToeScene());
 				else
 					SceneManager::setTransition(new Minigame());
 			}

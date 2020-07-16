@@ -3,6 +3,7 @@
 #include "scene.hpp"
 #include "MinigameDescriptor.hpp"
 #include "MazeScene.hpp"
+#include "TicTacToeScene.hpp"
 
 #include "../gameManager.hpp"
 #include "../inputManager.hpp"
@@ -18,7 +19,9 @@ class MinigameSelectScene : public Scene
 	private:
 		enum MINIGAME_LIST
 		{
-			MAZE = 0
+			MAZE = 0,
+			PONG = 1,
+			TIC_TAC_TOE = 2
 		};
 
 		//std::vector<MinigameDescriptor
