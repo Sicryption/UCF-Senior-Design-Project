@@ -26,8 +26,6 @@ void Menu::OnUpdate()
 
 	std::vector<MenuItem*> menuItemsClone(menuItems);
 
-	Util::PrintLine(std::to_string(touchedThisFrame));
-
 	for (unsigned int i = 0; i < menuItemsClone.size(); i++)
 	{
 		MenuItem* currentItem = menuItemsClone[i];

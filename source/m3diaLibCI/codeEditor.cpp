@@ -169,9 +169,20 @@ namespace m3dCI
 	void CodeEditor::SelectCommand(int index)
 	{
 		if (index == -1 || index >= (int)commands.size())
+		{
+			if (currentSelectedCommand != nullptr)
+				currentSelectedCommand->setSelected(false);
+
 			currentSelectedCommand = nullptr;
+		}
 		else
+		{
+			if (currentSelectedCommand != nullptr)
+				currentSelectedCommand->setSelected(false);
+
 			currentSelectedCommand = commands[index];
+			currentSelectedCommand->setSelected(true);
+		}
 
 		refreshCommandList();
 	}
