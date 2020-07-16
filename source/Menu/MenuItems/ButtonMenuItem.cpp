@@ -7,15 +7,15 @@ ButtonMenuItem::ButtonMenuItem(int px, int py, int pw, int ph, m3d::Color p_inne
 	: m3dCI::Button(px, py, pw, ph, p_innerColor, p_borderColor, p_borderWidth), MenuItem()
 {
 	m3d::Color iC = p_innerColor;
-	m3d::Color brighter = m3d::Color((int)(iC.getRed() * 0.9f), (int)(iC.getGreen() * 0.9f), (int)(iC.getBlue() * 0.9f), iC.getAlpha());
-	SetOnTouch([&, p_innerColor](int a, int b)
+	m3d::Color darker = m3d::Color((int)(iC.getRed() * 0.9f), (int)(iC.getGreen() * 0.9f), (int)(iC.getBlue() * 0.9f), iC.getAlpha());
+	SetOnTouch([&, p_innerColor, darker](int a, int b)
 	{
-		setInnerColor(m3d::Color(200, 200, 200, 255));
+		setInnerColor(darker);
 	});
 	
-	SetOnHeldEnter([&,p_innerColor](int a, int b)
+	SetOnHeldEnter([&,p_innerColor, darker](int a, int b)
 	{
-		setInnerColor(m3d::Color(200, 200, 200, 255));
+		setInnerColor(darker);
 	});
 
 	SetOnHeldLeave([&,p_innerColor](int a, int b)
