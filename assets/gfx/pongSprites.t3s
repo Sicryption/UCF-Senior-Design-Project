@@ -1,0 +1,4 @@
+--atlas -f rgba8888 -z auto
+pong1.png
+ball.png
+paddle.png

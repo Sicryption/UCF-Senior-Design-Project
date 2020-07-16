@@ -72,6 +72,8 @@ MinigameSelectScene::MinigameSelectScene()
 			{
 				if (i == MINIGAME_LIST::MAZE)
 					SceneManager::setTransition(new MazeScene());
+				else if (i == MINIGAME_LIST::PONG)
+					SceneManager::setTransition(new PongScene());
 				else
 					SceneManager::setTransition(new Minigame());
 			}
