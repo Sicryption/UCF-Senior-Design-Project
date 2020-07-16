@@ -164,7 +164,9 @@ void Minigame::SubmitButton_OnClick()
     {
         Util::PrintLine("warning: thread closed");
     }
-    #endif 
+    #endif
+
+	submitButton->SetActive(false);
 }
 
 void Minigame::EditButton_OnClick()
@@ -278,4 +280,10 @@ void Minigame::ClearCommands()
 void Minigame::SetSubmitFunction(std::function<void(std::vector<CommandObject*>)> callbackFunction)
 {
 	submitFunction = callbackFunction;
+}
+
+void Minigame::onExecutionEnd()
+{
+	//Until a hault option is made here. We don't want the execution to run twice.
+	submitButton->SetActive(true);
 }

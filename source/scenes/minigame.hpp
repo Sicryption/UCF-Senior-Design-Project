@@ -60,7 +60,7 @@ protected:
 	 *  @brief Function called before a sandbox execution
 	 *  onExecutionEnd is called right after the sandbox executes a chunk.
 	 */
-	virtual void onExecutionEnd(){}
+	virtual void onExecutionEnd();
 
 public:
 	void toggleWinCond();
