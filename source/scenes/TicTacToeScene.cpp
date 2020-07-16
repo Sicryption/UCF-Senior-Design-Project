@@ -50,12 +50,12 @@ void TicTacToeScene::draw() {
     wallpaper->setPosition(0,0);
     screen->drawTop(*wallpaper);
 
-    if(currentState == TTTState::TutorialMessage)
+    /*if(currentState == TTTState::TutorialMessage)
     {   
         screen->drawTop(*popup);
 		screen->drawTop(*prompt);
 		//use m3dci for prompt
-    }
+    }*/
 }
 
 void TicTacToeScene::load(){Minigame::load();};
@@ -94,10 +94,7 @@ void TicTacToeScene::onEnter(){Minigame::onEnter();};
 void TicTacToeScene::onExit(){Minigame::onExit();};
 bool TicTacToeScene::checkWinCond() 
 {
-    if(winCond == true)
-    {
-        return true;
-    }
+    return true;
     
     return false;
 }

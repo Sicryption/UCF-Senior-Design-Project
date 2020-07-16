@@ -1,7 +1,7 @@
+#pragma once
 #include "../gameManager.hpp"
 #include "../sceneManager.hpp"
 #include "../resources.h"
-#include "../gameObjects/mazePlayer.hpp"
 #include "../scenes/scene.hpp"
 #include "../scenes/MainMenuScene.hpp"
 
@@ -44,6 +44,8 @@ class TicTacToeScene : public Minigame
 
         void unload();
         
+        void update();
+
         void SubmitTTTCode(std::vector<CommandObject*> luaCode);
 
         void onEnter();
