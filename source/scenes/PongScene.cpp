@@ -18,17 +18,13 @@ void PongScene::initialize(){
 
 	// initalize the background
 	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("pong1.png")));
-	//  Initialize popup BG
+	
+	// initialize popup 
 	popup = new SpriteMenuItem(*(ResourceManager::getSprite("menu_popup.png")));
 	popup->setPosition(80, 20);
-	//wallpaper->setTexture(*texture);
+
 	wallpaper->setCenter(0, 0);
 	wallpaper->setScale(1, 1);
-
-
-	//runnerID = addObject(runner);
-
-	//setObjectName("runner", runnerID);
 
 	// initialize game objects
 	ball = new PongBall();
@@ -36,13 +32,19 @@ void PongScene::initialize(){
 
 	leftPaddle = new PongPaddle(20, 90);
 	leftPaddle->initialize();
-	//leftPaddle->setCenter(5, 95);
+	//leftPaddle->setCenter(10, 135); // 20, 135
+	//leftPaddle->setPosition(0, 0);
 
 	rightPaddle = new PongPaddle(380, 90, ball);
-	//rightPaddle = new PongPaddle(390, 90);
 	rightPaddle->initialize();
 	//rightPaddle->setCenter(5, 95);
 }
+
+// TODO:
+// - keep track of game score
+// - integrate api commands with update() and submit pong code()
+// - add win and lose conditions
+// - reset game objects
 
 void PongScene::draw(){
 	Minigame::draw();
@@ -72,9 +74,19 @@ void PongScene::draw(){
 	//rightPaddle->draw();
 	//rightPaddle->update();
 
-	int halfLen = leftPaddle->getCenterY() - leftPaddle->getYPosition(), halfWidth = leftPaddle->getXPosition() - leftPaddle->getCenterX();
+	//int halfLen = leftPaddle->getCenterY() - leftPaddle->getYPosition(), halfWidth = leftPaddle->getXPosition() - leftPaddle->getCenterX();
 
 	util->PrintLine("demo");
+
+	if (leftPaddle->getCenterY() - (leftPaddle->getCenterY() - leftPaddle->getYPosition()) <= ball->getCenterY()
+		&& leftPaddle->getCenterY() + (leftPaddle->getCenterY() - leftPaddle->getYPosition()) >= ball->getCenterY()
+		&& leftPaddle->getCenterX() - (leftPaddle->getXPosition() - leftPaddle->getCenterX()) <= ball->getCenterX()
+		&& leftPaddle->getCenterX() + (leftPaddle->getXPosition() - leftPaddle->getCenterX()) >= ball->getCenterX())
+
+	{
+		ball->toggleXDir();
+	}
+
 	
 
 	/*
@@ -87,6 +99,7 @@ void PongScene::draw(){
 	}
 	*/
 
+	/*
 	if (leftPaddle->getCenterY() - (halfLen) <= ball->getCenterY()
 		&& leftPaddle->getCenterY() + (halfLen) >= ball->getCenterY()
 		&& leftPaddle->getCenterX() - (halfWidth) <= ball->getCenterX()
@@ -94,9 +107,11 @@ void PongScene::draw(){
 	{
 		ball->toggleXDir();
 	}
+	*/
 
 	// switchs ball's direction on collision with the enemy paddle 
 	// check the ball enters into the paddle's x and if the ball is within the scope of the paddle 
+
 	/*
 	if (leftPaddle->getCenterY() - (leftPaddle->getCenterY() - leftPaddle->getYPosition()) <= ball->getYPosition()
 		&& leftPaddle->getCenterY() + (leftPaddle->getCenterY() - leftPaddle->getYPosition()) >= ball->getYPosition()
@@ -106,18 +121,11 @@ void PongScene::draw(){
 		ball->toggleXDir();
 	}
 	*/
+	
 
 	
-	/*
-	if (leftPaddle->getCenterY() - (leftPaddle->getCenterY() - leftPaddle->getYPosition()) <= ball->getCenterY()
-		&& leftPaddle->getCenterY() + (leftPaddle->getCenterY() - leftPaddle->getYPosition()) >= ball->getCenterY()
-		&& leftPaddle->getCenterX() - (leftPaddle->getXPosition() - leftPaddle->getCenterX()) <= ball->getCenterX()
-		&& leftPaddle->getCenterX() + (leftPaddle->getXPosition() - leftPaddle->getCenterX()) >= ball->getCenterX())
-
-	{
-		ball->toggleXDir();
-	}
-	*/
+	
+	
 
 
 }
@@ -133,7 +141,7 @@ void PongScene::update()
 	
 };
 
-void PongScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)
+void PongScene::SubmitPongCode(std::vector<CommandObject*> luaCode)
 {
 	
   

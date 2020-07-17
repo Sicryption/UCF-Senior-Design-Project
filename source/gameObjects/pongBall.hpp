@@ -38,10 +38,6 @@ public:
 
     void update() {
 
-		//TODO: 
-		// - control ball movement w/ respect to paddles
-		// - refactor window bounds with variables 
-		// - reset the ball 
 
 		moveTo(speed * dirX, speed * dirY);
 
@@ -79,12 +75,20 @@ public:
 
     }
 
+	void setPosition(int t_x, int t_y) {
+		sprite->setPosition(t_x, t_y);
+	}
+
 	int getXPosition() {
 		return sprite->getXPosition();
 	}
 
 	int getYPosition() {
 		return sprite->getYPosition();
+	}
+
+	void setCenter(int t_x, int t_y) {
+		sprite->setCenter(t_x, t_y);
 	}
 
 	int getCenterX() {
@@ -95,9 +99,7 @@ public:
 		return sprite->getCenterY();
 	}
 
-	void setCenter(int t_x, int t_y) {
-		sprite->setCenter(t_x, t_y);
-	}
+	
 
 
     void destroy(){ this->~PongBall(); }

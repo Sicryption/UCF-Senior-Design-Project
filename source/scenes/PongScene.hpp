@@ -2,7 +2,7 @@
 #include "../gameManager.hpp"
 #include "../sceneManager.hpp"
 #include "../resources.h"
-#include "../gameObjects/pongPaddle.cpp"
+#include "../gameObjects/pongPaddle.hpp"
 #include "../scenes/scene.hpp"
 #include "../scenes/MainMenuScene.hpp"
 
@@ -42,7 +42,7 @@ class PongScene : public Minigame
         
 		void update();
 
-		void SubmitMazeCode(std::vector<CommandObject*> luaCode);
+		void SubmitPongCode(std::vector<CommandObject*> luaCode);
 
 		void onEnter();
 		void onExit();

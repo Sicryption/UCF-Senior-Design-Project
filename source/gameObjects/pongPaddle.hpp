@@ -1,7 +1,6 @@
 #include "../gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
-//#include "../scenes/PongScene.hpp"
 #include "../gameObjects/pongBall.hpp"
 
 class PongPaddle : public GameObject
@@ -59,6 +58,8 @@ public:
 		{
 			moveTo(0, velo);
 		}
+
+
 		
 	
     }
@@ -77,6 +78,11 @@ public:
 
     }
 
+	void setPosition(int t_x, int t_y) {
+		sprite->setPosition(t_x, t_y);
+	}
+
+
 	int getXPosition() {
 		return sprite->getXPosition();
 	}
@@ -84,6 +90,11 @@ public:
 	int getYPosition() {
 		return sprite->getYPosition();
 	}
+
+	void setCenter(int t_x, int t_y) {
+		sprite->setCenter(t_x, t_y);
+	}
+
 
 	int getCenterX() {
 		return sprite->getCenterX();
@@ -93,19 +104,7 @@ public:
 		return sprite->getCenterY();
 	}
 
-	void setCenter(int t_x, int t_y) {
-		sprite->setCenter(t_x, t_y);
-	}
-
-	float getXScale() {
-		return sprite->getXScale();
-	}
-
-
-	float getYScale() {
-		return sprite->getYScale();
-	}
-
+	
 	
 	void reset()
 	{
