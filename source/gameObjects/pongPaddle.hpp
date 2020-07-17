@@ -4,6 +4,9 @@
 //#include "../scenes/PongScene.hpp"
 #include "../gameObjects/pongBall.hpp"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 class PongPaddle : public GameObject
 {
 
@@ -12,28 +15,41 @@ private:
     m3d::Rectangle *PongRec;
     m3d::BoundingBox *paddleBox;
 	SpriteMenuItem *sprite;
-	PongBall* ball; 
+	PongBall* ball = nullptr; 
 	int velo; 
+
+	int chanceToFail = 0;
+	bool purposelyFail = false;
+
+	int startX, startY;
 
 public:
 	PongPaddle(int _x, int _y)
 	{
 		x = _x;
 		y = _y;
-		xScale = 3.5;
-		yScale = .5;
+		startX = _x;
+		startY = _y;
+		xScale = 0.5;
+		yScale = 2;
 		angle = 0;
+
+		velo = 3;
 	}
 
 	PongPaddle(int _x, int _y, PongBall *_ball)
 	{
 		x = _x;
 		y = _y;
-		xScale = 3.5;
-		yScale = .5;
+		startX = _x;
+		startY = _y;
+		xScale = 0.5;
+		yScale = 2;
 		angle = 0;
-		ball = _ball; 
-		velo = 1;
+
+		velo = 3;
+
+		ball = _ball;
 	}
 	
 
@@ -48,20 +64,39 @@ public:
     }
 
     void update() {
-		int diff = getYPosition() - ball->getYPosition();
+		if (ball == nullptr)
+		{
+			// player paddle moves up or down based on button press
+			if (m3d::buttons::buttonDown(m3d::buttons::Button::Down)) {
+				//moveTo(x, 1 * GameManager::getDeltaTime());
+				moveTo(0, velo);
+			}
 
-		// enemy paddle moves towards the ball based on its displacement
-		if (diff > 0)
-		{
-			moveTo(0, -velo);
+			if (m3d::buttons::buttonDown(m3d::buttons::Button::Up)) {
+				//moveTo(x, -1 * GameManager::getDeltaTime());
+				moveTo(0, -velo); //
+			}
 		}
-		else if (diff < 0)
+		else
 		{
-			moveTo(0, velo);
+			int diff = (getYPosition() + (sprite->GetHeight() / 2)) - (ball->getYPosition() + (ball->getHeight() / 2));
+
+			// enemy paddle moves towards the ball based on its displacement
+			if (diff > 0)
+				moveTo(0, purposelyFail ? velo: -velo);
+			else if (diff < 0)
+				moveTo(0, purposelyFail ? -velo : velo);
 		}
-		
-	
     }
+
+	void ballBouncedOffPaddle()
+	{
+		chanceToFail += 10;
+
+		int random = rand() % 100;
+
+		purposelyFail = random < chanceToFail;
+	}
 
     void draw() {
         m3d::Screen *screen = GameManager::getScreen();
@@ -71,10 +106,17 @@ public:
     }
 
     void moveTo(double _x, double _y) {
-        //PongRec->setYPosition(y + (int)(_y + 0.5));
 		y += _y;
 		x += _x;
 
+		if (x < 0)
+			x = 0;
+		if (y < 0)
+			y = 0;
+		if (x > TOPSCREEN_WIDTH)
+			x = TOPSCREEN_WIDTH;
+		if (y + sprite->GetHeight() > TOPSCREEN_HEIGHT)
+			y = TOPSCREEN_HEIGHT - sprite->GetHeight();
     }
 
 	int getXPosition() {
@@ -106,10 +148,13 @@ public:
 		return sprite->getYScale();
 	}
 
-	
 	void reset()
 	{
-		
+		x = startX;
+		y = startY;
+
+		chanceToFail = 0;
+		purposelyFail = false;
 	}
 
 
@@ -117,6 +162,8 @@ public:
 
 	void Rotate(double deg) {};
 
-
-
+	BoundingBox getAABB()
+	{
+		return sprite->getBoundingBox();
+	}
 };

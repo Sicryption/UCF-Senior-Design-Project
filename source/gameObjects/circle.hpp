@@ -69,4 +69,9 @@ public:
     }
 
     void Rotate(double deg){};
+
+	BoundingBox getAABB()
+	{
+		return m3d::BoundingBox(x, y, radius * 2, radius * 2);
+	}
 };

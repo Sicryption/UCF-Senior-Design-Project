@@ -6,6 +6,9 @@
 
 #define DEBUG
 
+#define mazeCellWidth 20
+#define mazeCellHeight 20
+
 class TerminalObject : public GameObject
 {
 
@@ -20,8 +23,8 @@ public:
     TerminalObject(bool (*walls)[12][20])
     {
         wall =  walls;
-        x = 20;
-        y = 20;
+        x = mazeCellWidth;
+        y = mazeCellHeight;
         xScale = 1;
         yScale = 1;
         angle = 0;
@@ -55,8 +58,8 @@ public:
     void moveTo(double _x,double _y)
     {
         int i;
-        int xc = (x/20);
-        int yc = (y/20);
+        int xc = (x/mazeCellWidth);
+        int yc = (y/mazeCellHeight);
          /*
 
         
@@ -82,7 +85,7 @@ public:
                         break;
                     }
                         
-                    x = x + 20;
+                    x = x + mazeCellWidth;
                 }
             }
             if(_x < 0)
@@ -92,7 +95,7 @@ public:
                 {
                     if((*wall)[yc][i - 1] == 1)
                         break;
-                    x -= 20;
+                    x -= mazeCellWidth;
                 }
             }
             
@@ -106,7 +109,7 @@ public:
                 {
                     if((*wall)[i+1][xc] == 1)
                         break;
-                    y += 20;
+                    y += mazeCellHeight;
                 }
             }
             if(_y < 0)
@@ -116,7 +119,7 @@ public:
                 {
                     if((*wall)[i - 1][xc] == 1)
                         break;
-                    y -= 20;
+                    y -= mazeCellHeight;
                 }
             }
         }
@@ -129,14 +132,20 @@ public:
         
     };
     void Rotate(double deg){};
-    int winCond() {
-			if((x/20) == 18 && (y/20) == 9)
-			{
-				return 1;
-			}
-			else
-			{
-				return 0;
-			}
+    int winCond() 
+	{
+		if((x/mazeCellWidth) == 18 && (y/ mazeCellHeight) == 9)
+		{
+			return 1;
 		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	BoundingBox getAABB()
+	{
+		return sprite->getBoundingBox();
+	}
 };

@@ -11,8 +11,7 @@ Minigame::Minigame()
 	m3d::Screen * screen = GameManager::getScreen();
     m_sandbox = new LuaSandbox( [this](){onExecutionBegin();},
                                 [this](){onExecutionEnd();});
-	   
-
+	
 	int margin = 5;
 
 	codeEditor = new CodeEditorMenuItem(margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), 1);

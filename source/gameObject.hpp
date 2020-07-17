@@ -29,6 +29,7 @@ public:
     virtual void destroy()=0;
     virtual void moveTo(double x,double y)=0;
     virtual void Rotate(double deg)=0;
+	virtual m3d::BoundingBox getAABB()=0;
 
     void setAngle(double _angle)
     {
@@ -44,6 +45,7 @@ public:
         xScale = _x;
         yScale = _y;
     }
+
     m3d::Vector2f getScale()
     {
         m3d::Vector2f scale;
@@ -57,6 +59,7 @@ public:
         x = _x;
         y = _y;
     }
+
     m3d::Vector2f getPosition()
     {
         m3d::Vector2f pos;
@@ -64,7 +67,4 @@ public:
         pos.v = y;
         return pos;
     }
-
-    bool screenIntersect();
-
 };
