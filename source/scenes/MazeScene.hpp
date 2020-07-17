@@ -14,8 +14,9 @@
 class MazeScene : public Minigame
 {
 	private:
-		SpriteMenuItem *wallpaper, *texture, *popup, *wPopup;
+		SpriteMenuItem *wallpaper, *wallpaper2, *texture, *popup, *wPopup, *current;
 		SpriteMenuItem *tutorial[5];
+		SpriteMenuItem *wallpapers[3];
 		int tutCount;
 		RectangleMenuItem *winScreen, *loseScreen;
 		m3d::Color *colorRec, *colorText;
@@ -35,10 +36,22 @@ class MazeScene : public Minigame
 							{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, 
 							{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
+		bool wallsToo[12][20] ={{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+							{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+							{ 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1},
+							{ 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1},
+							{ 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1},
+							{ 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1},
+							{ 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1},
+							{ 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1},
+							{ 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+							{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+							{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, 
+							{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
-			
             //2d array acting as map of array
         bool (*wallHolder)[12][20] = &walls;
+		bool (*wallHolderToo)[12][20] = &wallsToo;
 		//wallHolder = &walls;
 
 		enum MazeState
@@ -47,6 +60,7 @@ class MazeScene : public Minigame
 			Requesting,
 			Execute,
 			Win,
+			Transistion,
 			Lose
 		};
 		MazeState currentState;
@@ -74,4 +88,5 @@ class MazeScene : public Minigame
 		void loadLoseScr();
 		void requestUI();
 		void closeGame();
+		void transistion();
 };

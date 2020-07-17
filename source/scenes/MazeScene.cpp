@@ -47,15 +47,20 @@ void MazeScene::initialize(){
 	//prompt->setPosition(90,30);
 	//prompt->setFontSize(.5);
 	//prompt->setFontWeight(.5);
-	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("maze1.png")));
-	menu->AddItem(wallpaper);
+	wallpapers[0] = new SpriteMenuItem(*(ResourceManager::getSprite("maze1.png")));
+	menu->AddItem(wallpapers[0]);
+	wallpapers[1] = new SpriteMenuItem(*(ResourceManager::getSprite("maze2.png")));
+	menu->AddItem(wallpapers[1]);
+	wallpapers[2] = new SpriteMenuItem(*(ResourceManager::getSprite("maze3.png")));
+	menu->AddItem(wallpapers[2]);
+	current = wallpapers[0];
 	//  Initialize popup BG
     wPopup = new SpriteMenuItem(*(ResourceManager::getSprite("win_popup.png")));
 	menu->AddItem(wPopup);
 	wPopup->setPosition(80,20);
 	//wallpaper->setTexture(*texture);
-	wallpaper->setCenter(0,0);
-	wallpaper->setScale(1,1);
+	current->setCenter(0,0);
+	current->setScale(1,1);
 	//tutorial
 	tutorial[0] = new SpriteMenuItem(*(ResourceManager::getSprite("maze_tutorial_1.png")));
 	menu->AddItem(tutorial[0]);
@@ -74,13 +79,18 @@ void MazeScene::initialize(){
 	currentState = MazeState::TutorialMessage;
 }
 
+void MazeScene::transistion(){
+	current = wallpapers[1];
+	runner->setposition(20,180,wallHolderToo);
+};
+
 void MazeScene::draw(){
 	Minigame::draw();
 
 	m3d::Screen * screen = GameManager::getScreen();
 
-	wallpaper->setPosition(0,0);
-    screen->drawTop(*wallpaper);
+	current->setPosition(0,0);
+    screen->drawTop(*current);
 
     if(currentState == MazeState::TutorialMessage)
     {   
@@ -164,12 +174,16 @@ void MazeScene::update()
 		case MazeState::Execute:
 			if(checkWinCond() == 1)
 			{
-				currentState = MazeState::Win;
+				currentState = MazeState::Transistion;
 			}
 			break;
 		case MazeState::Win:
 			break;
 		case MazeState::Lose:
+			break;
+		case MazeState::Transistion:
+			transistion();
+			currentState = MazeState::Requesting;
 			break;
 		case MazeState::Requesting:
 			if (Input::btnReleased(m3d::buttons::B))
