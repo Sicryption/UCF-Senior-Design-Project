@@ -146,11 +146,7 @@ void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)
     std::string str = CommandObject::ConvertBulk(luaCode);
 
 
-	//Util::getInstance()->PrintLine(str);
-	//executeInSandbox(str);
     m_sandbox->executeStringQueued(str);
-
-    Util::PrintLine("done");
 
 	currentState = MazeState::Execute;
 }

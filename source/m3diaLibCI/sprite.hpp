@@ -252,6 +252,11 @@ namespace m3dCI {
          */
         const std::string& getSpriteSheet();
 
+
+		int GetHeight();
+
+		int GetWidth();
+
         /**
          * @brief Draws the shape
          * @param t_context the RenderContext

@@ -15,36 +15,42 @@ PongScene::~PongScene()
 
 void PongScene::initialize(){
 	Minigame::initialize();
-
+	
 	// initalize the background
 	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("pong1.png")));
-	
-	// initialize popup 
+	//  Initialize popup BG
 	popup = new SpriteMenuItem(*(ResourceManager::getSprite("menu_popup.png")));
 	popup->setPosition(80, 20);
-
+	//wallpaper->setTexture(*texture);
 	wallpaper->setCenter(0, 0);
 	wallpaper->setScale(1, 1);
 
+
+	//runnerID = addObject(runner);
+
+	//setObjectName("runner", runnerID);
+
 	// initialize game objects
 	ball = new PongBall();
+	int ballID = addObject(ball);
+	setObjectName("ball", ballID);
+
 	ball->initialize();
 
 	leftPaddle = new PongPaddle(20, 90);
+	int paddleID = addObject(leftPaddle);
+	setObjectName("player", paddleID);
+
 	leftPaddle->initialize();
-	//leftPaddle->setCenter(10, 135); // 20, 135
-	//leftPaddle->setPosition(0, 0);
 
 	rightPaddle = new PongPaddle(380, 90, ball);
-	rightPaddle->initialize();
-	//rightPaddle->setCenter(5, 95);
-}
+	int enemyID = addObject(rightPaddle);
+	setObjectName("enemy", enemyID);
 
-// TODO:
-// - keep track of game score
-// - integrate api commands with update() and submit pong code()
-// - add win and lose conditions
-// - reset game objects
+	rightPaddle->initialize();
+
+	currentState = PongState::TutorialMessage;
+}
 
 void PongScene::draw(){
 	Minigame::draw();
@@ -55,79 +61,10 @@ void PongScene::draw(){
 	screen->drawTop(*wallpaper);
 
 	ball->draw();
-	ball->update();
-
-	// player paddle moves up or down based on button press
-	if (m3d::buttons::buttonDown(m3d::buttons::Button::Down)) {
-		//moveTo(x, 1 * GameManager::getDeltaTime());
-		leftPaddle->moveTo(0, 2);
-	}
-
-	if (m3d::buttons::buttonDown(m3d::buttons::Button::Up)) {
-		//moveTo(x, -1 * GameManager::getDeltaTime());
-		leftPaddle->moveTo(0, -2); //
-	}
-
 
 	leftPaddle->draw();
 
-	//rightPaddle->draw();
-	//rightPaddle->update();
-
-	//int halfLen = leftPaddle->getCenterY() - leftPaddle->getYPosition(), halfWidth = leftPaddle->getXPosition() - leftPaddle->getCenterX();
-
-	util->PrintLine("demo");
-
-	if (leftPaddle->getCenterY() - (leftPaddle->getCenterY() - leftPaddle->getYPosition()) <= ball->getCenterY()
-		&& leftPaddle->getCenterY() + (leftPaddle->getCenterY() - leftPaddle->getYPosition()) >= ball->getCenterY()
-		&& leftPaddle->getCenterX() - (leftPaddle->getXPosition() - leftPaddle->getCenterX()) <= ball->getCenterX()
-		&& leftPaddle->getCenterX() + (leftPaddle->getXPosition() - leftPaddle->getCenterX()) >= ball->getCenterX())
-
-	{
-		ball->toggleXDir();
-	}
-
-	
-
-	/*
-	if (leftPaddle->getCenterY() - (halfLen) <= ball->getYPosition()
-		&& leftPaddle->getCenterY() + (halfLen) >= ball->getYPosition()
-		&& leftPaddle->getCenterX() - (halfWidth) <= ball->getXPosition()
-		&& leftPaddle->getCenterX() + (halfWidth) >= ball->getXPosition())
-	{
-		ball->toggleXDir();
-	}
-	*/
-
-	/*
-	if (leftPaddle->getCenterY() - (halfLen) <= ball->getCenterY()
-		&& leftPaddle->getCenterY() + (halfLen) >= ball->getCenterY()
-		&& leftPaddle->getCenterX() - (halfWidth) <= ball->getCenterX()
-		&& leftPaddle->getCenterX() + (halfWidth) >= ball->getCenterX())
-	{
-		ball->toggleXDir();
-	}
-	*/
-
-	// switchs ball's direction on collision with the enemy paddle 
-	// check the ball enters into the paddle's x and if the ball is within the scope of the paddle 
-
-	/*
-	if (leftPaddle->getCenterY() - (leftPaddle->getCenterY() - leftPaddle->getYPosition()) <= ball->getYPosition()
-		&& leftPaddle->getCenterY() + (leftPaddle->getCenterY() - leftPaddle->getYPosition()) >= ball->getYPosition()
-		&& leftPaddle->getCenterX() - (leftPaddle->getXPosition() - leftPaddle->getCenterX()) <= ball->getXPosition()
-		&& leftPaddle->getCenterX() + (leftPaddle->getXPosition() - leftPaddle->getCenterX()) >= ball->getXPosition())
-	{
-		ball->toggleXDir();
-	}
-	*/
-	
-
-	
-	
-	
-
-
+	rightPaddle->draw();
 }
 		
 void PongScene::load(){ Minigame::load(); }; //any data files
@@ -138,13 +75,102 @@ void PongScene::update()
 {
 	Minigame::update();
 
-	
-};
+	switch(currentState)
+	{
+		case PongState::TutorialMessage:
+			if (buttons::buttonDown(buttons::Start))
+			{
+				currentState = PongState::Requesting;
+
+				std::vector<CommandObject*> startingCommands =
+				{
+					new SelectCommand("player", true, true),
+					new RightCommand("18")
+				};
+
+				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitPongCode(commands); });
+			}
+		break;
+		case PongState::Requesting:
+			if (Input::btnReleased(m3d::buttons::B))
+				SceneManager::setTransition(new MinigameSelectScene());
+		break;
+		case PongState::Execute:
+
+			BoundingBox ballAABB = ball->getAABB();
+
+			//handle ball bouncing
+			for (int i = 0; i < m_hashmap.size(); i++)
+			{
+				//We don't want the ball interacting with itself
+				if (m_hashmap[i] == ball)
+					continue;
+
+				BoundingBox aabb = m_hashmap[i]->getAABB();
+
+				//check if ball is inside object
+				if (aabb.intersects(ballAABB))
+				{
+					//if so, bounce off
+
+					//Determine which side of the ball hit the wall
+
+					int pixelDifference = 3;
+
+					//We can't take corners, and instead need to detect using a one pixel BB on each side of each corner.
+					BoundingBox TL = BoundingBox(ballAABB.getX() + pixelDifference, ballAABB.getY(), 1, 1),
+						TR = BoundingBox(ballAABB.getX() + ballAABB.getWidth() - pixelDifference, ballAABB.getY(), 1, 1),
+						LT = BoundingBox(ballAABB.getX(), ballAABB.getY() + pixelDifference, 1, 1),
+						LB = BoundingBox(ballAABB.getX(), ballAABB.getY() + ballAABB.getHeight() - pixelDifference, 1, 1),
+						BL = BoundingBox(ballAABB.getX() + pixelDifference, ballAABB.getY() + ballAABB.getHeight(), 1, 1),
+						BR = BoundingBox(ballAABB.getX() + ballAABB.getWidth() - pixelDifference, ballAABB.getY() + ballAABB.getHeight(), 1, 1),
+						RT = BoundingBox(ballAABB.getX() + ballAABB.getWidth(), ballAABB.getY() + pixelDifference, 1, 1),
+						RB = BoundingBox(ballAABB.getX() + ballAABB.getWidth(), ballAABB.getY() + ballAABB.getHeight() - pixelDifference, 1, 1);
+
+					if (aabb.intersects(TL) || aabb.intersects(TR))
+						ball->SetDirection(0, 1);
+					else if (aabb.intersects(BL) || aabb.intersects(BR))
+						ball->SetDirection(0, -1);
+					else if (aabb.intersects(LT) || aabb.intersects(LB))
+						ball->SetDirection(1, 0);
+					else if (aabb.intersects(RT) || aabb.intersects(RB))
+						ball->SetDirection(-1, 0);
+
+					if (m_hashmap[i] == rightPaddle)
+						rightPaddle->ballBouncedOffPaddle();
+				}
+			}
+
+			// ball goes out of x bounds, a goal has been scored
+			if (ball->getXPosition() < 0 || ball->getXPosition() + ball->getWidth() > TOPSCREEN_WIDTH)
+			{
+				//SCORE
+				ball->reset();
+				rightPaddle->reset();
+			}
+
+			// ball goes out of y bounds, a collision with the wall occurs 
+			if (ball->getYPosition() < 0 || ball->getYPosition() + ball->getHeight() >= TOPSCREEN_HEIGHT)
+			{
+				//Bounce off top or bottom wall
+				ball->toggleYDir();
+			}
+
+			leftPaddle->update();
+			rightPaddle->update();
+			ball->update();
+		break;
+	}
+}
 
 void PongScene::SubmitPongCode(std::vector<CommandObject*> luaCode)
 {
-	
-  
+	Util::PrintLine("pong: queue commands");
+	std::string str = CommandObject::ConvertBulk(luaCode);
+
+	m_sandbox->executeStringQueued(str);
+
+	currentState = PongState::Execute;
 }
 
 void PongScene::onEnter(){ Minigame::onEnter(); };

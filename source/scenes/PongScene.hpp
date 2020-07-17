@@ -18,7 +18,7 @@ class PongScene : public Minigame
 		SpriteMenuItem *popup, *wallpaper;
 		PongBall *ball;
 		PongPaddle *leftPaddle, *rightPaddle;
-
+		
 		enum PongState
 		{
 			TutorialMessage,
