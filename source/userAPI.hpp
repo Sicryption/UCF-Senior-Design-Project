@@ -32,7 +32,7 @@ namespace UserAPI
 {
     //========== Core API
 
-    /**
+    /** Print Line API Function
      *  @brief User API function, prints a string to the console inserting a new-line after
      *  The function will convert a parameter on top of the stack into a string.
      *  called with one parameter.

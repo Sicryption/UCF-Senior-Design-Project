@@ -7,36 +7,35 @@ class TextObject : public GameObject
 
 private:
 
-    m3dCI::Text* textObj;
+    m3dCI::Text* text;
     m3d::Color color;
-    std::string text;
 
 public:
-    TextObject( double t_x = 0, double t_y = 0 , 
-                     std::string t_text = "Hello", double t_angle = 0,
-                     m3d::Color t_color = m3d::Color(0,0,0))
+    TextObject( std::string t_text = "TEXT", double t_x = 0, double t_y = 0 , 
+                     double t_xScale = DEFAULT_SIZE, double t_yScale = DEFAULT_SIZE, double t_angle = 0,
+                     m3d::Color t_color = DEFAULT_COLOR)
     {
         x = t_x;
         y = t_y;
-        xScale = 1;
-        yScale = 1;
+        xScale = t_xScale;
+        yScale = t_yScale;
         angle = t_angle;
         color = t_color;
-        textObj = new m3dCI::Text("", m3d::Color(0,0,0));
+        text = new m3dCI::Text(t_text,color);
     }
 
     ~TextObject()
     {
-        textObj->~Text();
+
     }
 
     void updateShape()
     {
-        textObj->setPosition(x,y);
-        textObj->setFontSize(yScale);
-        textObj->setFontWeight(xScale);
-        textObj->setText(text);
-        textObj->setColor(color);             
+        text->setPosition(x,y);
+        //text->setHeight(yScale);
+        //text->setWidth(xScale);
+        
+        text->setColor(color);        
     }
 
     void initialize()
@@ -54,7 +53,7 @@ public:
         updateShape();
         m3d::Screen * screen = GameManager::getScreen();
 
-        screen->drawTop(*textObj);
+        screen->drawTop(*text);
     
     }
 

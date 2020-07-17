@@ -127,20 +127,23 @@ int UserAPI::make_text(lua_State* L)
     lua_Number y = lua_tonumber(L,-2);
     std::string text = lua_tostring(L,-1);
 
+    Util::PrintLine("test 1");
     Scene *currScene = SceneManager::getScene();
     if(currScene == nullptr)
     {
         Util::PrintLine("Error: no current scene");
         return 0;
     }
-
-    int t_id = currScene->addObject(new TextObject(x,y,text)); 
+    Util::PrintLine("test 2");
+    int t_id = currScene->addObject( new TextObject("TEXT",0,0) ); 
+    //int t_id = currScene->addObject(new RectangleObject(0,0)); 
     if(t_id == 0)
     {
-        Util::PrintLine("Error: could not create Circle Object in Scene \'" + currScene->getSceneName() + "\'");
+        Util::PrintLine("Error: could not create Text Object in Scene \'" + currScene->getSceneName() + "\'");
         return 0;
     }
-
+    
+    Util::PrintLine("test 3");
     lua_pushinteger(L,t_id);
     lua_setglobal(L,"current_object");
     lua_pushinteger(L,t_id);
@@ -225,7 +228,6 @@ int UserAPI::get_y_position(lua_State* L)
     return 1;
 }
    
-
 int UserAPI::rotate(lua_State* L)
 {
     lua_Number t_id = lua_tonumber(L,-1);
