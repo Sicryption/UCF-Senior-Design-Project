@@ -135,9 +135,9 @@ int UserAPI::make_text(lua_State* L)
         return 0;
     }
     Util::PrintLine("test 2");
-    int t_id = currScene->addObject( new TextObject("TEXT",0,0) ); 
-    //int t_id = currScene->addObject(new RectangleObject(0,0)); 
-    if(t_id == 0)
+    //int t_id = currScene->addObject( new TextObject("TEXT",0,0) ); 
+    int t_id = currScene->addObject(new RectangleObject(0,0)); 
+    if(t_id < 0)
     {
         Util::PrintLine("Error: could not create Text Object in Scene \'" + currScene->getSceneName() + "\'");
         return 0;

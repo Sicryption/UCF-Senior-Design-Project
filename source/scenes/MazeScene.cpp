@@ -108,7 +108,15 @@ void MazeScene::update()
 				std::vector<CommandObject*> startingCommands =
 				{
 					new SelectCommand("runner",true,true),
-					new TextCommand("TEXT")
+					new RightCommand("18"),
+					new DownCommand("5"),
+					new LeftCommand("18"),
+					new DownCommand("5"),
+					new RightCommand("18"),
+					new DownCommand("5"),
+					new LeftCommand("18"),
+					new DownCommand("5"),
+					new RightCommand("18")
 				};
 
 				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
