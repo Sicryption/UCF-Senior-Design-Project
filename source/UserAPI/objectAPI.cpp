@@ -199,7 +199,6 @@ int UserAPI::get_x_position(lua_State* L)
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id ) +" in Scene" + currScene->getSceneName() + " \n");
         return 0;
     }
-    //m3d::Vector2f *currentVector = currObj->getPosition();
 
     lua_pushnumber(L, currObj->getPosition().u);
     return 1;
@@ -222,8 +221,6 @@ int UserAPI::get_y_position(lua_State* L)
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
         return 0;
     }
-    //m3d::Vector2f *currentVector = currObj->getPosition();
-
     lua_pushnumber(L,currObj->getPosition().v);
     return 1;
 }
