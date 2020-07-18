@@ -20,8 +20,8 @@
 #define DEBUG_API
 #endif
 
-#define STEP_TIME 150
-#define STR_LEN 255
+#define STEP_TIME 75 /// Used in intermediate API sleep functions to give the illusion of animation
+#define STR_LEN 256 /// Maximum string length that can be read from the sandbox
 
 /** UserAPI
  *  A namespace defining the functions bound to a Lua Sandbox
@@ -103,6 +103,7 @@ namespace UserAPI
 
     //========== Hardware API
 
+    
 
 }
 /*

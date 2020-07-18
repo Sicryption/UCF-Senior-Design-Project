@@ -332,6 +332,19 @@ void LuaSandbox::resetSandbox()
 {
     close();
     initialize();
-    
 }
 
+int LuaSandbox::getQueueSize()
+{
+    m3d::Lock lock_queue(m_mutex_lua);
+    return m_luaQueue.size();
+}
+
+void LuaSandbox::clearQueue()
+{
+    m3d::Lock lock_queue(m_mutex_lua);
+    while(!m_luaQueue.empty())
+    {
+        m_luaQueue.pop();
+    }
+}
