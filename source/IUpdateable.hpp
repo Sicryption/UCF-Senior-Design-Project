@@ -1,7 +1,16 @@
+/**
+ *  @file IUpdatable.hpp
+ */
 #pragma once
 #include <3ds.h>
 #include <m3dia.hpp>
 
+/**
+ *  @class Updatable "IUpdatable.hpp"
+ *  @brief Abstract Updatable Class
+ * 
+ *  Used for classes which need to be calls and referenced on mass in the game loop
+ */
 class Updateable
 {
     public:

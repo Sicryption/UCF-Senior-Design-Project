@@ -1,3 +1,8 @@
+/**
+ *  @file resources.h
+ *  @brief Defines the ResourceManager class and any other structures to handle files and assets.
+ *  
+ */
 #pragma once
 #include <stdlib.h> 
 #include <string.h> 
@@ -12,33 +17,49 @@
 #include"m3diaLibCI/sprite.hpp"
 #include "util.hpp"
 
-//#define DEBUG
+#ifdef DEBUG
+#define RESOURCE_DEBUG
+#endif
 
 #define ROMFS_PATH      "romfs:/"
 #define TEXTURE_PATH    "romfs:/gfx/"
 #define AUDIO_PATH      "romfs:/sfx/"
-#define TEXTURE_EXT {"png","jpg","bmp"}
-#define SOUND_EXT {"mp3", "wav"}
+#define TEXTURE_EXT     {"png","jpg","bmp"}
+#define SOUND_EXT       {"mp3", "wav"}
 
 
-/** @class ResourceManager
- *  Singleton Resource Managment class.
- *  Load and unload resources from the ROM file system to memory
+/** @class ResourceManager "resources.h"
+ *  Static Resource Managment class.
+ *  Load and unload resources from the ROM file system to memory. 
+ *  Using this prevents multiple structures loading a single resource and consuming more memory than necessary
+ * 
+ *  @todo Audio and multiple filetypes
  */
-class ResourceManager
+class ResourceManager final
 {
 private:
     
     ResourceManager();
     ~ResourceManager();
     
-    //static ResourceManager* _instance;
+    /**
+     *  @brief Hash table of loaded assets
+     *  stores pointers to memory indexed by a string.
+     */
     static std::map<std::string, void*> _hashmap;
+
+    /**
+     *  @brief Default texture
+     */
     static m3d::Texture * _error;
+    
     static std::vector<std::string> _preloadTextures;
 
-    //static ResourceManager* getInstance();
-
+    /**
+     *  @brief Read filenames from Spritesheet
+     *  
+     *  @return 
+     */
     static std::vector<std::string> readSpritesheet(std::string);
 
 public:

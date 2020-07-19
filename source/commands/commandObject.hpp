@@ -1,3 +1,8 @@
+/**
+ *  @file commandObject.hpp
+ *  
+ *  @brief Defines the CommandObject abstract class and the constant definitions used by it
+ */
 #pragma once
 #include <stdlib.h>
 #include <string>
@@ -17,11 +22,12 @@
 #define COM_CLEAR_TINT  m3d::Color(255,255,255) 
 
 /**
- *  @brief Abstract CommandObject
+ *  @class CommandObject commandObject.hpp "commands/commandObject.hpp"
+ *  @brief Abstract Class CommandObject
  *  
  *  Used to provide simple representations of lua commands and operations.\n
  *  Stores parameters as well as parameter names for the code editor, variable type is not needs as lua variables are typeless. 
- *  Each CommandObject will convert to some amount of Lua code via the @ref convertToLua() method substituting in parameters where needed.  
+ *  Each CommandObject will convert to some amount of Lua code via the @ref convertToLua() method, substituting in parameters where needed.  
  */
 class CommandObject 
 {
@@ -62,7 +68,7 @@ public:
     /**
      *  @brief Initialize a CommandObject
      * 
-     *  Must be inherited by child classes.
+     *  Each child of CommandObject must be inherit this.
      *  @param t_lockEdit assigned to @ref m_isEditLocked
      *  @param t_lockAdd assigned to @ref m_isAddLocked
      */
@@ -165,7 +171,7 @@ public:
     /**
      *  @brief Translate CommandObject into Lua
      * 
-     *  Each child object **must** implement its own version.
+     *  Each child of Command Object should implement its own version.
      *  @warning It's recommended to end the string with a '\\n' character 
      *  @return Lua string
      */

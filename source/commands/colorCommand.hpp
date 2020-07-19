@@ -18,11 +18,11 @@ public:
 
     std::string convertToLua()
     {
-        return "change_color(" + 
-                                std::to_string( m_color.getRed() ) + 
-                                std::to_string( m_color.getGreen() ) +
-                                std::to_string( m_color.getBlue() ) +
-                                std::to_string( m_color.getAlpha() ) + ")\n"; 
+        return "set_color( current_object, " +   
+                            std::to_string( m_color.getRed() )   + ", " +
+                            std::to_string( m_color.getGreen() ) + ", " +
+                            std::to_string( m_color.getBlue() )  + ", " +
+                            std::to_string( m_color.getAlpha() ) + ")\n"; 
     }
 
 };
