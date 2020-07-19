@@ -17,7 +17,7 @@
 #define TOPSCREEN_HEIGHT 240
 #define BOTTOMSCREEN_HEIGHT 240
 
-#define XStart 15
+#define XStart 5
 #define YStart 6
 #define CELL_WIDTH 274
 #define CELL_HEIGHT 57
@@ -31,16 +31,18 @@ namespace m3dCI
 {
     class CommandEditor : public m3d::Drawable
 	{
-		private:
-
-			m3dCI::Sprite* background = nullptr;
-
-			m3dCI::Text *name = nullptr;
-			m3dCI::Text *params[MAX_PARAMS] = { nullptr, nullptr, nullptr };
 		protected:
 			CommandObject* command;
 
 			bool isComplete = false;
+
+			m3dCI::Sprite* background = nullptr;
+
+			m3dCI::Text *name = nullptr;
+
+			m3dCI::Text *params[MAX_PARAMS] = { nullptr, nullptr, nullptr };
+
+			std::function<void()> OnEditCommand = nullptr;
 		public:
 			
 			CommandEditor(CommandObject* command);

@@ -13,6 +13,7 @@
 #define COM_PADDING 3
 #define COM_SPACING 5
 #define COM_TEXT_COLOR  m3d::Color(0,0,0)
+#define COM_SELECTED_TEXT_COLOR  m3d::Color(0,100,0)
 #define COM_LOCK_TINT   m3d::Color(100,100,100,100)
 #define COM_CLEAR_TINT  m3d::Color(255,255,255)
 
@@ -138,7 +139,7 @@ public:
 
 
         m_text[0]->setText(m_name);
-        m_text[0]->setColor(COM_TEXT_COLOR);
+        m_text[0]->setColor(m_selected? COM_SELECTED_TEXT_COLOR:COM_TEXT_COLOR);
         m_text[0]->setFontWeight(0.6f);
 		m_text[0]->setFontSize(0.6f);
 
@@ -156,6 +157,7 @@ public:
         {
             if(m_text[i] != nullptr)
             {
+				m_text[i]->setColor(m_selected ? COM_SELECTED_TEXT_COLOR : COM_TEXT_COLOR);
 				m_text[i]->setPosition(t_xCursor, t_yCursor);
                 m_text[i]->draw(t_context);
                 t_xCursor += m_text[i - 1]->getWidth() + COM_SPACING;
@@ -175,9 +177,9 @@ public:
 		return m_isAddLocked;
 	}
 
-    bool setSelected()
+    void setSelected(bool selected)
     {
-
+		m_selected = selected;
     }
 };
 

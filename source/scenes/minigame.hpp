@@ -42,7 +42,7 @@ private:
 
 	std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
 
-	bool showCommandLister = false, showCommandEditor = false;
+	bool showCommandLister = false, showCommandEditor = false, editCommandFromCommandEditor = false;
 
 protected:
     LuaSandbox* m_sandbox;
@@ -60,7 +60,7 @@ protected:
 	 *  @brief Function called before a sandbox execution
 	 *  onExecutionEnd is called right after the sandbox executes a chunk.
 	 */
-	virtual void onExecutionEnd(){}
+	virtual void onExecutionEnd();
 
 public:
 	void toggleWinCond();

@@ -55,6 +55,9 @@ namespace m3dCI
 			//need a way to insert at specified line
 			void addCommand(CommandObject* command, int position = -1);
 			void removeCommand(int position = -1);
+
+			void replaceCommand(CommandObject* current, CommandObject* newCommand);
+
 			void ClearCommands();
 
 			bool canAdd();
