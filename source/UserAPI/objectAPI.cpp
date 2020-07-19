@@ -392,7 +392,32 @@ int UserAPI::set_color(lua_State* L)
     m3d::Thread::sleep(STEP_TIME);
     return 0;
 }
-   
+
+int UserAPI::select_object(lua_State* L)
+{
+    lua_Number t_id = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+
+    }
+
+    lua_pushnumber(L,t_id);
+    lua_setglobal(L,"current_object");
+
+
+    
+}
+
 int UserAPI::delete_object(lua_State* L)
 {
     lua_Number t_id = lua_tonumber(L,-1);
@@ -414,11 +439,5 @@ int UserAPI::delete_object(lua_State* L)
     currObj->destroy();
     currObj = nullptr;
     m3d::Thread::sleep(STEP_TIME);
-    return 0;
-}
- 
-int UserAPI::change_color(lua_State* L)
-{
-    int t_id = lua_tonumber(L,-1); 
     return 0;
 }

@@ -2,7 +2,11 @@
 #include "util.hpp"
 #include "sandbox.hpp"
 
-/**The array of lua accessible user API functions, paired with their lua global name*/
+/**
+ *  @brief enabled UserAPI functions paired with thier global name
+ *  The array of Lua accessible user API functions, paired with their lua global name
+ * 
+ */
 std::pair<std::string, lua_CFunction> enabledFunctions[] = {
     std::make_pair( "println" , UserAPI::print_line),
     std::make_pair( "print" , UserAPI::print),
@@ -21,6 +25,7 @@ std::pair<std::string, lua_CFunction> enabledFunctions[] = {
     std::make_pair( "get_x_scale", UserAPI::get_x_scale),
     std::make_pair( "get_y_scale", UserAPI::get_y_scale),
     std::make_pair( "set_color" , UserAPI::set_color),
+    //std::make_pair( "select" , UserAPI::select_object),
     std::make_pair( "delete" , UserAPI::delete_object)
 };
 
@@ -89,7 +94,6 @@ void LuaSandbox::sandboxRuntime(m3d::Parameter param)
 		}
 		// lock sandbox
 		lock_state.~Lock();
-
 
 		if (m_luaQueue.size() > 0)
 		{
