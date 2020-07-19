@@ -19,6 +19,7 @@
 #define COM_SPACING 5   /** External horizontal margin after parameters */
 #define COM_TEXT_COLOR  m3d::Color(0,0,0)   /** Default command text color */
 #define COM_LOCK_TINT   m3d::Color(100,100,100,100) /** Tint color of locked commands */
+#define COM_SELECTED_TEXT_COLOR  m3d::Color(0,100,0)
 #define COM_CLEAR_TINT  m3d::Color(255,255,255) 
 
 /**

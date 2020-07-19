@@ -117,12 +117,12 @@
 
     m3d::Vector3f* Input::getGyroscope()
     {
-        m3d::Vector3f* rate = new m3d::Vector2f();
+        m3d::Vector3f* rate = new m3d::Vector3f();
         angularRate* vec = new angularRate();
         hidGyroRead(vec);
 
-        rate->u = vec->x;
-        rate->v = vec->y;
+        rate->x = vec->x;
+        rate->y = vec->y;
         rate->z = vec->z;
 
         return rate;
