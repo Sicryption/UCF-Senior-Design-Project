@@ -135,16 +135,16 @@ void PongScene::update()
 					{
 						new WhileCommand("true", true, true),
 						new SelectCommand("ball"),
-						new GetYCommand(),
+						new GetYCommand("by"),
 						new SelectCommand("player"),
-						new GetYCommand(),
+						new GetYCommand("py"),
 						new IfCommand("py > by"),
-						new DownCommand("100"),
+						new SetYCommand("by"),
 						new EndCommand(),
 						new IfCommand("py < by"),
-						new UpCommand("100"),
+						new SetYCommand("by"),
 						new EndCommand(),
-						new EndCommand()
+						new EndCommand(true)
 					};
 
 					notReadTut = false;
@@ -164,16 +164,16 @@ void PongScene::update()
 				{
 					new WhileCommand("true", true, true),
 					new SelectCommand("ball"),
-					new GetYCommand(),
+					new GetYCommand("by"),
 					new SelectCommand("player"),
-					new GetYCommand(),
+					new GetYCommand("py"),
 					new IfCommand("py > by"),
-					new DownCommand("100"),
+					new SetYCommand("by"),
 					new EndCommand(),
 					new IfCommand("py < by"),
-					new UpCommand("100"),
+					new SetYCommand("by"),
 					new EndCommand(),
-					new EndCommand()
+					new EndCommand(true)
 
 				};
 

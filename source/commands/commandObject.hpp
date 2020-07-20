@@ -250,7 +250,7 @@ public:
 				m_text[i]->setColor(m_selected ? COM_SELECTED_TEXT_COLOR : COM_TEXT_COLOR);
 				m_text[i]->setPosition(t_xCursor, t_yCursor);
                 m_text[i]->draw(t_context);
-                t_xCursor += m_text[i - 1]->getWidth() + COM_SPACING;
+                t_xCursor += m_text[i]->getWidth() + COM_SPACING;
             }
         }
 
