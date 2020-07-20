@@ -98,7 +98,7 @@ public:
      * 
      *  @param t_angle new angle
      */
-    void setAngle(double t_angle)
+    virtual void setAngle(double t_angle)
     {
         angle = t_angle;
     }
@@ -107,7 +107,7 @@ public:
      *  @brief Get the current angle
      *  @returns value of @ref angle
      */
-    double getAngle()
+    virtual double getAngle()
     {
         return angle;
     }
@@ -145,7 +145,7 @@ public:
      *  @param t_x x-axis component of the new position
      *  @param t_y y-axis component of the new position
      */
-    void setPosition(double t_x, double t_y)
+    virtual void setPosition(double t_x, double t_y)
     {
         x = t_x;
         y = t_y;
@@ -156,7 +156,7 @@ public:
      *  
      *  @returns an m3d::Vector2f of the postion
      */
-    m3d::Vector2f getPosition()
+    virtual m3d::Vector2f getPosition()
     {
         m3d::Vector2f pos;
         pos.u = x;
@@ -179,7 +179,7 @@ public:
      * 
      *  @returns value set to @ref m_color
      */
-    m3d::Color getColor(); 
+    virtual m3d::Color getColor(); 
 
     //bool screenIntersect();
 
