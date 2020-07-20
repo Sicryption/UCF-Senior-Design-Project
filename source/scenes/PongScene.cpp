@@ -94,7 +94,7 @@ void PongScene::draw(){
 
 	if (currentState == PongState::TutorialMessage && notReadTut)
 	{
-		screen->drawTop(*popup);
+		//screen->drawTop(*popup);
 	}
 
 	// display win screen
