@@ -2,7 +2,7 @@
  *  @file circle.hpp
  *  @brief Defines the Circle Object
  */
-#include "../gameObject.hpp"
+#include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
 

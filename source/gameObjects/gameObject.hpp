@@ -5,7 +5,7 @@
 
 
 #pragma once
-#include "IUpdateable.hpp"
+#include "../IUpdateable.hpp"
 
 /** 
  *  @def DEFAULT_SIZE
@@ -20,7 +20,7 @@
 #define DEFAULT_COLOR m3d::Color(255,0,0)
 
 /**
- *  @class GameObject "gameObject.hpp"
+ *  @class GameObject "gameObjects/gameObject.hpp"
  *  @brief The GameObject Class
  *  
  *  Used to encapsulate updatable objects within a @ref Scene.

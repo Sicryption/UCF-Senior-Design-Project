@@ -1,4 +1,4 @@
-#include "../gameObject.hpp"
+#include "../gameObjects/gameObject.hpp"
 #include "../gameObjects/rectangle.hpp"
 #include "../gameObjects/circle.hpp"
 #include "../gameObjects/textObject.hpp"
