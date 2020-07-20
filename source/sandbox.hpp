@@ -125,6 +125,7 @@ public:
 	 *  @brief Set the state of the sandbox thread.
      * 
 	 *  Sets the state within both the native and lua environment
+     *  @note use @ref THREAD_RUNNING, @ref THREAD_HALT, @ref THREAD_CLOSE definitions
      *  @warning may wait for the threadstate to unlock
 	 *  @param state state to set
 	 */
@@ -134,6 +135,7 @@ public:
 	 *  @brief Get the state of the sandbox thread
      * 
      *  Reads the @ref m_threadState
+     *  @note use @ref THREAD_RUNNING, @ref THREAD_HALT, @ref THREAD_CLOSE definitions
      *  @warning may wait for the threadstate to unlock
      *  @returns State of the sandbox thread
 	 */

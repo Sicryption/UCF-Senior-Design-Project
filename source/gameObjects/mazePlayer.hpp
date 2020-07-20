@@ -2,7 +2,7 @@
 #include "../gameManager.hpp"
 #include "../resources.h"
 #include "../util.hpp"
-#include <sstream>
+//#include <sstream>
 
 #define DEBUG
 
@@ -139,4 +139,9 @@ public:
 				return 0;
 			}
 		}
+    void setposition(int xcoor, int ycoor, bool (*walls)[12][20]){
+        x = xcoor;
+        y = ycoor;
+        wall = walls;
+    };
 };

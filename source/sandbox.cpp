@@ -93,23 +93,26 @@ void LuaSandbox::sandboxRuntime(m3d::Parameter param)
 		{
 			continue;
 		}
-		// lock sandbox
+		// Unlock Thread State
 		lock_state.~Lock();
 
 		if (m_luaQueue.size() > 0)
 		{
 			m_execBefore();
-			//  TODO: Disable Command Menu
+			//  TODO : Disable Command Menu
             
+            // Lock lua queue access
             m3d::Lock lock_queue(m_mutex_lua);
 			std::string t_lua(m_luaQueue.front());
             m_luaQueue.pop();
+            // Unlock lua queue access
             lock_queue.~Lock();
 
             #ifdef DEBUG_SANDBOX
 			Util::PrintLine("thread: read \'"+t_lua.substr(0,30)+"\'");
             #endif
 
+            // Lock lua state access
 			m3d::Lock lock_sandbox(m_mutex_sandbox);
             if(luaL_dostring(m_luaState,t_lua.c_str()) > 0)
             {
@@ -124,6 +127,7 @@ void LuaSandbox::sandboxRuntime(m3d::Parameter param)
             }
             #endif
 			
+            // Unlock lua state access
             lock_sandbox.~Lock();
 
 			m_execAfter();
@@ -156,6 +160,7 @@ bool LuaSandbox::executeString(std::string text)
     Util::PrintLine("executing: " + text.substr(0,20) + "...");
     #endif
     const char* temp = text.c_str();    
+    m3d::Lock lock_sandbox(m_mutex_sandbox);
     return luaL_dostring(m_luaState,temp);
 }
 
