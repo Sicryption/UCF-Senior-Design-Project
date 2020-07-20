@@ -127,36 +127,14 @@ void PongScene::update()
 			// player reads the tutorial 
 			if (buttons::buttonPressed(buttons::A)) 
 			{
-				if (tutCount >= 5)
+				if (tutCount < 5)
 				{
-					currentState = PongState::Requesting;
-
-					std::vector<CommandObject*> startingCommands =
-					{
-						new WhileCommand("true", true, true),
-						new SelectCommand("ball"),
-						new GetYCommand("by"),
-						new SelectCommand("player"),
-						new GetYCommand("py"),
-						new IfCommand("py > by"),
-						new SetYCommand("by"),
-						new EndCommand(),
-						new IfCommand("py < by"),
-						new SetYCommand("by"),
-						new EndCommand(),
-						new EndCommand(true)
-					};
-
-					notReadTut = false;
-					SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitPongCode(commands); });
-					break;
+					popup = tutorial[tutCount++];
+					popup->setPosition(80, 20);
 				}
-		
-				popup = tutorial[tutCount++];
-				popup->setPosition(80, 20);
 			}
 			// the player submits their code
-			if (buttons::buttonDown(buttons::Start))
+			if (buttons::buttonDown(buttons::Start) || tutCount >= 5)
 			{
 				currentState = PongState::Requesting;
 
@@ -166,13 +144,7 @@ void PongScene::update()
 					new SelectCommand("ball"),
 					new GetYCommand("by"),
 					new SelectCommand("player"),
-					new GetYCommand("py"),
-					new IfCommand("py > by"),
 					new SetYCommand("by"),
-					new EndCommand(),
-					new IfCommand("py < by"),
-					new SetYCommand("by"),
-					new EndCommand(),
 					new EndCommand(true)
 
 				};
