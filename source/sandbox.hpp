@@ -10,6 +10,8 @@
 
 #include "lua/lua.hpp"
 
+//#include "userAPI.hpp"
+
 #ifdef DEBUG
 #define DEBUG_SANDBOX
 #endif
@@ -197,11 +199,28 @@ public:
      */
     int executeFileQueued(std::string path);
 
-
+    /**
+     *  Closes and waits on the sandbox thread, then closes the current lua_State.
+     *  @warning this function calls a max length join() and will block the current thread indefinitely.
+     */
     void close();
 
+    /**
+     *  @brief closes and initializes the sandbox
+     */
     void resetSandbox();
 
+    /**
+     *  Get the size of the Lua queue going into the thread
+     *  @warning locks access to the luaQueue
+     */
+    int getQueueSize();
+
+    /**
+     *  Clear the Lua queue going to the thread
+     *  @warning locks access to the luaQueue
+     */
+    void clearQueue();
 };
 
 
