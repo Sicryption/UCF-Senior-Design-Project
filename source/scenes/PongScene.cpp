@@ -5,7 +5,8 @@ Util* util = Util::getInstance();
 
 PongScene::PongScene()
 {
-	
+	points = { 0,0 };
+	matchPoint = 5; 
 }
 
 PongScene::~PongScene()
@@ -15,6 +16,8 @@ PongScene::~PongScene()
 
 void PongScene::initialize(){
 	Minigame::initialize();
+
+	
 	
 	// initalize the background
 	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("pong1.png")));
@@ -65,6 +68,8 @@ void PongScene::draw(){
 	leftPaddle->draw();
 
 	rightPaddle->draw();
+
+	if ()
 }
 		
 void PongScene::load(){ Minigame::load(); }; //any data files
@@ -84,8 +89,20 @@ void PongScene::update()
 
 				std::vector<CommandObject*> startingCommands =
 				{
-					new SelectCommand("player", true, true),
-					new RightCommand("18")
+					
+					new WhileCommand(),
+					new SelectCommand("ball"),
+					new GetYCommand(),
+					new SelectCommand("player"),
+					new GetYCommand(),
+					new IfCommand("py > by"),
+					new DownCommand("100"),
+					new EndCommand(),
+					new IfCommand("py < by"),
+					new UpCommand("100"),
+					new EndCommand(),
+					new EndCommand()
+
 				};
 
 				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitPongCode(commands); });
@@ -96,6 +113,15 @@ void PongScene::update()
 				SceneManager::setTransition(new MinigameSelectScene());
 		break;
 		case PongState::Execute:
+
+			if (points[0] == matchPoint)
+			{
+				currentState = PongState::Lose;
+			}
+			else if (points[1] == matchPoint)
+			{
+				currentState = PongState::Win;
+			}
 
 			BoundingBox ballAABB = ball->getAABB();
 
@@ -144,6 +170,15 @@ void PongScene::update()
 			// ball goes out of x bounds, a goal has been scored
 			if (ball->getXPosition() < 0 || ball->getXPosition() + ball->getWidth() > TOPSCREEN_WIDTH)
 			{
+				if (ball->getXPosition() < 0) // enemy scores
+				{
+					points[0]++;
+				}
+				else // player scores 
+				{
+					points[1]++;
+				}
+
 				//SCORE
 				ball->reset();
 				rightPaddle->reset();

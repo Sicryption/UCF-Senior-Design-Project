@@ -31,6 +31,7 @@ public:
     virtual void destroy()=0;
     virtual void moveTo(double x,double y)=0;
     virtual void Rotate(double deg)=0;
+	virtual m3d::BoundingBox getAABB() = 0;
 
     void setAngle(double _angle)
     {

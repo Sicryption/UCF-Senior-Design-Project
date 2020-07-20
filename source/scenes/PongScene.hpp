@@ -5,6 +5,7 @@
 #include "../gameObjects/pongPaddle.hpp"
 #include "../scenes/scene.hpp"
 #include "../scenes/MainMenuScene.hpp"
+#include <array>
 
 #ifdef DEBUG
 //#define DEBUG_MAZE
@@ -18,6 +19,8 @@ class PongScene : public Minigame
 		SpriteMenuItem *popup, *wallpaper;
 		PongBall *ball;
 		PongPaddle *leftPaddle, *rightPaddle;
+		array<int, 2> points; 
+		int matchPoint; 
 		
 		enum PongState
 		{
