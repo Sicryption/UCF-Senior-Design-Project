@@ -1,33 +1,26 @@
-/**
- *  @file rectangle.hpp
- */
 #include "../gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
 
-/**
- *  @class RectangleObject "gameObject/rectangle.hpp"
- *  @brief Filled Rectangle 
- * 
- */
-class RectangleObject : public GameObject
+class TextObject : public GameObject
 {
 
 private:
 
-    m3d::Rectangle* box;
+    m3dCI::Text* text;
     m3d::Color color;
 
 public:
     /**
-     *  @brief Constructor of the Rectangle object
+     *  @brief Constructor of the Text object
      * 
+     *  @param t_text text to display
      *  @param t_x,t_y position of the object
      *  @param t_xScale,t_yScale size of the object
      *  @param t_angle angle of the circle
      *  @param t_color color of the circle
      */
-    RectangleObject( double t_x = 0, double t_y = 0 , 
+    TextObject( std::string t_text = "TEXT", double t_x = 0, double t_y = 0 , 
                      double t_xScale = DEFAULT_SIZE, double t_yScale = DEFAULT_SIZE, double t_angle = 0,
                      m3d::Color t_color = DEFAULT_COLOR)
     {
@@ -37,21 +30,21 @@ public:
         yScale = t_yScale;
         angle = t_angle;
         color = t_color;
-        box = new m3d::Rectangle(x,y,xScale,yScale,color);
+        text = new m3dCI::Text(t_text,color);
     }
 
-    ~RectangleObject()
+    ~TextObject()
     {
 
     }
 
     void updateShape()
     {
-        box->setPosition(x,y);
-        box->setHeight(yScale);
-        box->setWidth(xScale);
+        text->setPosition(x,y);
+        //text->setHeight(yScale);
+        //text->setWidth(xScale);
         
-        box->setColor(color);        
+        text->setColor(color);        
     }
 
     void initialize()
@@ -69,13 +62,13 @@ public:
         updateShape();
         m3d::Screen * screen = GameManager::getScreen();
 
-        screen->drawTop(*box);
+        screen->drawTop(*text);
     
     }
 
     void destroy()
     { 
-        this->~RectangleObject(); 
+        this->~TextObject(); 
     }
     
     void moveTo(double t_x,double t_y)
