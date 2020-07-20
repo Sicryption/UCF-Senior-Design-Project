@@ -1,3 +1,4 @@
 --atlas -f rgba8888 -z auto
 maze1.png
 terminal.png
+tictactoe1.png

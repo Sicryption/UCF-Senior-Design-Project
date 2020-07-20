@@ -3,6 +3,7 @@
 #include "scene.hpp"
 #include "MinigameDescriptor.hpp"
 #include "MazeScene.hpp"
+#include "TicTacToeScene.hpp"
 
 #include "../gameManager.hpp"
 #include "../inputManager.hpp"
@@ -25,7 +26,9 @@ class MinigameSelectScene : public Scene
 		///@brief List of Minigame ID's. This is used to link each button to the proper Minigame/MinigameDescriptor
 		enum MINIGAME_LIST
 		{
-			MAZE = 0
+			MAZE = 0,
+			PONG = 1,
+			TIC_TAC_TOE = 2
 		};
 		
 		///@brief List of MinigameDescriptors which make up the Boxes on screen.
