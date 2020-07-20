@@ -58,9 +58,10 @@ private:
     /**
      *  @brief Read filenames from Spritesheet
      *  
-     *  @return 
+     *  @param path file path relative to the assets folder
+     *  @return list of asset file names relative to the spritesheet
      */
-    static std::vector<std::string> readSpritesheet(std::string);
+    static std::vector<std::string> readSpritesheet(std::string path);
 
 public:
     
@@ -77,7 +78,7 @@ public:
      *  @param path file path relative to the rom file system
      *  @returns pointer to the retrieved file data
      */
-    static void* readFile(std::string);
+    static void* readFile(std::string path);
 
     /**
      *  @brief Loads a Texture Asset
@@ -85,7 +86,7 @@ public:
      *  @param path file path relative to the rom file system
      *  @returns false if the texture couldnt be loaded
      */
-    static m3d::Texture* loadTexture(std::string);
+    static m3d::Texture* loadTexture(std::string path);
 
     /**
      *  @brief  Loads a sprite sheet and generates sprites from its indexes. 
@@ -93,7 +94,7 @@ public:
      *  @param path path to the spritesheet relative to the asset folder (no extension)
      *  @returns array of loaded sprites
      */
-    static std::vector<m3dCI::Sprite*> loadSpritesheet(std::string);
+    static std::vector<m3dCI::Sprite*> loadSpritesheet(std::string path);
 
     /**
      *  @brief Loads a Sound asset
@@ -102,15 +103,14 @@ public:
      *  @param path file path relative to the rom file system
      *  @returns pointer to the loaded resource
      */
-    static m3d::Sound* loadSound(std::string, std::string);
+    static m3d::Sound* loadSound(std::string id, std::string path);
 
     /**
      *  Loads an asset from the ROM file system into the Resource Manager
-     *  @param id unique identifier of the asset
      *  @param path file path relative to the rom file system
      *  @returns pointer to the loaded resource
      */
-    static void* loadFile(std::string);
+    static void* loadFile(std::string path);
 
 
     //static m3d::Sprite* loadSpritesheet(std::string,int);
@@ -124,7 +124,7 @@ public:
      *  Unloads an asset from the Resource Manager
      *  @param path unique identifier of the asset
      */
-    static void Unload(std::string);
+    static void Unload(std::string path);
 
     
     static m3d::Texture* getTexture(std::string);

@@ -51,6 +51,7 @@ private:
     std::function<void()>   m_execBefore = [](){} /**Function executed before each queued sandbox execution*/,
                             m_execAfter = [](){} /**Function executed after each queued sandbox execution*/;
 
+
     /**
 	 * @brief Sandbox thread's main  function.
      * 
@@ -183,7 +184,7 @@ public:
      *  @param data to be assigned
      *  @returns the value assigned
      */
-    bool setGlobal(std::string , int* );
+    bool setGlobal(std::string identifier, int* data);
 
     /**
      *  @brief Set the value of a global variable.
@@ -193,7 +194,7 @@ public:
      *  @param data to be assigned
      *  @returns the value assigned
      */
-    bool setGlobal(std::string , double* );
+    bool setGlobal(std::string identifier, double* data);
 
     /**
      *  @brief Set the value of a global variable.
@@ -203,7 +204,7 @@ public:
      *  @param data to be assigned
      *  @returns the value assigned
      */
-    bool setGlobal(std::string , std::string* );
+    bool setGlobal(std::string identifier, std::string* data);
 
     /**
      *  @brief Execute a chunk of lua code. 

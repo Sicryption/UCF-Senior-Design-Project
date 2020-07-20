@@ -1,3 +1,7 @@
+/**
+ *  @file userAPI.hpp
+ *  @brief Define the UserAPI namespace
+ */
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,10 +27,13 @@
 #define STEP_TIME 75 /// Used in intermediate API sleep functions to give the illusion of animation
 #define STR_LEN 256 /// Maximum string length that can be read from the sandbox
 
-/** UserAPI
- *  A namespace defining the functions bound to a Lua Sandbox
- *  Any function to become a user functions must be a C Closure, returning an int and accepting a lua_State*.
- *  enabled functions must be added to the enabledFunctions array manually
+/** 
+ *  @namespace UserAPI
+ *  @brief A namespace defining the functions bound to a Lua Sandbox
+ * 
+ *  Any function that becomes a UserAPI function must be a <a href="https://www.lua.org/manual/5.3/manual.html#lua_CFunction"> Lua C Closures </a>, 
+ *  returning an int and accepting a single lua_State* parameter.\n
+ *  Enabled functions must be added to the @ref enabledFunctions array manually.
  */
 namespace UserAPI
 {
@@ -213,48 +220,4 @@ namespace UserAPI
 
     //========== Hardware API
 
-}
-/*
----- Control Statements
-SELECT [obj_name] -> 
-IF [bool_expression] 
-    -> if [bool_expression] then
-LOOP [int] 
-    -> while [int] > 0 do
-WHILE [bool_expression] -> while [bool_expression] do
-END    -> end
-LABEL [label_name]
-GOTO [label_name]
-
----- Object Manipulation
-LEFT, RIGHT, UP, DOWN [double]
-    -> apifunction([double],[double])
-RED, BLUE, GREEN, YELLOW, ORANGE, PURPLE
-    -> apifunction([color])
-SCALE [x] [y], SCALE_X [x], SCALE_Y [y]
-    -> apifuntion([x],[y])
-ROTATE [double] 
-    -> apifunction([double] , false) 
-ANGLE [double] 
-    -> apifunction([double] , true) 
-
-CIRCLE [obj_name] 
-RECTANGLE [obj_name]
-TRIANGLE [obj_name]
-PADDLE, etc [obj_name]
-    -> apifunction([obj_name]) 
-
-DELETE [obj_name]
-
----- Variables
-VAR [var_name] [value] 
-    -> [var_name] = [value]
-DELETE_VAR [var_name]
-    -> [var_name] = nil
-
----- OTHER
-GET_X, GET_Y [var_name] 
-GET_ANGLE [var_name]
-* GET_SPEED_X, GET_SPEED_Y [var_name]
-
-*/
+};

@@ -1,3 +1,7 @@
+/**
+ *  @file gameManager.hpp
+ *  @brief Defines the @ref GameManager class
+ */
 #pragma once
 #include "time.h"
 
@@ -5,8 +9,6 @@
 #include <m3dia.hpp>
 
 #include "scenes/scene.hpp"
-
-
 
 class GameManager
 {

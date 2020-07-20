@@ -1,5 +1,6 @@
 /**
- *  @file Defines the GameObject Abstract class
+ *  @file gameObject.hpp
+ *  @brief Defines the GameObject Abstract class
  */
 
 

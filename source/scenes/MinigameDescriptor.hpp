@@ -4,6 +4,7 @@
 
 /**
 	@brief A MinigameDescriptor is the object responsible for the data displayed on Screen
+
 	when the minigame is selected.
 	This means it will need:
 	- Name
@@ -23,6 +24,7 @@ private:
 public:
 	/**
 		@brief Constructor for MinigameDescriptor.
+        
 		@param n The name of the minigame.
 		@param desc The description of the minigame.
 		@param smallSpriteLocation Where under source/assets/gfx is the small sprite located.

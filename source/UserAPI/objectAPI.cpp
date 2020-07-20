@@ -1,9 +1,15 @@
+/**
+ *  @file objectAPI.cpp
+ *  @brief Implementations for @ref GameObject related @ref UserAPI functions
+ */
 #include "../userAPI.hpp"
 
 /**
  * @brief sign function
+ * 
+ * Solution taken from <a href="https://stackoverflow.com/questions/1903954/is-there-a-standard-sign-function-signum-sgn-in-c-c">stack
+ * overflow</a>
  * @returns positive (1), negative (-1), or zero (0) depending on the value of the parameter.
- * @ref https://stackoverflow.com/questions/1903954/is-there-a-standard-sign-function-signum-sgn-in-c-c
  */
 template <typename T> int sign(T val) {
     return (T(0) < val) - (val < T(0));
@@ -156,7 +162,6 @@ int make_paddle(lua_State* L)
     return 0;
 }
   
-// TODO: Revise, no set position, only set x and y.
 int UserAPI::set_position(lua_State* L)
 {
     lua_Number t_id = lua_tonumber(L,-1);

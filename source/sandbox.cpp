@@ -3,9 +3,11 @@
 #include "sandbox.hpp"
 
 /**
- *  @brief enabled UserAPI functions paired with thier global name
- *  The array of Lua accessible user API functions, paired with their lua global name
+ *  @brief enabled UserAPI functions
  * 
+ *  The array of Lua accessible user API functions, paired with their Lua global name.
+ *  Used to initialize the LuaSandbox.
+ *  @note These functions are added as variable functionsand can be easily overwritten by assigning a new value to the global name.
  */
 std::pair<std::string, lua_CFunction> enabledFunctions[] = {
     std::make_pair( "println" , UserAPI::print_line),
@@ -13,7 +15,6 @@ std::pair<std::string, lua_CFunction> enabledFunctions[] = {
     std::make_pair( "make_rectangle" , UserAPI::make_rectangle),
     std::make_pair( "make_circle" , UserAPI::make_circle),
     std::make_pair( "make_text" , UserAPI::make_text),
-    //std::make_pair( "make_triangle" , UserAPI::make_rectangle),
     std::make_pair( "move" , UserAPI::move_object),
     std::make_pair( "position" , UserAPI::set_position),
     std::make_pair( "get_x" , UserAPI::get_x_position),

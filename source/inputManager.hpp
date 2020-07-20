@@ -123,16 +123,14 @@ public:
     static m3d::Vector2f* touch();
 
     /**
-     *  @brief 
-     *  @param
-     *  @warning Thread
+     *  @todo hook to a module
      */
     static void recordMic(m3d::Parameter);
     
     /**
      *  @brief Reads the last addition to the micstream; the bytes inserted since the last frame.
      * 
-     *  @returns A single sample of the microphone input
+     *  @todo  return a single sample of the microphone input
      */
     static void readMic();
 
