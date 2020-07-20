@@ -5,7 +5,7 @@ Util* util = Util::getInstance();
 
 PongScene::PongScene()
 {
-	
+	notReadTut = true;
 }
 
 PongScene::~PongScene()
@@ -42,21 +42,16 @@ void PongScene::initialize(){
 
 
 	//  initialize the tutorial windows 
-	/*
 	tutorial[0] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_1.png")));
-
 	tutorial[1] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_2.png")));
-	
 	tutorial[2] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_3.png")));
-
 	tutorial[3] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_4.png")));
-
 	tutorial[4] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_5.png")));
+
 	
 	tutCount = 0;
 	popup = tutorial[tutCount++];
 	popup->setPosition(80, 20);
-	*/
 
 
 
@@ -97,7 +92,7 @@ void PongScene::draw(){
 
 	rightPaddle->draw();
 
-	if (currentState == PongState::TutorialMessage)
+	if (currentState == PongState::TutorialMessage && notReadTut)
 	{
 		screen->drawTop(*popup);
 	}
@@ -129,6 +124,37 @@ void PongScene::update()
 	switch(currentState)
 	{
 		case PongState::TutorialMessage:
+			// player reads the tutorial 
+			if (buttons::buttonPressed(buttons::A)) 
+			{
+				if (tutCount >= 5)
+				{
+					currentState = PongState::Requesting;
+
+					std::vector<CommandObject*> startingCommands =
+					{
+						new WhileCommand("true", true, true),
+						new SelectCommand("ball"),
+						new GetYCommand(),
+						new SelectCommand("player"),
+						new GetYCommand(),
+						new IfCommand("py > by"),
+						new DownCommand("100"),
+						new EndCommand(),
+						new IfCommand("py < by"),
+						new UpCommand("100"),
+						new EndCommand(),
+						new EndCommand()
+					};
+
+					notReadTut = false;
+					SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitPongCode(commands); });
+					break;
+				}
+		
+				popup = tutorial[tutCount++];
+				popup->setPosition(80, 20);
+			}
 			// the player submits their code
 			if (buttons::buttonDown(buttons::Start))
 			{
