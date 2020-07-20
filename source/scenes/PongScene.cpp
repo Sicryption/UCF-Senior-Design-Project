@@ -5,8 +5,7 @@ Util* util = Util::getInstance();
 
 PongScene::PongScene()
 {
-	points = { 0,0 };
-	matchPoint = 1; 
+	
 }
 
 PongScene::~PongScene()
@@ -17,25 +16,51 @@ PongScene::~PongScene()
 void PongScene::initialize(){
 	Minigame::initialize();
 
+	// assign player and enemy points and points to win 
+	points = { 0,0 };
+	matchPoint = 1;
 	
-	
-	// initalize the background
+	// initalize the scene background
 	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("pong1.png")));
-	//  Initialize popup BG
-	popup = new SpriteMenuItem(*(ResourceManager::getSprite("menu_popup.png")));
-	popup->setPosition(80, 20);
-	//wallpaper->setTexture(*texture);
 	wallpaper->setCenter(0, 0);
 	wallpaper->setScale(1, 1);
 
+	//  initialize the popup window 
+	/*
+	popup = new SpriteMenuItem(*(ResourceManager::getSprite("menu_popup.png")));
+	popup->setPosition(80, 20);
+	*/
+
+
+	//  initialize the win popup window 
 	wPopup = new SpriteMenuItem(*(ResourceManager::getSprite("win_popup.png")));
 	wPopup->setPosition(80, 20);
 
-	//runnerID = addObject(runner);
+	//  initialize the lose popup window 
+	lPopup = new SpriteMenuItem(*(ResourceManager::getSprite("lose_popup.png")));
+	lPopup->setPosition(80, 20);
 
-	//setObjectName("runner", runnerID);
 
-	// initialize game objects
+	//  initialize the tutorial windows 
+	/*
+	tutorial[0] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_1.png")));
+
+	tutorial[1] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_2.png")));
+	
+	tutorial[2] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_3.png")));
+
+	tutorial[3] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_4.png")));
+
+	tutorial[4] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_5.png")));
+	
+	tutCount = 0;
+	popup = tutorial[tutCount++];
+	popup->setPosition(80, 20);
+	*/
+
+
+
+	// initialize the game objects and add them to the hash map
 	ball = new PongBall();
 	int ballID = addObject(ball);
 	setObjectName("ball", ballID);
@@ -55,7 +80,6 @@ void PongScene::initialize(){
 	rightPaddle->initialize();
 
 	
-
 	currentState = PongState::TutorialMessage;
 }
 
@@ -73,14 +97,21 @@ void PongScene::draw(){
 
 	rightPaddle->draw();
 
+	if (currentState == PongState::TutorialMessage)
+	{
+		screen->drawTop(*popup);
+	}
+
+	// display win screen
 	if (currentState == PongState::Win)
 	{
 		screen->drawTop(*wPopup);
 	}
 
+	// display lose screen
 	if (currentState == PongState::Lose)
 	{
-		screen->drawTop(*wPopup);
+		screen->drawTop(*lPopup);
 	}
 
 
@@ -98,14 +129,14 @@ void PongScene::update()
 	switch(currentState)
 	{
 		case PongState::TutorialMessage:
+			// the player submits their code
 			if (buttons::buttonDown(buttons::Start))
 			{
 				currentState = PongState::Requesting;
 
 				std::vector<CommandObject*> startingCommands =
 				{
-					
-					new WhileCommand(),
+					new WhileCommand("true", true, true),
 					new SelectCommand("ball"),
 					new GetYCommand(),
 					new SelectCommand("player"),
@@ -127,8 +158,19 @@ void PongScene::update()
 			if (Input::btnReleased(m3d::buttons::B))
 				SceneManager::setTransition(new MinigameSelectScene());
 		break;
+		case PongState::Win:
+			if (Input::btnReleased(m3d::buttons::B))
+				SceneManager::setTransition(new MinigameSelectScene());
+		break;
+		case PongState::Lose:
+			if (Input::btnReleased(m3d::buttons::B)) // return to minigame select screen
+				SceneManager::setTransition(new MinigameSelectScene());
+			if (Input::btnReleased(m3d::buttons::A)) // restart the game 
+				initialize();
+		break;
 		case PongState::Execute:
 
+			// determine winner and loser
 			if (points[0] == matchPoint)
 			{
 				currentState = PongState::Lose;
@@ -140,16 +182,16 @@ void PongScene::update()
 
 			BoundingBox ballAABB = ball->getAABB();
 
-			//handle ball bouncing
+			// handle ball bouncing
 			for (int i = 0; i < m_hashmap.size(); i++)
 			{
-				//We don't want the ball interacting with itself
+				// We don't want the ball interacting with itself
 				if (m_hashmap[i] == ball)
 					continue;
 
 				BoundingBox aabb = m_hashmap[i]->getAABB();
 
-				//check if ball is inside object
+				// check if ball is inside object
 				if (aabb.intersects(ballAABB))
 				{
 					//if so, bounce off
@@ -168,6 +210,7 @@ void PongScene::update()
 						RT = BoundingBox(ballAABB.getX() + ballAABB.getWidth(), ballAABB.getY() + pixelDifference, 1, 1),
 						RB = BoundingBox(ballAABB.getX() + ballAABB.getWidth(), ballAABB.getY() + ballAABB.getHeight() - pixelDifference, 1, 1);
 
+					// set ball's direction based on where it collided
 					if (aabb.intersects(TL) || aabb.intersects(TR))
 						ball->SetDirection(0, 1);
 					else if (aabb.intersects(BL) || aabb.intersects(BR))
@@ -194,7 +237,6 @@ void PongScene::update()
 					points[1]++;
 				}
 
-				//SCORE
 				ball->reset();
 				rightPaddle->reset();
 			}
@@ -202,7 +244,7 @@ void PongScene::update()
 			// ball goes out of y bounds, a collision with the wall occurs 
 			if (ball->getYPosition() < 0 || ball->getYPosition() + ball->getHeight() >= TOPSCREEN_HEIGHT)
 			{
-				//Bounce off top or bottom wall
+				// Bounce off top or bottom wall
 				ball->toggleYDir();
 			}
 
@@ -213,6 +255,7 @@ void PongScene::update()
 	}
 }
 
+// run user code 
 void PongScene::SubmitPongCode(std::vector<CommandObject*> luaCode)
 {
 	Util::PrintLine("pong: queue commands");

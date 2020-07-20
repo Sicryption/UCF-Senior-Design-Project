@@ -1,0 +1,185 @@
+\hypertarget{class_pong_paddle}{}\doxysection{Pong\+Paddle Class Reference}
+\label{class_pong_paddle}\index{PongPaddle@{PongPaddle}}
+Inheritance diagram for Pong\+Paddle\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_pong_paddle}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_pong_paddle_a6e3c891de33a848f79eb6cce9a0221ec}\label{class_pong_paddle_a6e3c891de33a848f79eb6cce9a0221ec}} 
+\mbox{\hyperlink{class_pong_paddle_a6e3c891de33a848f79eb6cce9a0221ec}{Pong\+Paddle}} (int \+\_\+x, int \+\_\+y)
+\begin{DoxyCompactList}\small\item\em A custom constructor for setting the player paddle\textquotesingle{}s position, scale, angle, and velocity. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_pong_paddle_afa0fb0ea2c83a3c456c6c82d49108c83}{Pong\+Paddle}} (int \+\_\+x, int \+\_\+y, \mbox{\hyperlink{class_pong_ball}{Pong\+Ball}} $\ast$\+\_\+ball)
+\begin{DoxyCompactList}\small\item\em A custom constructor for setting the enemy paddle\textquotesingle{}s velocity, position, angle, scale and ball. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_pong_paddle_abc6b3c6d378f775e87eec00f1d5789d4}\label{class_pong_paddle_abc6b3c6d378f775e87eec00f1d5789d4}} 
+void \mbox{\hyperlink{class_pong_paddle_abc6b3c6d378f775e87eec00f1d5789d4}{initialize}} ()
+\begin{DoxyCompactList}\small\item\em Set the paddle\textquotesingle{}s sprite\textquotesingle{}s position and scale. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_pong_paddle_a9ee6d6fb2788d010cf400708d9f59b9b}\label{class_pong_paddle_a9ee6d6fb2788d010cf400708d9f59b9b}} 
+void \mbox{\hyperlink{class_pong_paddle_a9ee6d6fb2788d010cf400708d9f59b9b}{update}} ()
+\begin{DoxyCompactList}\small\item\em Determine the paddle\textquotesingle{}s velocity. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_pong_paddle_ab64be04afc99c74555c6a5cb59ef7b06}\label{class_pong_paddle_ab64be04afc99c74555c6a5cb59ef7b06}} 
+void \mbox{\hyperlink{class_pong_paddle_ab64be04afc99c74555c6a5cb59ef7b06}{ball\+Bounced\+Off\+Paddle}} ()
+\begin{DoxyCompactList}\small\item\em Calculate the enemy paddle\textquotesingle{}s chance to fail each time the the ball hits its paddle. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_pong_paddle_abef86e7a3d42612f536168d3ca5bc1b7}\label{class_pong_paddle_abef86e7a3d42612f536168d3ca5bc1b7}} 
+void \mbox{\hyperlink{class_pong_paddle_abef86e7a3d42612f536168d3ca5bc1b7}{draw}} ()
+\begin{DoxyCompactList}\small\item\em Display the paddle to the screen using its sprite. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_pong_paddle_afbcdacc59ad9d8f6a10b0578b281055c}{move\+To}} (double \+\_\+x, double \+\_\+y)
+\begin{DoxyCompactList}\small\item\em Adds an offset to the paddle\textquotesingle{}s current position and prevents the paddle from going out of bounds. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_pong_paddle_a3e1d15703fecd08afe94f51474ef8166}{get\+X\+Position}} ()
+\begin{DoxyCompactList}\small\item\em Returns the x position of the paddle. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_pong_paddle_abd4488452321dda8c0f0ccc403d1dba2}{get\+Y\+Position}} ()
+\begin{DoxyCompactList}\small\item\em Returns the y position of the paddle. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_pong_paddle_a8846745be084ee4e0b99f9cf868ce7cc}{get\+CenterX}} ()
+\begin{DoxyCompactList}\small\item\em Returns the center x position of the paddle. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_pong_paddle_a97e21e3ef7617220ad09a032bbd0aa50}{get\+CenterY}} ()
+\begin{DoxyCompactList}\small\item\em Returns the center y position of the paddle. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_pong_paddle_a92cc36ae191bfd3c6475edb5f29647dd}{set\+Center}} (int t\+\_\+x, int t\+\_\+y)
+\begin{DoxyCompactList}\small\item\em Sets the center x and y positions of the paddle. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_pong_paddle_a96777c5066afc74cd9fcf32573ff1ead}\label{class_pong_paddle_a96777c5066afc74cd9fcf32573ff1ead}} 
+void \mbox{\hyperlink{class_pong_paddle_a96777c5066afc74cd9fcf32573ff1ead}{reset}} ()
+\begin{DoxyCompactList}\small\item\em Place the paddle in its original position when a goal is scored and and reset the enemy paddle\textquotesingle{}s chance to fail. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_pong_paddle_a9664f10d68446e2e71f1f7e9f8c238ee}\label{class_pong_paddle_a9664f10d68446e2e71f1f7e9f8c238ee}} 
+void \mbox{\hyperlink{class_pong_paddle_a9664f10d68446e2e71f1f7e9f8c238ee}{destroy}} ()
+\begin{DoxyCompactList}\small\item\em Calls the destructor. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_pong_paddle_a8ceef2639a90b96658275e7d7103324c}{Rotate}} (double deg)
+\begin{DoxyCompactList}\small\item\em Rotates the paddle to a given degree (unimplemented). \end{DoxyCompactList}\item 
+Bounding\+Box \mbox{\hyperlink{class_pong_paddle_a035581855c5da531055839199e11d9cf}{get\+A\+A\+BB}} ()
+\begin{DoxyCompactList}\small\item\em Returns paddle\textquotesingle{}s bounding box. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_pong_paddle_afa0fb0ea2c83a3c456c6c82d49108c83}\label{class_pong_paddle_afa0fb0ea2c83a3c456c6c82d49108c83}} 
+\index{PongPaddle@{PongPaddle}!PongPaddle@{PongPaddle}}
+\index{PongPaddle@{PongPaddle}!PongPaddle@{PongPaddle}}
+\doxysubsubsection{\texorpdfstring{PongPaddle()}{PongPaddle()}}
+{\footnotesize\ttfamily Pong\+Paddle\+::\+Pong\+Paddle (\begin{DoxyParamCaption}\item[{int}]{\+\_\+x,  }\item[{int}]{\+\_\+y,  }\item[{\mbox{\hyperlink{class_pong_ball}{Pong\+Ball}} $\ast$}]{\+\_\+ball }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+A custom constructor for setting the enemy paddle\textquotesingle{}s velocity, position, angle, scale and ball. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_pong_paddle_a035581855c5da531055839199e11d9cf}\label{class_pong_paddle_a035581855c5da531055839199e11d9cf}} 
+\index{PongPaddle@{PongPaddle}!getAABB@{getAABB}}
+\index{getAABB@{getAABB}!PongPaddle@{PongPaddle}}
+\doxysubsubsection{\texorpdfstring{getAABB()}{getAABB()}}
+{\footnotesize\ttfamily Bounding\+Box Pong\+Paddle\+::get\+A\+A\+BB (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns paddle\textquotesingle{}s bounding box. 
+
+\begin{DoxyReturn}{Returns}
+The bounding box 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_pong_paddle_a8846745be084ee4e0b99f9cf868ce7cc}\label{class_pong_paddle_a8846745be084ee4e0b99f9cf868ce7cc}} 
+\index{PongPaddle@{PongPaddle}!getCenterX@{getCenterX}}
+\index{getCenterX@{getCenterX}!PongPaddle@{PongPaddle}}
+\doxysubsubsection{\texorpdfstring{getCenterX()}{getCenterX()}}
+{\footnotesize\ttfamily int Pong\+Paddle\+::get\+CenterX (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the center x position of the paddle. 
+
+\begin{DoxyReturn}{Returns}
+The center x position 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_pong_paddle_a97e21e3ef7617220ad09a032bbd0aa50}\label{class_pong_paddle_a97e21e3ef7617220ad09a032bbd0aa50}} 
+\index{PongPaddle@{PongPaddle}!getCenterY@{getCenterY}}
+\index{getCenterY@{getCenterY}!PongPaddle@{PongPaddle}}
+\doxysubsubsection{\texorpdfstring{getCenterY()}{getCenterY()}}
+{\footnotesize\ttfamily int Pong\+Paddle\+::get\+CenterY (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the center y position of the paddle. 
+
+\begin{DoxyReturn}{Returns}
+The y position 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_pong_paddle_a3e1d15703fecd08afe94f51474ef8166}\label{class_pong_paddle_a3e1d15703fecd08afe94f51474ef8166}} 
+\index{PongPaddle@{PongPaddle}!getXPosition@{getXPosition}}
+\index{getXPosition@{getXPosition}!PongPaddle@{PongPaddle}}
+\doxysubsubsection{\texorpdfstring{getXPosition()}{getXPosition()}}
+{\footnotesize\ttfamily int Pong\+Paddle\+::get\+X\+Position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the x position of the paddle. 
+
+\begin{DoxyReturn}{Returns}
+The x position 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_pong_paddle_abd4488452321dda8c0f0ccc403d1dba2}\label{class_pong_paddle_abd4488452321dda8c0f0ccc403d1dba2}} 
+\index{PongPaddle@{PongPaddle}!getYPosition@{getYPosition}}
+\index{getYPosition@{getYPosition}!PongPaddle@{PongPaddle}}
+\doxysubsubsection{\texorpdfstring{getYPosition()}{getYPosition()}}
+{\footnotesize\ttfamily int Pong\+Paddle\+::get\+Y\+Position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the y position of the paddle. 
+
+\begin{DoxyReturn}{Returns}
+The y position 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_pong_paddle_afbcdacc59ad9d8f6a10b0578b281055c}\label{class_pong_paddle_afbcdacc59ad9d8f6a10b0578b281055c}} 
+\index{PongPaddle@{PongPaddle}!moveTo@{moveTo}}
+\index{moveTo@{moveTo}!PongPaddle@{PongPaddle}}
+\doxysubsubsection{\texorpdfstring{moveTo()}{moveTo()}}
+{\footnotesize\ttfamily void Pong\+Paddle\+::move\+To (\begin{DoxyParamCaption}\item[{double}]{\+\_\+x,  }\item[{double}]{\+\_\+y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Adds an offset to the paddle\textquotesingle{}s current position and prevents the paddle from going out of bounds. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+x} & The x offset \\
+\hline
+{\em \+\_\+y} & The y offset \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_pong_paddle_a8ceef2639a90b96658275e7d7103324c}\label{class_pong_paddle_a8ceef2639a90b96658275e7d7103324c}} 
+\index{PongPaddle@{PongPaddle}!Rotate@{Rotate}}
+\index{Rotate@{Rotate}!PongPaddle@{PongPaddle}}
+\doxysubsubsection{\texorpdfstring{Rotate()}{Rotate()}}
+{\footnotesize\ttfamily void Pong\+Paddle\+::\+Rotate (\begin{DoxyParamCaption}\item[{double}]{deg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Rotates the paddle to a given degree (unimplemented). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em deg} & The degree \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_pong_paddle_a92cc36ae191bfd3c6475edb5f29647dd}\label{class_pong_paddle_a92cc36ae191bfd3c6475edb5f29647dd}} 
+\index{PongPaddle@{PongPaddle}!setCenter@{setCenter}}
+\index{setCenter@{setCenter}!PongPaddle@{PongPaddle}}
+\doxysubsubsection{\texorpdfstring{setCenter()}{setCenter()}}
+{\footnotesize\ttfamily void Pong\+Paddle\+::set\+Center (\begin{DoxyParamCaption}\item[{int}]{t\+\_\+x,  }\item[{int}]{t\+\_\+y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the center x and y positions of the paddle. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+\_\+x} & The x position \\
+\hline
+{\em t\+\_\+y} & The y position \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/game\+Objects/pong\+Paddle.\+hpp\end{DoxyCompactItemize}

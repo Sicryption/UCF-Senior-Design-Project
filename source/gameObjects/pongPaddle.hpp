@@ -9,7 +9,9 @@
 
 class PongPaddle : public GameObject
 {
-
+	/**
+		@brief A custom game object used for Pong.
+	**/
 private:
     m3d::Color *color;
     m3d::Rectangle *PongRec;
@@ -24,6 +26,9 @@ private:
 	int startX, startY;
 
 public:
+	/**
+	* @brief A custom constructor for setting the player paddle's position, scale, angle, and velocity.
+	*/
 	PongPaddle(int _x, int _y)
 	{
 		x = _x;
@@ -37,6 +42,10 @@ public:
 		velo = 3;
 	}
 
+	/**
+	* @brief A custom constructor for setting the enemy paddle's velocity, position, angle, scale and ball.
+	* 
+	*/
 	PongPaddle(int _x, int _y, PongBall *_ball)
 	{
 		x = _x;
@@ -52,33 +61,34 @@ public:
 		ball = _ball;
 	}
 	
-
+	/**
+	* @brief Set the paddle's sprite's position and scale.
+	*/
     void initialize() {
-        //color = new m3d::Color(0,100,0);
-        //PongRec = new m3d::Rectangle((int)x,(int)y,50,10,*color);
-        //paddlebox = PongRec->getBoundingBox();
-		
+ 	
 		sprite = new SpriteMenuItem(*(ResourceManager::getSprite("paddle.png")));
 		sprite->setScale(xScale, yScale);
 		sprite->setPosition(x, y);
     }
 
+	/**
+	* @brief Determine the paddle's velocity.
+	*/
     void update() {
 		if (ball == nullptr)
 		{
-			// player paddle moves up or down based on button press
+			// player paddle moves up or down based on button press (for testing purposes)
 			if (m3d::buttons::buttonDown(m3d::buttons::Button::Down)) {
-				//moveTo(x, 1 * GameManager::getDeltaTime());
 				moveTo(0, velo);
 			}
 
 			if (m3d::buttons::buttonDown(m3d::buttons::Button::Up)) {
-				//moveTo(x, -1 * GameManager::getDeltaTime());
 				moveTo(0, -velo); //
 			}
 		}
 		else
 		{
+			// calculate displacement between enemy paddle and ball 
 			int diff = (getYPosition() + (sprite->GetHeight() / 2)) - (ball->getYPosition() + (ball->getHeight() / 2));
 
 			// enemy paddle moves towards the ball based on its displacement
@@ -89,6 +99,9 @@ public:
 		}
     }
 
+	/**
+	* @brief Calculate the enemy paddle's chance to fail each time the the ball hits its paddle.
+	*/
 	void ballBouncedOffPaddle()
 	{
 		chanceToFail += 10;
@@ -98,13 +111,21 @@ public:
 		purposelyFail = random < chanceToFail;
 	}
 
+	/**
+	* @brief Display the paddle to the screen using its sprite.
+	*/
     void draw() {
         m3d::Screen *screen = GameManager::getScreen();
-        //screen->drawTop(*PongRec);
 		sprite->setPosition(x, y);
 		screen->drawTop(*sprite);
     }
 
+	/**
+	* @brief Adds an offset to the paddle's current position and
+	* prevents the paddle from going out of bounds.
+	* @param _x The x offset
+	* @param _y The y offset
+	*/
     void moveTo(double _x, double _y) {
 		y += _y;
 		x += _x;
@@ -119,35 +140,52 @@ public:
 			y = TOPSCREEN_HEIGHT - sprite->GetHeight();
     }
 
+	/**
+	* @brief Returns the top right x position of the paddle.
+	* @return The top right x position
+	*/
 	int getXPosition() {
 		return sprite->getXPosition();
 	}
 
+	/**
+	* @brief Returns the top right y position of the paddle.
+	* @return The top right y position
+	*/
 	int getYPosition() {
 		return sprite->getYPosition();
 	}
 
+	/**
+	* @brief Returns the center x position of the paddle.
+	* @return The center x position
+	*/
 	int getCenterX() {
 		return sprite->getCenterX();
 	}
 
+	/**
+	* @brief Returns the center y position of the paddle.
+	* @return The y position
+	*/
 	int getCenterY() {
 		return sprite->getCenterY();
 	}
 
+	/**
+	* @brief Sets the center x and y positions of the paddle.
+	* @param t_x The x position
+	* @param t_y The y position
+	*/
 	void setCenter(int t_x, int t_y) {
 		sprite->setCenter(t_x, t_y);
 	}
 
-	float getXScale() {
-		return sprite->getXScale();
-	}
 
-
-	float getYScale() {
-		return sprite->getYScale();
-	}
-
+	/**
+	* @brief Place the paddle in its original position when a goal is scored and
+	* and reset the enemy paddle's chance to fail. 
+	*/
 	void reset()
 	{
 		x = startX;
@@ -157,11 +195,21 @@ public:
 		purposelyFail = false;
 	}
 
-
+	/**
+	*  @brief Calls the destructor.
+	*/
 	void destroy() { this->~PongPaddle(); }
 
+	/**
+	* @brief Rotates the paddle to a given degree (unimplemented).
+	* @param deg The degree
+	*/
 	void Rotate(double deg) {};
 
+	/**
+	* @brief Returns paddle's bounding box.
+	* @return The bounding box
+	*/
 	BoundingBox getAABB()
 	{
 		return sprite->getBoundingBox();
