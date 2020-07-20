@@ -1,6 +1,8 @@
 /**
  *  @file minigame.hpp
- *  @brief Defines the minigame inherited class
+ *  @brief Defines the Minigame class
+ * 
+ *  Minigames are a type of Scene with shared logic
  */
 #pragma once
 
@@ -18,19 +20,33 @@
 #include "../scenes/scene.hpp"
 #include "../sandbox.hpp"
 
-
 #ifdef DEBUG
 #define DEBUG_THREAD
 #endif
 
-
-
-
+/**
+ *  @def setObjectName
+ *  @brief Give an object a user accessible name within the Lua Environment.
+ * 
+ *   
+ *  Given a name string literal and the id of a GameObject. 
+ *  Executes some Lua code which will allow the user to manipulate that object with the UserAPI.
+ *  @note Executes using the Lua Queue, so there may be a delay if other code is being executed.
+ *  @param name [string] 
+ *  @param id [int]
+ */
 #define setObjectName(name, id) m_sandbox->executeStringQueued("name_table[\"" name "\"] = " + std::to_string(id))
 
+/**
+ *  @class Minigame "/scenes/minigame.hpp"
+ *  @brief Astract Minigame Class
+ *  
+ *  Defines the default behavior of Minigame type scenes
+ */
 class Minigame : public Scene
 {
 private:
+
 	ButtonMenuItem  *AddButton = nullptr,
                     *EditButton = nullptr,
                     *RemoveButton = nullptr,
@@ -45,31 +61,49 @@ private:
 	bool showCommandLister = false, showCommandEditor = false, editCommandFromCommandEditor = false;
 
 protected:
+    /**
+     *  @brief Sandbox environment
+     * 
+     *  Each minigame needs a sandbox environment. This is initialized and destroyed along with the Minigame.
+     *  The minigame itself may affect its execution.
+     */
     LuaSandbox* m_sandbox;
-	static bool winCond;
 
-    
+    /**
+     *  @brief Win Condition State
+     * 
+     *  Used to track when a win condition for the game has been met.
+     */
+	static bool winCond;
 
 	/**
 	 *  @brief Function called before a sandbox execution
+     * 
 	 *  onExecutionBegin is called right before the sandbox executes a chunk
 	 */
 	virtual void onExecutionBegin(){}
 
 	/**
 	 *  @brief Function called before a sandbox execution
+     * 
 	 *  onExecutionEnd is called right after the sandbox executes a chunk.
 	 */
 	virtual void onExecutionEnd();
 
 public:
+
+    /**
+     *  @brief Toggle the win condition
+     * 
+     *  Inverts the value of @ref winCond
+     */
 	void toggleWinCond();
 
 	/**
 	 *  @brief Default Constructor, should be inherited by child class constructors
 	 */
-
 	Minigame();
+
 	/**
 	 *  @brief Default Destructor, should be inherited by child class destructor
 	 */

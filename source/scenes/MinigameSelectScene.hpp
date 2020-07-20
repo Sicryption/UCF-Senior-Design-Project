@@ -4,6 +4,7 @@
 #include "MinigameDescriptor.hpp"
 #include "MazeScene.hpp"
 #include "PongScene.hpp"
+#include "TicTacToeScene.hpp"
 
 #include "../gameManager.hpp"
 #include "../inputManager.hpp"
@@ -27,7 +28,8 @@ class MinigameSelectScene : public Scene
 		enum MINIGAME_LIST
 		{
 			MAZE = 0,
-			PONG = 1
+			PONG = 1,
+			TIC_TAC_TOE = 2
 		};
 		
 		///@brief List of MinigameDescriptors which make up the Boxes on screen.
@@ -45,6 +47,9 @@ class MinigameSelectScene : public Scene
 		int selectedMinigame = -1;
 
 		RectangleMenuItem *whiteBackground;
+
+		SpriteMenuItem* grass;
+		SpriteMenuItem* bGrass;
 
 		SpriteMenuItem *selectedMinigameLargeSprite = nullptr;
 		TextMenuItem *MinigameSelectTopText = nullptr, *MinigameDescription = nullptr, *MinigameName = nullptr;
