@@ -179,7 +179,10 @@ public:
      * 
      *  @returns value set to @ref m_color
      */
-    virtual m3d::Color getColor(); 
+    virtual m3d::Color getColor()
+    {
+        return m_color;
+    } 
 
     //bool screenIntersect();
 
