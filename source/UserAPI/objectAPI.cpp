@@ -183,7 +183,52 @@ int UserAPI::set_position(lua_State* L)
     }
 
     currObj->setPosition(t_x, t_y);
-    m3d::Thread::sleep(STEP_TIME);
+    return 0;
+}
+
+int UserAPI::set_x_position(lua_State* L)
+{
+    lua_Number t_id = lua_tonumber(L,-2);
+    lua_Number t_x = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+        return 0;
+    }
+
+    currObj->setPosition(t_x, currObj->getPosition().v);
+    return 0;
+}
+
+int UserAPI::set_y_position(lua_State* L)
+{
+    lua_Number t_id = lua_tonumber(L,-2);
+    lua_Number t_y = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    GameObject *currObj = currScene->findObject(t_id);
+    if(currObj == nullptr) 
+    {
+        Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
+        return 0;
+    }
+
+    currObj->setPosition(currObj->getPosition().u, t_y);
     return 0;
 }
 
@@ -226,6 +271,7 @@ int UserAPI::get_y_position(lua_State* L)
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
         return 0;
     }
+    
     lua_pushnumber(L,currObj->getPosition().v);
     return 1;
 }

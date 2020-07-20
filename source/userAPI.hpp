@@ -105,6 +105,11 @@ namespace UserAPI
      */   
     int set_position(lua_State* L);
 
+
+    int set_x_position(lua_State* L);
+
+    int set_y_position(lua_State* L);
+
     /**
      *  @brief Get an objects x-axis position
      * 
