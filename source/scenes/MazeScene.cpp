@@ -61,6 +61,7 @@ void MazeScene::initialize(){
 }
 
 void MazeScene::draw(){
+	Minigame::draw();
 
 	m3d::Screen * screen = GameManager::getScreen();
 
@@ -84,7 +85,6 @@ void MazeScene::draw(){
 	//screen->drawBottom(*bwallpaper);
 	//screen->drawBottom(*prompt);
 
-	Minigame::draw();
     runner->draw();
 
 }

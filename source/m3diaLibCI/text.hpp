@@ -7,17 +7,16 @@
 
 namespace m3dCI {
     /**
-     * @brief A custom implemenation of the m3diaLib Text class, used for rendering text
+     * @brief The text class used for rendering text
      * @todo Add support for stereoscopic 3D
      */
     class Text: public m3d::Drawable {
     public:
         /**
-         * @brief Initializes the text object
+         * @brief Initializes the text
          */
         Text(const std::string& t_text = "", m3d::Color t_color = m3d::Color(255, 255, 255));
-		
-		///Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
+		//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
 		virtual ~Text();
         /**
          * @brief Sets the string of the text
@@ -39,7 +38,7 @@ namespace m3dCI {
 
         /**
          * @brief Sets the x position of the text
-         * @param t_x The x position
+         * @param t_y The x position
          */
         void setXPosition(int t_x);
 

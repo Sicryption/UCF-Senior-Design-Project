@@ -12,7 +12,7 @@ private:
 
 public:
     RectangleObject( double t_x = 0, double t_y = 0 , 
-                     double t_xScale = DEFAULT_SIZE, double t_yScale = DEFAULT_SIZE, double t_angle = 0,
+                     double t_xScale = DEFAULT_SIZE,double t_yScale = DEFAULT_SIZE, double t_angle = 0,
                      m3d::Color t_color = DEFAULT_COLOR)
     {
         x = t_x;

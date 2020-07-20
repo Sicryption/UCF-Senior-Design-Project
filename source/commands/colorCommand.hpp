@@ -14,7 +14,7 @@ public:
 
     ~ColorCommand();
 
-    std::vector<std::string> getParamNames() {return {};}
+    std::vector<std::string> getParamNames() {return {"Object Name"};}
 
     std::string convertToLua()
     {
