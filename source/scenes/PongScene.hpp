@@ -16,7 +16,7 @@ class PongScene : public Minigame
 {
 	private:
 		//TextMenuItem *prompt, *winPrompt;
-		SpriteMenuItem *popup, *wallpaper;
+		SpriteMenuItem *popup, *wallpaper, *wPopup;
 		PongBall *ball;
 		PongPaddle *leftPaddle, *rightPaddle;
 		array<int, 2> points; 

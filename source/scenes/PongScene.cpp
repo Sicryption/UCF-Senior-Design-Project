@@ -6,7 +6,7 @@ Util* util = Util::getInstance();
 PongScene::PongScene()
 {
 	points = { 0,0 };
-	matchPoint = 5; 
+	matchPoint = 1; 
 }
 
 PongScene::~PongScene()
@@ -28,6 +28,8 @@ void PongScene::initialize(){
 	wallpaper->setCenter(0, 0);
 	wallpaper->setScale(1, 1);
 
+	wPopup = new SpriteMenuItem(*(ResourceManager::getSprite("win_popup.png")));
+	wPopup->setPosition(80, 20);
 
 	//runnerID = addObject(runner);
 
@@ -52,6 +54,8 @@ void PongScene::initialize(){
 
 	rightPaddle->initialize();
 
+	
+
 	currentState = PongState::TutorialMessage;
 }
 
@@ -69,10 +73,16 @@ void PongScene::draw(){
 
 	rightPaddle->draw();
 
-	if (currentState == MazeState::Win)
+	if (currentState == PongState::Win)
 	{
-		
+		screen->drawTop(*wPopup);
 	}
+
+	if (currentState == PongState::Lose)
+	{
+		screen->drawTop(*wPopup);
+	}
+
 
 
 }
