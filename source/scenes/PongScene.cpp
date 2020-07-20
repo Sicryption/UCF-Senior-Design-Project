@@ -69,7 +69,12 @@ void PongScene::draw(){
 
 	rightPaddle->draw();
 
-	if ()
+	if (currentState == MazeState::Win)
+	{
+		
+	}
+
+
 }
 		
 void PongScene::load(){ Minigame::load(); }; //any data files
