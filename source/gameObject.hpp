@@ -1,7 +1,7 @@
 #pragma once
 #include "IUpdateable.hpp"
 
-#define DEFAULT_SIZE 10 
+#define DEFAULT_SIZE 40 
 #define DEFAULT_COLOR m3d::Color(255,0,0)
 
 class GameObject : public Updateable
@@ -21,6 +21,8 @@ protected:
     double yScale;
     double target_yScale;
 
+    m3d::Color m_color;
+
 public:
     virtual void initialize() = 0;
     virtual void update() = 0;
@@ -29,7 +31,6 @@ public:
     virtual void destroy()=0;
     virtual void moveTo(double x,double y)=0;
     virtual void Rotate(double deg)=0;
-	virtual m3d::BoundingBox getAABB()=0;
 
     void setAngle(double _angle)
     {
@@ -45,7 +46,6 @@ public:
         xScale = _x;
         yScale = _y;
     }
-
     m3d::Vector2f getScale()
     {
         m3d::Vector2f scale;
@@ -59,7 +59,6 @@ public:
         x = _x;
         y = _y;
     }
-
     m3d::Vector2f getPosition()
     {
         m3d::Vector2f pos;
@@ -67,4 +66,10 @@ public:
         pos.v = y;
         return pos;
     }
+
+    void setColor(m3d::Color);
+    m3d::Color getColor();
+
+    bool screenIntersect();
+
 };

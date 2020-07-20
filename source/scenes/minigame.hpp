@@ -42,7 +42,7 @@ private:
 
 	std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
 
-	bool showCommandLister = false, showCommandEditor = false;
+	bool showCommandLister = false, showCommandEditor = false, editCommandFromCommandEditor = false;
 
 protected:
     LuaSandbox* m_sandbox;
@@ -60,7 +60,7 @@ protected:
 	 *  @brief Function called before a sandbox execution
 	 *  onExecutionEnd is called right after the sandbox executes a chunk.
 	 */
-	virtual void onExecutionEnd(){}
+	virtual void onExecutionEnd();
 
 public:
 	void toggleWinCond();
@@ -74,34 +74,120 @@ public:
 	 *  @brief Default Destructor, should be inherited by child class destructor
 	 */
 	virtual ~Minigame();
-
+	
+	/**
+		@brief Function which allows for adding commands to the CodeEditor window.
+		@param command CommandObject to add to the CodeEditor
+	**/
 	void AddCommand(CommandObject* command);
-	void AddStartCommands(std::vector<CommandObject*> obj);
+	
+	/**
+		@brief Function which allows for adding several commands to the code editor at the very beginning. 
+		Called by SceneManager::RequestUserCode().
+		@param list List of CommandObject*s to add to the CodeEditor 
+	**/
+	void AddStartCommands(std::vector<CommandObject*> list);
+	
+	/**
+		@brief Function to clear all Commands currently inside the CodeEditor
+	**/
 	void ClearCommands();
 
+	/**
+		@brief Function to set the function which is called when Run/Submit is called.
+		@param callbackFunction The function which is called on Run/Submit. It will pass back a list of CommandObjects
+	**/
 	void SetSubmitFunction(std::function<void(std::vector<CommandObject*>)> callbackFunction);
 
+	/**
+		@brief Function containing the set of actions needed to happen when the Add Button gets clicked.
+	**/
 	void AddButton_OnClick();
+	/**
+		@brief Function containing the set of actions needed to happen when the Edit Button gets clicked.
+	**/
 	void EditButton_OnClick();
+	/**
+		@brief Function containing the set of actions needed to happen when the Delete Button gets clicked.
+	**/
 	void DeleteButton_OnClick();
+	/**
+		@brief Function containing the set of actions needed to happen when the Submit Button gets clicked.
+	**/
 	void SubmitButton_OnClick();
+	/**
+		@brief Function containing the set of actions needed to happen when the Close Button gets clicked.
+	**/
 	void CloseButton_OnClick();
 
+	/**
+		@brief Virtual Function responsible for determining if the Win Condition was met.
+	**/
 	virtual bool checkWinCond() {};
-
-
+	
+	/**
+		@brief Virtual Function responsible for loading the Scene
+	**/
 	virtual void loadScene() {};
+	
+	/**
+		@brief Virtual Function responsible for loading objects nessecary for the Win Screen
+	**/
 	virtual void loadWinScr() {};
+	
+	/**
+		@brief Virtual Function responsible for loading objects nessecary for the Lose Screen
+	**/
 	virtual void loadLoseScr() {};
+	
+	/**
+		@brief Virtual Function responsible for requesting specific UI Elements
+	**/
 	virtual void requestUI() {};
+	
+	/**
+		@brief Virtual Function responsible for properly closing out of the Minigame
+	**/
 	virtual void closeGame() {};
-
+	
+	/**
+		@brief Virtual Function responsible for the initialization of the minigame
+	**/
 	virtual void initialize() {};
+	
+	/**
+		@brief Virtual Function responsible for loading objects. 
+		Useful later for loading save states.
+	**/
 	virtual void load() {};
+	
+	/**
+		@brief Virtual Function responsible for unloading objects. 
+		Useful later for storing a save state.
+	**/
 	virtual void unload() {};
+	
+	/**
+		@brief Virtual Function responsible for updating objects. 
+		This is called each game frame.
+	**/
 	virtual void update();
-	virtual void draw() {};
-
+	
+	/**
+		@brief Virtual Function responsible for drawing each object.
+		This is called each game frame.
+	**/
+	virtual void draw(){Scene::draw();};
+	
+	/**
+		@brief Virtual Function responsible for setting initial values. 
+		(Redundant with Initialize?).
+	**/
 	virtual void onEnter() {};
+	
+	/**
+		@brief Virtual Function responsible for deleting objects created via OnEnter. 
+		(Redundant with closeGame?).
+	**/
 	virtual void onExit() {};
 };
