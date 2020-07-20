@@ -17,9 +17,9 @@ template <typename T> int sign(T val) {
 
 int UserAPI::move_object(lua_State* L)
 {
-    int y = lua_tonumber(L,-1);
-    int x = lua_tonumber(L,-2); 
     int t_id = lua_tonumber(L,-3); 
+    int x = lua_tonumber(L,-2); 
+    int y = lua_tonumber(L,-1);
     
     
     Scene* scene = SceneManager::getScene();
@@ -164,9 +164,9 @@ int make_paddle(lua_State* L)
   
 int UserAPI::set_position(lua_State* L)
 {
-    lua_Number t_id = lua_tonumber(L,-1);
-    lua_Number t_x = lua_tonumber(L,-2);
-    lua_Number t_y = lua_tonumber(L,-3);
+    lua_Number t_id = lua_tonumber(L,-3);
+    lua_Number t_y  = lua_tonumber(L,-2);
+    lua_Number t_x  = lua_tonumber(L,-1);
 
     Scene *currScene = SceneManager::getScene();
     if(currScene == nullptr)
@@ -302,8 +302,8 @@ int UserAPI::rotate(lua_State* L)
     
 int UserAPI::set_angle(lua_State* L)
 {
-    lua_Number t_id = lua_tonumber(L,-1);
-    lua_Number t_angle = lua_tonumber(L,-2);
+    lua_Number t_id = lua_tonumber(L,-2);
+    lua_Number t_angle = lua_tonumber(L,-1);
 
     Scene *currScene = SceneManager::getScene();
     if(currScene == nullptr)
@@ -350,9 +350,9 @@ int UserAPI::get_angle(lua_State* L)
 // TODO: Design such that x or y = -1, maintains that scale.
 int UserAPI::set_scale(lua_State* L)
 {
-    lua_Number t_id     = lua_tonumber(L,-1);
+    lua_Number t_id     = lua_tonumber(L,-3);
     lua_Number t_width  = lua_tonumber(L,-2);
-    lua_Number t_height = lua_tonumber(L,-3);
+    lua_Number t_height = lua_tonumber(L,-1);
 
     Scene *currScene = SceneManager::getScene();
     if(currScene == nullptr)
@@ -463,8 +463,13 @@ int UserAPI::select_object(lua_State* L)
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
 
     }
-
-    lua_pushnumber(L,t_id);
+    if(t_id < 0)
+    {
+        lua_pushnil(L);
+    }else
+    {
+        lua_pushnumber(L,t_id);
+    }
     lua_setglobal(L,"current_object");
 
 

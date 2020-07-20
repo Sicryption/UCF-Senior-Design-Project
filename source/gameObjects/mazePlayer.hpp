@@ -48,6 +48,7 @@ public:
         m3d::Screen * screen = GameManager::getScreen();
 
 		sprite->setPosition(x, y);
+        sprite->setRotation(angle);
         screen->drawTop(*sprite);
     }
 
@@ -128,7 +129,7 @@ public:
 		#endif*/
         
     };
-    void Rotate(double deg){};
+    //void Rotate(double deg){};
     int winCond() {
 			if((x/20) == 18 && (y/20) == 9)
 			{

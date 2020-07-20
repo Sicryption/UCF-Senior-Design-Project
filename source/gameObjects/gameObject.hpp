@@ -90,7 +90,11 @@ public:
      *  Must be implimented by children. This function will recieve movement as steps.
      *  @param deg [in] relative x movement
      */
-    virtual void Rotate(double deg)=0;
+    virtual void Rotate(double deg)
+    {
+        angle += deg;
+        angle = fmod(angle,360);
+    }
 
     /**
      *  @brief Sets the angle 
