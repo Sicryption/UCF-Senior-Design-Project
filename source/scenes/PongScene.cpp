@@ -45,9 +45,6 @@ void PongScene::initialize(){
 	tutorial[0] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_1.png")));
 	tutorial[1] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_2.png")));
 	tutorial[2] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_3.png")));
-	tutorial[3] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_4.png")));
-	tutorial[4] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_5.png")));
-
 	
 	tutCount = 0;
 	popup = tutorial[tutCount++];
