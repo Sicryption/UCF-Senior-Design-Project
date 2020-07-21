@@ -70,7 +70,7 @@ int UserAPI::move_object(lua_State* L)
             
         }while(t_runState == 1);
 
-        if(t_runState == THREAD_SKIP || t_runState == THREAD_CLOSE || t_runState)
+        if(t_runState == THREAD_SKIP || t_runState == THREAD_CLOSE || t_runState == THREAD_CLEAR)
         {
             return 0;
         } 
