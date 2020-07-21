@@ -112,9 +112,11 @@ void Minigame::update()
 		else if (!showCommandEditor && !editCommandFromCommandEditor)
 		{
 			scr->drawBottom(*codeEditor);
-			AddButton->SetActive(codeEditor->canAdd());
-			EditButton->SetActive(codeEditor->canEdit());
-			RemoveButton->SetActive(codeEditor->canRemove());
+
+			AddButton->SetActive(isExecuting?false:codeEditor->canAdd());
+			EditButton->SetActive(isExecuting ? false : codeEditor->canEdit());
+			RemoveButton->SetActive(isExecuting ? false : codeEditor->canRemove());
+			submitButton->SetActive(isExecuting ? false : true);
 		}
 	}
 
@@ -305,10 +307,14 @@ void Minigame::SetSubmitFunction(std::function<void(std::vector<CommandObject*>)
 	submitFunction = callbackFunction;
 }
 
+void Minigame::onExecutionBegin()
+{
+	isExecuting = true;
+}
+
 void Minigame::onExecutionEnd()
 {
-	//Until a hault option is made here. We don't want the execution to run twice.
-	submitButton->SetActive(true);
+	isExecuting = false;
 }
 
 void Minigame::draw()

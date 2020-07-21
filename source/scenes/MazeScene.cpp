@@ -80,6 +80,38 @@ void MazeScene::initialize(){
 }
 
 void MazeScene::transistion(){
+	std::vector<CommandObject*> startingCommands =
+	{
+		new SelectCommand("runner",true,true),
+		new RightCommand("5"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+	};
+
+	SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
+
 	current = wallpapers[1];
 	runner->setposition(20,180,wallHolderToo);
 };
@@ -145,8 +177,12 @@ void MazeScene::update()
 					};
 
 					SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
+
+					//Enable buttons for use once Code has been requested
 					submitButton->SetActive(true);
 					AddButton->SetActive(true);
+					RemoveButton->SetActive(true);
+					EditButton->SetActive(true);
 					tutCount = 0;
 					break;
 				}
@@ -154,8 +190,11 @@ void MazeScene::update()
 				popup->setPosition(80,20);
 			}
 
+			//Disable all buttons during tutorial
 			submitButton->SetActive(false);
 			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
 			break;
 		case MazeState::Execute:
 			if(checkWinCond() == 1)
@@ -163,8 +202,6 @@ void MazeScene::update()
 				currentState = MazeState::Transistion;
 				break;
 			}
-			submitButton->SetActive(false);
-			AddButton->SetActive(false);
 			break;
 		case MazeState::Win:
 			break;
@@ -172,6 +209,7 @@ void MazeScene::update()
 			break;
 		case MazeState::Transistion:
 			transistion();
+
 			currentState = MazeState::Requesting;
 			break;
 		case MazeState::Requesting:
@@ -180,7 +218,7 @@ void MazeScene::update()
 			break;
 	}
 
-    
+	Util::PrintLine(std::to_string(currentState));
 };
 
 void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)

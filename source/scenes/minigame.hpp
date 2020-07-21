@@ -66,6 +66,8 @@ protected:
 	CodeEditorMenuItem* codeEditor = nullptr;
 	CommandEditorMenuItem* commandEditor = nullptr;
 
+	bool isExecuting = false;
+
 	/**
 		@brief CommandLister is responsible for showing all objects which can be added to the CodeEditor.
 	**/
@@ -91,7 +93,7 @@ protected:
      * 
 	 *  onExecutionBegin is called right before the sandbox executes a chunk
 	 */
-	virtual void onExecutionBegin(){}
+	virtual void onExecutionBegin();
 
 	/**
 	 *  @brief Function called before a sandbox execution
