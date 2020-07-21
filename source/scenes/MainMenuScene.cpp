@@ -21,6 +21,7 @@ MainMenuScene::MainMenuScene()
 	menu->AddItem(ClickHereToContinue);
 
 	apple = new SpriteMenuItem(*ResourceManager::getSprite("apple.png"));
+	apple->setScale(0.35f, 0.35f);
 	menu->AddItem(apple);
 
 	grass = new SpriteMenuItem(*ResourceManager::getSprite("grassB1.png"));
