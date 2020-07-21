@@ -93,14 +93,14 @@ void MazeScene::draw(){
 
     if(currentState == MazeState::TutorialMessage)
     {   
-        screen->drawTop(*popup);
+        screen->drawTop(*popup, m3d::RenderContext::Mode::Flat, 2);
 		//screen->drawTop(*prompt);
 		//use m3dci for prompt
     }
 
 	if(currentState == MazeState::Win)
     {   
-        screen->drawTop(*wPopup);
+        screen->drawTop(*wPopup, m3d::RenderContext::Mode::Flat, 2);
 		//screen->drawTop(*winPrompt);
 		//use m3dci for prompt
     }

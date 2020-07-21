@@ -58,6 +58,12 @@ Minigame::~Minigame()
 	m_sandbox->close();
 }
 
+void Minigame::initialize()
+{
+    m_gridOverlay = new m3dCI::Sprite( *ResourceManager::getSprite("minigame_grid.png"));
+    m_gridOverlay->setOpacity(50);
+}
+
 void Minigame::update()
 {
     #ifdef DEBUG_MINIGAME
@@ -304,3 +310,14 @@ void Minigame::onExecutionEnd()
 	//Until a hault option is made here. We don't want the execution to run twice.
 	submitButton->SetActive(true);
 }
+
+void Minigame::draw()
+{
+    Scene::draw();
+    
+    if(m_gridOverlay != nullptr)
+    {
+        GameManager::getScreen()->drawTop(*m_gridOverlay, m3d::RenderContext::Mode::Flat, 1);
+    }
+};
+

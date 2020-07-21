@@ -24,6 +24,7 @@
 #define DEBUG_MINIGAME
 #endif
 
+#define GRID_SIZE 20
 
 /**
  *  @def setObjectName
@@ -60,6 +61,8 @@ private:
 	std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
 
 	bool showCommandLister = false, showCommandEditor = false, editCommandFromCommandEditor = false;
+
+    m3dCI::Sprite* m_gridOverlay = nullptr;
 
 protected:
     /**
@@ -188,7 +191,7 @@ public:
 	/**
 		@brief Virtual Function responsible for the initialization of the minigame
 	**/
-	virtual void initialize() {};
+	virtual void initialize();
 	
 	/**
 		@brief Virtual Function responsible for loading objects. 
@@ -212,7 +215,7 @@ public:
 		@brief Virtual Function responsible for drawing each object.
 		This is called each game frame.
 	**/
-	virtual void draw(){Scene::draw();};
+	virtual void draw();
 	
 	/**
 		@brief Virtual Function responsible for setting initial values. 
