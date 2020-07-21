@@ -125,8 +125,8 @@ void MazeScene::update()
 	{
 		case MazeState::TutorialMessage:
 
-			if (buttons::buttonPressed(buttons::A)){
-				if(tutCount >= 5)
+			if (buttons::buttonPressed(buttons::A) || buttons::buttonDown(buttons::Start)){
+				if(tutCount >= 5 || buttons::buttonDown(buttons::Start))
 				{
 					currentState = MazeState::Requesting;
 
@@ -145,38 +145,27 @@ void MazeScene::update()
 					};
 
 					SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
+					submitButton->SetActive(true);
+					AddButton->SetActive(true);
+					tutCount = 0;
 					break;
 				}
 				popup = tutorial[tutCount++];
 				popup->setPosition(80,20);
 			}
-			if (buttons::buttonDown(buttons::Start))
-			{
-				currentState = MazeState::Requesting;
 
-				std::vector<CommandObject*> startingCommands =
-				{
-					new SelectCommand("runner",true,true),
-					new RightCommand("18"),
-					new DownCommand("5"),
-					new LeftCommand("18"),
-					new DownCommand("5"),
-					new RightCommand("18"),
-					new DownCommand("5"),
-					new LeftCommand("18"),
-					new DownCommand("5"),
-					new RightCommand("18")
-				};
-
-				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
-			}
+			submitButton->SetActive(false);
+			AddButton->SetActive(false);
 			break;
 		case MazeState::Execute:
 			if(checkWinCond() == 1)
 			{
 				m_sandbox->setThreadState(THREAD_CLEAR);
 				currentState = MazeState::Transistion;
+				break;
 			}
+			submitButton->SetActive(false);
+			AddButton->SetActive(false);
 			break;
 		case MazeState::Win:
 			break;
