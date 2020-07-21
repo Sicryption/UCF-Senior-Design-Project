@@ -21,6 +21,7 @@ MainMenuScene::MainMenuScene()
 	menu->AddItem(ClickHereToContinue);
 
 	apple = new SpriteMenuItem(*ResourceManager::getSprite("apple.png"));
+	apple->setScale(0.35f, 0.35f);
 	menu->AddItem(apple);
 
 	grass = new SpriteMenuItem(*ResourceManager::getSprite("grassB1.png"));
@@ -88,10 +89,8 @@ void MainMenuScene::draw()
 		}
 		else
 		{
-			/*if (m3d::buttons::buttonReleased(m3d::buttons::Button::Start))
-			{
-				MenuHandler::getInstance()->TransitionTo(MenuHandler::MenuState::MinigameSelect);
-			}*/
+			if (m3d::buttons::buttonReleased(m3d::buttons::Button::Start))
+				ClickHereToContinue->CallOnRelease(-1, -1);
 		}
 	}
 
