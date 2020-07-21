@@ -54,5 +54,7 @@ namespace m3dCI
 			@param y Y position
 		**/
 		void setPosition(int x, int y);
+
+		void setText(std::string command);
 	};
 }

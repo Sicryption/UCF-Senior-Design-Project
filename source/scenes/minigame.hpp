@@ -55,7 +55,6 @@ private:
                     *closeButton = nullptr,
                     *submitButton = nullptr;
 	CodeEditorMenuItem* codeEditor = nullptr;
-	CommandListerMenuItem* commandLister = nullptr;
 	CommandEditorMenuItem* commandEditor = nullptr;
 
 	std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
@@ -65,6 +64,11 @@ private:
     m3dCI::Sprite* m_gridOverlay = nullptr;
 
 protected:
+	/**
+		@brief CommandLister is responsible for showing all objects which can be added to the CodeEditor.
+	**/
+	CommandListerMenuItem* commandLister = nullptr;
+
     /**
      *  @brief Sandbox environment
      * 
