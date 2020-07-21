@@ -81,7 +81,7 @@ void Minigame::update()
 	}
 	if (buttons::buttonPressed(buttons::Y))
 	{
-        Util::PrintLine("Thread Stopped");
+        Util::PrintLine("Thread Queue Clear");
 		m_sandbox->setThreadState(THREAD_CLEAR);
 
 	}
