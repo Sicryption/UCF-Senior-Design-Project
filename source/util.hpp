@@ -1,3 +1,7 @@
+/**
+ *  @file util.hpp
+ *  @brief Defines the Util class
+ */
 #pragma once
 
 #include "m3diaLibCI/console.hpp"
@@ -7,8 +11,11 @@
 using namespace m3d;
 
 /**
-	@brief A utility singleton class tasked with providing functions needed by several other classes
-**/
+ *  @class Util "util.hpp"
+ *  @brief A utility singleton class 
+ *  
+ *  Util is tasked with providing functions needed by several other classes
+*/
 class Util
 {
 	private:

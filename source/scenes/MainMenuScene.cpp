@@ -22,6 +22,12 @@ MainMenuScene::MainMenuScene()
 
 	apple = new SpriteMenuItem(*ResourceManager::getSprite("apple.png"));
 	menu->AddItem(apple);
+
+	grass = new SpriteMenuItem(*ResourceManager::getSprite("grassB1.png"));
+	menu->AddItem(grass);
+
+	bGrass = new SpriteMenuItem(*ResourceManager::getSprite("grassB2.png"));
+	menu->AddItem(bGrass);
 }
 
 MainMenuScene::~MainMenuScene()
@@ -90,8 +96,8 @@ void MainMenuScene::draw()
 		}
 	}
 
-	scr->drawTop(*whiteBackground, RenderContext::Mode::Flat);
-	scr->drawBottom(*whiteBackground, RenderContext::Mode::Flat);
+	scr->drawTop(*grass, RenderContext::Mode::Flat);
+	scr->drawBottom(*bGrass, RenderContext::Mode::Flat);
 	scr->drawTop(*StartupText, RenderContext::Mode::Flat);
 	if (apple->getYPosition() < (screenHeight / 2 - 10))
 	{

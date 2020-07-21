@@ -90,7 +90,6 @@ namespace m3dCI
 			 *  @param px X Coordinate
 			 *  @param pw The width of the CodeEditor
 			 *  @param p_borderWidth Width of Border
-			 *  @returns a Code Editor drawable object
 			**/
 			CodeEditor(int px, int pw, int p_borderWidth);
 

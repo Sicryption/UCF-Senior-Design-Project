@@ -1,13 +1,15 @@
+#pragma once
+
 #include "../gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
 #include "../util.hpp"
-#include <sstream>
+//#include <sstream>
 
 #define DEBUG
 
-#define mazeCellWidth 20
-#define mazeCellHeight 20
+#define XWidth 20
+#define YWidth 20
 
 class TerminalObject : public GameObject
 {
@@ -23,8 +25,8 @@ public:
     TerminalObject(bool (*walls)[12][20])
     {
         wall =  walls;
-        x = mazeCellWidth;
-        y = mazeCellHeight;
+        x = XWidth;
+        y = YWidth;
         xScale = 1;
         yScale = 1;
         angle = 0;
@@ -58,8 +60,8 @@ public:
     void moveTo(double _x,double _y)
     {
         int i;
-        int xc = (x/mazeCellWidth);
-        int yc = (y/mazeCellHeight);
+        int xc = (x/ XWidth);
+        int yc = (y/ YWidth);
          /*
 
         
@@ -85,7 +87,7 @@ public:
                         break;
                     }
                         
-                    x = x + mazeCellWidth;
+                    x = x + XWidth;
                 }
             }
             if(_x < 0)
@@ -95,7 +97,7 @@ public:
                 {
                     if((*wall)[yc][i - 1] == 1)
                         break;
-                    x -= mazeCellWidth;
+                    x -= XWidth;
                 }
             }
             
@@ -109,7 +111,7 @@ public:
                 {
                     if((*wall)[i+1][xc] == 1)
                         break;
-                    y += mazeCellHeight;
+                    y += YWidth;
                 }
             }
             if(_y < 0)
@@ -119,7 +121,7 @@ public:
                 {
                     if((*wall)[i - 1][xc] == 1)
                         break;
-                    y -= mazeCellHeight;
+                    y -= YWidth;
                 }
             }
         }
@@ -132,20 +134,24 @@ public:
         
     };
     void Rotate(double deg){};
-    int winCond() 
-	{
-		if((x/mazeCellWidth) == 18 && (y/ mazeCellHeight) == 9)
-		{
-			return 1;
+    int winCond() {
+			if((x/ XWidth) == 18 && (y/ YWidth) == 9)
+			{
+				return 1;
+			}
+			else
+			{
+				return 0;
+			}
 		}
-		else
-		{
-			return 0;
-		}
-	}
+    void setposition(int xcoor, int ycoor, bool (*walls)[12][20]){
+        x = xcoor;
+        y = ycoor;
+        wall = walls;
+    };
 
 	BoundingBox getAABB()
 	{
-		return sprite->getBoundingBox();
+		return m3d::BoundingBox(x, y, XWidth, YWidth);
 	}
 };
