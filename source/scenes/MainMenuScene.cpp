@@ -62,7 +62,6 @@ void MainMenuScene::initialize()
 
 	apple->setCenter(apple->m_sprite.params.pos.w / 2, apple->m_sprite.params.pos.h / 2);
 	apple->setPosition(topScreenWidth * 0.75 + 25, -(apple->m_sprite.params.pos.h / 2));
-	apple->setScale(0.35f, 0.35f);
 }
 
 void MainMenuScene::draw()
