@@ -8,7 +8,6 @@
 #include <array>
 
 #ifdef DEBUG
-//#define DEBUG_MAZE
 #endif
 
 

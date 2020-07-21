@@ -12,11 +12,7 @@ private:
 	SpriteMenuItem *sprite;
 	int dirX, dirY, speed; 
 
-			 /**
-			 * @brief A custom constructor for setting the ball's velocity, position, angle, and scale.
-			 * @param t_height The width
-			 * @return The height
-			 */
+			
 public:
 	/**
 	* @brief A custom constructor for setting the ball's velocity, position, angle, and scale.
