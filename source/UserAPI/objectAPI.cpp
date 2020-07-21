@@ -41,13 +41,21 @@ int UserAPI::move_object(lua_State* L)
     #endif
 
     int t_runState;
+    // while there are steps left
     while(!(x == 0 && y == 0))
     {
+        // Adjust remaining steps
+        
+        obj->moveTo( sign(x), sign(y));
+
         x = x - sign(x);
         y = y - sign(y);
+
         #ifdef DEBUG_API
             Util::PrintLine("state: " + std::to_string(t_runState) );
         #endif
+
+        //  check the threadState for a halt
         do{
             lua_getglobal(L,"_EXEC_STATE");
             if(!lua_isnoneornil(L,-1))
@@ -61,15 +69,16 @@ int UserAPI::move_object(lua_State* L)
             }
             
         }while(t_runState == 1);
+
+        if(t_runState == THREAD_SKIP || t_runState == THREAD_CLOSE || t_runState)
+        {
+            return 0;
+        } 
         
         #ifdef DEBUG_API
         Util::PrintLine("step [" + std::to_string(t_id) + "]. x: " +  std::to_string(sign(x)) + ", y: " +  std::to_string(sign(x)) );
         #endif
-        obj->moveTo( sign(x), sign(y));
         
-
-        
-
         m3d::Thread::sleep(STEP_TIME);
     }
     
