@@ -48,15 +48,6 @@
 class Minigame : public Scene
 {
 private:
-
-	ButtonMenuItem  *AddButton = nullptr,
-                    *EditButton = nullptr,
-                    *RemoveButton = nullptr,
-                    *closeButton = nullptr,
-                    *submitButton = nullptr;
-	CodeEditorMenuItem* codeEditor = nullptr;
-	CommandEditorMenuItem* commandEditor = nullptr;
-
 	std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
 
 	bool showCommandLister = false, showCommandEditor = false, editCommandFromCommandEditor = false;
@@ -64,6 +55,17 @@ private:
     m3dCI::Sprite* m_gridOverlay = nullptr;
 
 protected:
+	/**
+		@brief MenuItems
+	**/
+	ButtonMenuItem  *AddButton = nullptr,
+		*EditButton = nullptr,
+		*RemoveButton = nullptr,
+		*closeButton = nullptr,
+		*submitButton = nullptr;
+	CodeEditorMenuItem* codeEditor = nullptr;
+	CommandEditorMenuItem* commandEditor = nullptr;
+
 	/**
 		@brief CommandLister is responsible for showing all objects which can be added to the CodeEditor.
 	**/
