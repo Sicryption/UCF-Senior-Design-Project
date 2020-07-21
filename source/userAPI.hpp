@@ -81,6 +81,8 @@ namespace UserAPI
     int make_circle(lua_State* L);  
     int make_text(lua_State* L);
     int make_paddle(lua_State* L); 
+    int make_naught(lua_State* L);
+    int make_cross(lua_State* L);
 
     /**
      *  @brief Moves an object within the current scene
