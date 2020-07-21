@@ -2,9 +2,9 @@
 #include "../scenes/minigame.hpp"
 #include "../commands/commands.h"
 
-#define t(x) mini->AddCommand(x)
-#define func(a) [mini]() { t(a); }
-#define PAIR(name, command) { name, [mini]() { t(command); }}
+#define t(x) minigame->AddCommand(x)
+#define func(a) [&]() { t(a); }
+#define PAIR(name, command) { name, [&]() { t(command); }}
 #define NULLPartialPAIR(name) { name, nullptr }
 #define NULLPAIR PAIR("", nullptr)
 #define COLORPAIR(name, r, g, b) PAIR(name, new ColorCommand(name, m3d::Color(r,g,b,255)))
@@ -18,11 +18,55 @@ namespace m3dCI
 
 		pair<string, function<void()>> helper[NUM_TABS][NUM_COMMANDS_PER_TAB] =
 		{
-			{ PAIR("Circle", new CircleCommand()), PAIR("Rectangle", new RectangleCommand()), NULLPartialPAIR("Triangle"), PAIR("Text", new TextCommand("Empty")), PAIR("Select", new SelectCommand()), PAIR("Delete", new DeleteCommand), NULLPAIR, NULLPAIR },
-			{ COLORPAIR("Red", 255, 0, 0), COLORPAIR("Orange", 255, 127, 0), COLORPAIR("Yellow", 255, 255, 0), COLORPAIR("Green", 0, 255, 0), COLORPAIR("Blue", 0, 0, 255), COLORPAIR("Indigo", 75, 0, 130), COLORPAIR("Violet", 148, 0, 211), COLORPAIR("Black", 0, 0, 0) },
-			{ PAIR("Up", new UpCommand()), PAIR("Down", new DownCommand()), PAIR("Left", new LeftCommand()), PAIR("Right", new RightCommand()), PAIR("Scale", new ScaleCommand("1","1")), PAIR("Scale_X", new ScaleCommand("1", "-1")), PAIR("Scale_Y", new ScaleCommand("-1", "1")) },
-			{ PAIR("Var", new VarCommand()), PAIR("Get_X", new GetXCommand()), PAIR("Get_Y", new GetYCommand()), PAIR("Get_Angle", new GetAngleCommand()), PAIR("Set_Angle", new SetAngleCommand()), NULLPartialPAIR("Get_Scale_X"), NULLPartialPAIR("Get_Scale_Y") },
-			{ PAIR("If", new IfCommand()), NULLPartialPAIR("Loop"), PAIR("While", new WhileCommand()), PAIR("End", new EndCommand()), PAIR("Label", new LabelCommand()), PAIR("goto", new GotoCommand()), NULLPAIR, NULLPAIR }
+			{ 
+                PAIR("Circle", new CircleCommand()), 
+                PAIR("Rectangle", new RectangleCommand()), 
+                //NULLPartialPAIR("Triangle"), 
+                PAIR("Text", new TextCommand("TEXT")), 
+                PAIR("Select", new SelectCommand()), 
+                PAIR("Delete", new DeleteCommand), 
+                NULLPAIR, 
+                NULLPAIR, 
+                NULLPAIR 
+            },
+			{ 
+                COLORPAIR("Red", 255, 0, 0), 
+                COLORPAIR("Orange", 255, 127, 0), 
+                COLORPAIR("Yellow", 255, 255, 0), 
+                COLORPAIR("Green", 0, 255, 0), 
+                COLORPAIR("Blue", 0, 0, 255), 
+                COLORPAIR("Indigo", 75, 0, 130), 
+                COLORPAIR("Violet", 148, 0, 211), 
+                COLORPAIR("Black", 0, 0, 0) 
+            },
+			{ 
+                PAIR("Up", new UpCommand()), 
+                PAIR("Down", new DownCommand()), 
+                PAIR("Left", new LeftCommand()), 
+                PAIR("Right", new RightCommand()), 
+                PAIR("Scale", new ScaleCommand("1","1")), 
+                PAIR("Scale_X", new ScaleCommand("1", "-1")), 
+                PAIR("Scale_Y", new ScaleCommand("-1", "1")) 
+            },
+			{ 
+                PAIR("Var", new VarCommand()), 
+                PAIR("Get_X", new GetXCommand()), 
+                PAIR("Get_Y", new GetYCommand()), 
+                PAIR("Get_Angle", new GetAngleCommand()), 
+                PAIR("Set_Angle", new SetAngleCommand()), 
+                PAIR("Get_Scale_X", new Get_ScaleXCommand()), 
+                PAIR("Get_Scale_Y", new Get_ScaleYCommand()) 
+            },
+			{ 
+                PAIR("If", new IfCommand()), 
+                NULLPartialPAIR("Loop"), 
+                PAIR("While", new WhileCommand()), 
+                PAIR("End", new EndCommand()), 
+                PAIR("Label", new LabelCommand()), 
+                PAIR("Goto", new GotoCommand()), 
+                NULLPAIR, 
+                NULLPAIR 
+            }
 		};
 
 		for (int i = 0; i < NUM_TABS; i++)
@@ -72,9 +116,6 @@ namespace m3dCI
 		int sizeOfArray = sizeof(listOfCommandsByTab[index]) / sizeof(listOfCommandsByTab[index][0]);
 		for (int i = 0; i < sizeOfArray; i++)
 		{
-			if (listOfCommandsByTab[index][i].first == "")
-				continue;
-
 			m3dCI::commandListerItem* command = new m3dCI::commandListerItem(
 				x + tabWidthAndHeight,
 				y + commandObjectHeight * i,
@@ -116,7 +157,7 @@ namespace m3dCI
 		{
 			for (unsigned int i = 0; i < commands[selectedTab].size(); i++)
 			{
-				if (commands[selectedTab][i] != nullptr)
+				if (commands[selectedTab][i] != nullptr && listOfCommandsByTab[selectedTab][i].first != "")
 					commands[selectedTab][i]->draw(t_context);
 			}
 		}
@@ -137,7 +178,9 @@ namespace m3dCI
 		int commandObjectHeight = BOTTOMSCREEN_HEIGHT / NUM_COMMANDS_PER_TAB;
 		int selectedCommand = py / commandObjectHeight;
 
-		if (selectedCommand == -1 || listOfCommandsByTab[selectedTab][selectedCommand].first == "" || listOfCommandsByTab[selectedTab][selectedCommand].second == nullptr)
+		if (selectedCommand == -1 
+			|| listOfCommandsByTab[selectedTab][selectedCommand].first == "" 
+			|| listOfCommandsByTab[selectedTab][selectedCommand].second == nullptr)
 			return;
 
 		listOfCommandsByTab[selectedTab][selectedCommand].second();
@@ -176,5 +219,15 @@ namespace m3dCI
 			
 			currentlySelectedTab = tabIndex;
 		}
+	}
+
+	void CommandLister::OverrideCommandListObject(pair<string, function<void()>> commandListObject, int tab, int id)
+	{
+		if (tab >= NUM_TABS || id >= NUM_COMMANDS_PER_TAB || tab < 0 || id < 0)
+			return;
+
+		listOfCommandsByTab[tab][id] = commandListObject;
+
+		commands[tab][id]->setText(commandListObject.first);
 	}
 }

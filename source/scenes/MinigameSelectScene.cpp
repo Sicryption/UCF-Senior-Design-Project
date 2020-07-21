@@ -38,6 +38,13 @@ MinigameSelectScene::MinigameSelectScene()
 	whiteBackground = new RectangleMenuItem(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
 	menu->AddItem(whiteBackground);
 
+	
+	grass = new SpriteMenuItem(*ResourceManager::getSprite("grassB1.png"));
+	menu->AddItem(grass);
+
+	bGrass = new SpriteMenuItem(*ResourceManager::getSprite("grassB2.png"));
+	menu->AddItem(bGrass);
+
 	int ButtonWidth = 50;
 	int ButtonHeight = 50;
 
@@ -72,6 +79,8 @@ MinigameSelectScene::MinigameSelectScene()
 			{
 				if (i == MINIGAME_LIST::MAZE)
 					SceneManager::setTransition(new MazeScene());
+				else if(i == MINIGAME_LIST::TIC_TAC_TOE)
+					SceneManager::setTransition(new TicTacToeScene());
 				else
 					SceneManager::setTransition(new Minigame());
 			}
@@ -103,8 +112,8 @@ void MinigameSelectScene::draw()
 {
 	m3d::Screen * scr = GameManager::getScreen();
 
-	scr->drawTop(*whiteBackground, RenderContext::Mode::Flat);
-	scr->drawBottom(*whiteBackground, RenderContext::Mode::Flat);
+	scr->drawTop(*grass, RenderContext::Mode::Flat);
+	scr->drawBottom(*bGrass, RenderContext::Mode::Flat);
 
 	if (selectedMinigame == -1)
 		scr->drawTop(*MinigameSelectTopText, RenderContext::Mode::Flat);

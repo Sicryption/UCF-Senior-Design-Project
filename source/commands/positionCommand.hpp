@@ -12,11 +12,11 @@ public:
 
     ~GetXCommand();
 
-    std::vector<std::string> getParamNames() {return {};}
+    std::vector<std::string> getParamNames() {return { "Variable"};}
 
     std::string convertToLua()
     {
-        return "get_x()\n"; 
+        return m_params[0] + " = get_x()\n"; 
     }
 
 };
@@ -32,11 +32,11 @@ public:
 
     ~GetYCommand();
 
-    std::vector<std::string> getParamNames() {return {};}
+    std::vector<std::string> getParamNames() {return {"Variable"};}
 
     std::string convertToLua()
     {
-        return "get_y()\n"; 
+        return m_params[0] + " = get_y()\n"; 
     }
 
 };
@@ -57,7 +57,7 @@ public:
 
     std::string convertToLua()
     {
-        return "set_x(" + m_params[0] +")\n"; 
+        return "set_x(current_object," + m_params[0] +")\n"; 
     }
 
 };
@@ -78,7 +78,7 @@ public:
 
     std::string convertToLua()
     {
-        return "set_y(" + m_params[0] +")\n"; 
+        return "set_y( current_object," + m_params[0] +")\n"; 
     }
 
 };

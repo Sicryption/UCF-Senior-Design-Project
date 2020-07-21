@@ -1,8 +1,8 @@
-#include "../gameObject.hpp"
+#include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
 #include "../util.hpp"
-#include <sstream>
+//#include <sstream>
 
 #define DEBUG
 
@@ -48,6 +48,7 @@ public:
         m3d::Screen * screen = GameManager::getScreen();
 
 		sprite->setPosition(x, y);
+        sprite->setRotation(angle);
         screen->drawTop(*sprite);
     }
 
@@ -128,7 +129,7 @@ public:
 		#endif*/
         
     };
-    void Rotate(double deg){};
+    //void Rotate(double deg){};
     int winCond() {
 			if((x/20) == 18 && (y/20) == 9)
 			{
@@ -139,4 +140,9 @@ public:
 				return 0;
 			}
 		}
+    void setposition(int xcoor, int ycoor, bool (*walls)[12][20]){
+        x = xcoor;
+        y = ycoor;
+        wall = walls;
+    };
 };

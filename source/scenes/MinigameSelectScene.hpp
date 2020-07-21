@@ -3,6 +3,7 @@
 #include "scene.hpp"
 #include "MinigameDescriptor.hpp"
 #include "MazeScene.hpp"
+#include "TicTacToeScene.hpp"
 
 #include "../gameManager.hpp"
 #include "../inputManager.hpp"
@@ -13,15 +14,24 @@
 #define xScale 1.3f
 #define yScale 1.3f
 
+/**
+	@brief The MinigameSelectScene is the screen which shows all minigames to choose from
+	- List Minigame Options
+	- Load into respective Minigames
+	- Give sneak peak of each Minigame
+**/
 class MinigameSelectScene : public Scene
 {
-	private:
+	private:		
+		///@brief List of Minigame ID's. This is used to link each button to the proper Minigame/MinigameDescriptor
 		enum MINIGAME_LIST
 		{
-			MAZE = 0
+			MAZE = 0,
+			PONG = 1,
+			TIC_TAC_TOE = 2
 		};
-
-		//std::vector<MinigameDescriptor
+		
+		///@brief List of MinigameDescriptors which make up the Boxes on screen.
 		MinigameDescriptor minigames[MINIGAME_COUNT] =
 		{
 			MinigameDescriptor("Maze", "Navigate through a maze.\n\n\n\nAims to teach: Object Movement", "mazeSmall.png", "mazeLarge.png"),
@@ -32,26 +42,76 @@ class MinigameSelectScene : public Scene
 			MinigameDescriptor()
 		};
 
+		///@brief curently selected Minigame ID
 		int selectedMinigame = -1;
 
 		RectangleMenuItem *whiteBackground;
+
+		SpriteMenuItem* grass;
+		SpriteMenuItem* bGrass;
 
 		SpriteMenuItem *selectedMinigameLargeSprite = nullptr;
 		TextMenuItem *MinigameSelectTopText = nullptr, *MinigameDescription = nullptr, *MinigameName = nullptr;
 		ButtonMenuItem* minigameOptions[MINIGAME_COUNT];
 
 	public:
+	
+		/**
+			@brief Constructor for MinigameSelectScene.
+			Responsible for creating all necessary MenuItems.
+		**/
 		MinigameSelectScene();
+		
+		/**
+			@brief Deconstructor for MinigameSelectScene.
+			Responsible for deleting all needed MenuItems.
+		**/
 		~MinigameSelectScene();
 
+		/**
+			@brief Initialization of values of all MenuItems.
+		**/
 		void initialize();
+		
+		/**
+			@brief Function responsible for drawing the MainMenuScene
+			Updates each game frame.
+		**/
 		void draw();
+		
+		/**
+			@brief Function responsible for determining Menu Clicks and Apple Animation.
+			Updates each game frame.
+		**/
 		void update();
 
+		/**
+			@brief Load Scene Data
+			UNUSED
+		**/
 		void load() {};
+		
+		/**
+			@brief Unload Scene Data
+			UNUSED
+		**/
 		void unload() {};
+		
+		/**
+			@brief Function called when Minigame is first created
+			UNUSED
+		**/
 		void onEnter() {};
+		
+		/**
+			@brief Function called before Minigame is destroyed
+			UNUSED
+		**/
 		void onExit() {};
 
+		/**
+			@brief Function called to select a specific minigame
+			@param index ID of Minigame to select
+		**/
 		void SelectMinigame(int index);
 };

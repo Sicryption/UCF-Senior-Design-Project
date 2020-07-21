@@ -22,11 +22,17 @@ MainMenuScene::MainMenuScene()
 
 	apple = new SpriteMenuItem(*ResourceManager::getSprite("apple.png"));
 	menu->AddItem(apple);
+
+	grass = new SpriteMenuItem(*ResourceManager::getSprite("grassB1.png"));
+	menu->AddItem(grass);
+
+	bGrass = new SpriteMenuItem(*ResourceManager::getSprite("grassB2.png"));
+	menu->AddItem(bGrass);
 }
 
 MainMenuScene::~MainMenuScene()
 {
-	Util::PrintLine("Destroying mainmenuscene");
+	
 }
 
 void MainMenuScene::initialize()
@@ -56,7 +62,6 @@ void MainMenuScene::initialize()
 
 	apple->setCenter(apple->m_sprite.params.pos.w / 2, apple->m_sprite.params.pos.h / 2);
 	apple->setPosition(topScreenWidth * 0.75 + 25, -(apple->m_sprite.params.pos.h / 2));
-	apple->setScale(0.35f, 0.35f);
 }
 
 void MainMenuScene::draw()
@@ -88,8 +93,8 @@ void MainMenuScene::draw()
 		}
 	}
 
-	scr->drawTop(*whiteBackground, RenderContext::Mode::Flat);
-	scr->drawBottom(*whiteBackground, RenderContext::Mode::Flat);
+	scr->drawTop(*grass, RenderContext::Mode::Flat);
+	scr->drawBottom(*bGrass, RenderContext::Mode::Flat);
 	scr->drawTop(*StartupText, RenderContext::Mode::Flat);
 	if (apple->getYPosition() < (screenHeight / 2 - 10))
 	{
