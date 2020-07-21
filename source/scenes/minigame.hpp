@@ -21,8 +21,9 @@
 #include "../sandbox.hpp"
 
 #ifdef DEBUG
-#define DEBUG_THREAD
+#define DEBUG_MINIGAME
 #endif
+
 
 /**
  *  @def setObjectName

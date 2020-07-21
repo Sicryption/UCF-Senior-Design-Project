@@ -47,7 +47,10 @@ void LuaSandbox::initialize(std::function<void()> before = 0, std::function<void
     luaopen_base(m_luaState);
     luaopen_table(m_luaState);
     bindAPI();
-    executeFile("lua/init_scene.lua");
+    if(!executeFile("lua/init_scene.lua"))
+    {
+        Util::PrintLine("Error: failed to init \'lua/init_scene.lua\'");
+    }
     lock_sandbox.~Lock();
 
     m_thread = new m3d::Thread( [this](m3d::Parameter p){sandboxRuntime(p);}, 
@@ -76,7 +79,7 @@ void LuaSandbox::sandboxRuntime(m3d::Parameter param)
 		Util::PrintLine("Error: threadstate not defined, sandbox thread closing.");
 		return;
 	}
-
+    
     
 
     #ifdef DEBUG_SANDBOX
@@ -85,30 +88,35 @@ void LuaSandbox::sandboxRuntime(m3d::Parameter param)
 	
 	while (true)
 	{
-		//  Lock access to Thread State
-		m3d::Lock lock_state(m_mutex_threadState);
-		if (*state == THREAD_CLOSE)
+		int s = getThreadState();
+		if (s == THREAD_CLOSE)
 		{   //  close Thread
 			break;
 		}
-		else if (*state == THREAD_HALT)
+		else if (s == THREAD_HALT)
 		{
 			continue;
-		}
-		// Unlock Thread State
-		lock_state.~Lock();
+		}else if(s == THREAD_SKIP)
+        {
+            setThreadState(THREAD_RUNNING);
+            m3d::Lock lock_state(m_mutex_threadState);
+            m_luaQueue.pop();            
+        }
+        else if(s == THREAD_CLEAR)
+        {
+            clearQueue();
+            setThreadState(THREAD_RUNNING);
+        }
+
 
 		if (m_luaQueue.size() > 0)
 		{
 			m_execBefore();
-			//  TODO : Disable Command Menu
             
-            // Lock lua queue access
-            m3d::Lock lock_queue(m_mutex_lua);
+            m3d::Lock lock_queue(m_mutex_lua);  // Lock lua queue access
 			std::string t_lua(m_luaQueue.front());
-            m_luaQueue.pop();
-            // Unlock lua queue access
-            lock_queue.~Lock();
+            m_luaQueue.pop();            
+            lock_queue.~Lock(); // Unlock lua queue access
 
             #ifdef DEBUG_SANDBOX
 			Util::PrintLine("thread: read \'"+t_lua.substr(0,30)+"\'");
@@ -133,7 +141,6 @@ void LuaSandbox::sandboxRuntime(m3d::Parameter param)
             lock_sandbox.~Lock();
 
 			m_execAfter();
-
 		}
 
 		m3d::Thread::sleep();
@@ -357,6 +364,12 @@ void LuaSandbox::clearQueue()
     m3d::Lock lock_queue(m_mutex_lua);
     while(!m_luaQueue.empty())
     {
+        #ifdef DEBUG_SANDBOX
+        Util::Print("pop ");
+        #endif
         m_luaQueue.pop();
     }
+    #ifdef DEBUG_SANDBOX
+    Util::PrintLine("");
+    #endif
 }

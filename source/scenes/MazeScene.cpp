@@ -190,21 +190,28 @@ void MazeScene::update()
 				SceneManager::setTransition(new MinigameSelectScene());
 			break;
 	}
+
+    
 };
 
 void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)
-{
-	
-    Util::PrintLine("maze: queue commands");
+{	
+    #ifdef DEBUG_MINIGAME
+    Util::PrintLine("Maze: queue commands");
+    #endif
     std::string str = CommandObject::ConvertBulk(luaCode);
 
+    /*
+        Encapsulate code into a function. then call the function.
+    */
+    stringstream fn;
+    fn << "userCode = function()" << str << " end\n" << "\n";
+    m_sandbox->executeStringQueued(fn.str()); // if this returns false theres an error in the usercode
+    m_sandbox->executeStringQueued("userCode()\n");
 
-	//Util::getInstance()->PrintLine(str);
-	//executeInSandbox(str);
-    m_sandbox->executeStringQueued(str);
-
-    Util::PrintLine("done");
-
+    #ifdef DEBUG_MINIGAME
+    Util::PrintLine("Maze: done");
+    #endif
 	currentState = MazeState::Execute;
 }
 

@@ -60,7 +60,7 @@ Minigame::~Minigame()
 
 void Minigame::update()
 {
-    #ifdef DEBUG_THREAD
+    #ifdef DEBUG_MINIGAME
 	if (buttons::buttonPressed(buttons::X))
 	{
 		if(m_sandbox->getThreadState() == THREAD_HALT)
@@ -76,7 +76,7 @@ void Minigame::update()
 	if (buttons::buttonPressed(buttons::Y))
 	{
         Util::PrintLine("Thread Stopped");
-		m_sandbox->setThreadState(THREAD_CLOSE);
+		m_sandbox->setThreadState(THREAD_CLEAR);
 
 	}
     #endif
