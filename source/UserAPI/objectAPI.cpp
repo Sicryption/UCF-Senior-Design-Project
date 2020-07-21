@@ -44,12 +44,6 @@ int UserAPI::move_object(lua_State* L)
     // while there are steps left
     while(!(x == 0 && y == 0))
     {
-        // Adjust remaining steps
-        
-        obj->moveTo( sign(x), sign(y));
-
-        x = x - sign(x);
-        y = y - sign(y);
 
         #ifdef DEBUG_API
             Util::PrintLine("state: " + std::to_string(t_runState) );
@@ -74,6 +68,12 @@ int UserAPI::move_object(lua_State* L)
         {
             return 0;
         } 
+
+        obj->moveTo( sign(x), sign(y));
+
+        // Adjust remaining steps
+        x = x - sign(x);
+        y = y - sign(y);
         
         #ifdef DEBUG_API
         Util::PrintLine("step [" + std::to_string(t_id) + "]. x: " +  std::to_string(sign(x)) + ", y: " +  std::to_string(sign(x)) );
