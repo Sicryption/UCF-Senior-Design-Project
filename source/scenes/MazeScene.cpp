@@ -174,6 +174,7 @@ void MazeScene::update()
 		case MazeState::Execute:
 			if(checkWinCond() == 1)
 			{
+				m_sandbox->setThreadState(THREAD_CLEAR);
 				currentState = MazeState::Transistion;
 			}
 			break;
