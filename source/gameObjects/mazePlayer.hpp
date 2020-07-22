@@ -58,98 +58,91 @@ public:
     }
 
     void destroy(){ this->~TerminalObject(); }
-    void moveTo(double _x,double _y)
-    {
-        int i;
-        int xc = (x/ XWidth);
-        int yc = (y/ YWidth);
-         /*
+	void moveTo(double _x, double _y)
+	{
+		int i;
+		int xc = (x / XWidth);
+		int yc = (y / YWidth);
+		/*
 
-        
-        if( (x + _x) < 0 || (y + _y) < 0 || (x + _x) >= 40 || (y + _y) >= 24)
-            return;
-        
-        if((*wall)[(int)(x + _x)][(int)(y + _y)]==0)
-        {
-            x += (_x * 10);
-	        y += (_y * 10);
-        }*/
-        //if( (xc + _x) < 0 || (yc + _y) < 0 || (xc + _x) >= 20 || (yc + _y) >= 12)
-            //return;
-        if(_y == 0)
-        {
-            if(_x > 0)
-            {
-                _x += xc;
-                for( i = xc; i < (int)_x; i++)
-                {
-                    if((*wall)[yc][i + 1] == 1)
-                    {
-                        break;
-                    }
-                        
-                    x = x + XWidth;
-                }
-            }
-            if(_x < 0)
-            {
-                _x += xc;
-                for(i = xc; i > (int)_x; i--)
-                {
-                    if((*wall)[yc][i - 1] == 1)
-                        break;
-                    x -= XWidth;
-                }
-            }
-            
-        }
-        if(_x==0)
-        {
-            if(_y > 0)
-            {
-                _y += yc;
-                for(i = yc; i < (int)_y; i++)
-                {
-                    if((*wall)[i+1][xc] == 1)
-                        break;
-                    y += YWidth;
-                }
-            }
-            if(_y < 0)
-            {
-                _y += yc;
-                for( i = yc; i > (int)_y; i--)
-                {
-                    if((*wall)[i - 1][xc] == 1)
-                        break;
-                    y -= YWidth;
-                }
-            }
-        }
-    /*
-        #ifdef DEBUG
-			std::stringstream coordinates;
-			coordinates << "x =" << x ;
-			Util::PrintLine(coordinates.str());
-		#endif*/
-        
-    };
-    //void Rotate(double deg){};
-    int winCond() {
-			if((x/ XWidth) == 18 && (y/ YWidth) == 9)
+
+	   if( (x + _x) < 0 || (y + _y) < 0 || (x + _x) >= 40 || (y + _y) >= 24)
+		   return;
+
+	   if((*wall)[(int)(x + _x)][(int)(y + _y)]==0)
+	   {
+		   x += (_x * 10);
+		   y += (_y * 10);
+	   }*/
+	   //if( (xc + _x) < 0 || (yc + _y) < 0 || (xc + _x) >= 20 || (yc + _y) >= 12)
+		   //return;
+		if (_y == 0)
+		{
+			if (_x > 0)
 			{
-				return 1;
+				_x += xc;
+				for (i = xc; i < (int)_x; i++)
+				{
+					if ((*wall)[yc][i + 1] == 1)
+					{
+						break;
+					}
+
+					x = x + XWidth;
+				}
 			}
-			else
+			if (_x < 0)
 			{
-				return 0;
+				_x += xc;
+				for (i = xc; i > (int)_x; i--)
+				{
+					if ((*wall)[yc][i - 1] == 1)
+						break;
+					x -= XWidth;
+				}
+			}
+
+		}
+		if (_x == 0)
+		{
+			if (_y > 0)
+			{
+				_y += yc;
+				for (i = yc; i < (int)_y; i++)
+				{
+					if ((*wall)[i + 1][xc] == 1)
+						break;
+					y += YWidth;
+				}
+			}
+			if (_y < 0)
+			{
+				_y += yc;
+				for (i = yc; i > (int)_y; i--)
+				{
+					if ((*wall)[i - 1][xc] == 1)
+						break;
+					y -= YWidth;
+				}
 			}
 		}
+	}
+
+	int getX() 
+	{
+		return x;
+	}
+	
+	int getY() 
+	{
+		return y;
+	}
+
     void setposition(int xcoor, int ycoor, bool (*walls)[12][20]){
         x = xcoor;
         y = ycoor;
         wall = walls;
-    };
+    }
 
 	BoundingBox getAABB()
 	{
