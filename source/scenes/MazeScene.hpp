@@ -14,7 +14,7 @@
 class MazeScene : public Minigame
 {
 	private:
-		SpriteMenuItem *wallpaper, *wallpaper2, *texture, *popup, *wPopup, *current;
+		SpriteMenuItem *wallpaper, *wallpaper2, *texture, *popup, *wPopup, *lPopup, *current;
 		SpriteMenuItem *tutorial[5];
 		SpriteMenuItem *wallpapers[3];
 		int tutCount;
@@ -23,6 +23,7 @@ class MazeScene : public Minigame
 		TextMenuItem *prompt, *winPrompt;
         TerminalObject *runner;
 		int x, y, runnerID;
+		double timer; 
         bool walls[12][20] ={{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 							{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 							{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},

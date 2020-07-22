@@ -15,7 +15,7 @@ MazeScene::~MazeScene()
 
 void MazeScene::initialize(){
 	Minigame::initialize();
-
+	
 //loads and gets maze texture
 	//texture = new m3dCI::Sprite(*(ResourceManager::getSprite("wall.png")));
     //sprite* spr = new m3d::Sprite();
@@ -76,6 +76,10 @@ void MazeScene::initialize(){
 	popup = tutorial[tutCount++];
 	popup->setPosition(80,20);
 
+	//  initialize the lose popup window 
+	lPopup = new SpriteMenuItem(*(ResourceManager::getSprite("lose_popup.png")));
+	lPopup->setPosition(80, 20);
+
 	currentState = MazeState::TutorialMessage;
 }
 
@@ -105,6 +109,11 @@ void MazeScene::draw(){
 		//use m3dci for prompt
     }
 
+	if (currentState == MazeState::Lose)
+	{
+		screen->drawTop(*lPopup);
+	}
+
 	//screen->drawBottom(*bwallpaper);
 	//screen->drawBottom(*prompt);
 
@@ -129,6 +138,7 @@ void MazeScene::update()
 				if(tutCount >= 5)
 				{
 					currentState = MazeState::Requesting;
+					timer = 10;
 
 					std::vector<CommandObject*> startingCommands =
 					{
@@ -141,7 +151,7 @@ void MazeScene::update()
 						new DownCommand("5"),
 						new LeftCommand("18"),
 						new DownCommand("5"),
-						new RightCommand("18")
+						//new RightCommand("18")
 					};
 
 					SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
@@ -153,6 +163,7 @@ void MazeScene::update()
 			if (buttons::buttonDown(buttons::Start))
 			{
 				currentState = MazeState::Requesting;
+				timer = 10; 
 
 				std::vector<CommandObject*> startingCommands =
 				{
@@ -172,14 +183,23 @@ void MazeScene::update()
 			}
 			break;
 		case MazeState::Execute:
+			timer -= GameManager::getDeltaTime();
 			if(checkWinCond() == 1)
 			{
 				currentState = MazeState::Transistion;
+			}
+			else if (timer <= 0)
+			{
+				currentState = MazeState::Lose;
 			}
 			break;
 		case MazeState::Win:
 			break;
 		case MazeState::Lose:
+			if (Input::btnReleased(m3d::buttons::B)) // return to minigame select screen
+				SceneManager::setTransition(new MinigameSelectScene());
+			if (Input::btnReleased(m3d::buttons::A)) // restart the game 
+				initialize();
 			break;
 		case MazeState::Transistion:
 			transistion();
