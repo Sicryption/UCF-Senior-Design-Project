@@ -139,7 +139,7 @@ void MazeScene::transistion(){
 };
 
 void MazeScene::draw(){
-
+    Scene::draw();
 	m3d::Screen * screen = GameManager::getScreen();
 
 	current->setPosition(0,0);
@@ -163,7 +163,7 @@ void MazeScene::draw(){
 	//screen->drawBottom(*prompt);
 
 	Minigame::draw();
-    runner->draw();
+    //runner->draw();
 
 }
 		
@@ -252,7 +252,6 @@ void MazeScene::update()
 			break;
 	}
 
-	Util::PrintLine(std::to_string(currentState));
 };
 
 void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)

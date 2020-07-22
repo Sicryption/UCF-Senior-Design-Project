@@ -24,7 +24,7 @@ namespace m3dCI
                 //NULLPartialPAIR("Triangle"), 
                 PAIR("Text", new TextCommand("TEXT")), 
                 PAIR("Select", new SelectCommand()), 
-                PAIR("Delete", new DeleteCommand), 
+                PAIR("Delete", new DeleteCommand()), 
                 NULLPAIR, 
                 NULLPAIR, 
                 NULLPAIR 
