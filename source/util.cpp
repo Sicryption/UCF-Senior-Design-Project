@@ -96,7 +96,7 @@ void Util::OnDraw()
 {
     if(IsConsoleDrawn())
 	{
-		scr->drawTop(*console, RenderContext::Mode::Flat);
+		scr->drawTop(*console, RenderContext::Mode::Flat, 10);
 	}
 }
 
