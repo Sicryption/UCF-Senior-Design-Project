@@ -13,7 +13,7 @@
 #define TEAM_COUNT 2
 #define TUTORIAL_POPUP_COUNT 5
 
-#define MATCH_POINT 3
+#define MATCH_POINT 5
 
 class PongScene : public Minigame
 {
