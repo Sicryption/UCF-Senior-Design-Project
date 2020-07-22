@@ -11,7 +11,9 @@ class TicTacToeScene : public Minigame
         SpriteMenuItem *wallpaper, *popup;
         m3d::Color *colorRec, *colorText;
         TextMenuItem *prompt, *winPrompt;
-        RectangleMenuItem *rectangleTest;
+        RectangleMenuItem *topLeftTest, *topMidTest, *topRightTest;
+        RectangleMenuItem *midLeftTest, *midMidTest, *midRightTest;
+        RectangleMenuItem *botLeftTest, *botMidTest, *botRightTest;
 
         enum TTTState 
         {

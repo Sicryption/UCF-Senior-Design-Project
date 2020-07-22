@@ -17,8 +17,31 @@ void TicTacToeScene::initialize() {
     colorRec = new m3d::Color(150,150,150);
 	colorText = new m3d::Color(0,0,0);
 
-    rectangleTest = new RectangleMenuItem(50,130,50,50,*colorRec);
-    menu->AddItem(rectangleTest);
+    topLeftTest = new RectangleMenuItem(220,40,40,40,*colorRec);
+    topMidTest = new RectangleMenuItem(280,40,40,40,*colorRec);
+    topRightTest = new RectangleMenuItem(340,40,40,40,*colorRec);
+
+    midLeftTest = new RectangleMenuItem(220,100,40,40,*colorRec);
+    midMidTest = new RectangleMenuItem(280,100,40,40,*colorRec);
+    midRightTest = new RectangleMenuItem(340,100,40,40,*colorRec);
+
+    botLeftTest = new RectangleMenuItem(220,160,40,40,*colorRec);
+    botMidTest = new RectangleMenuItem(280,160,40,40,*colorRec);
+    botRightTest = new RectangleMenuItem(340,160,40,40,*colorRec);
+
+
+
+    menu->AddItem(topLeftTest);
+    menu->AddItem(topRightTest);
+    menu->AddItem(topMidTest);
+
+    menu->AddItem(midLeftTest);
+    menu->AddItem(midRightTest);
+    menu->AddItem(midMidTest);
+
+    menu->AddItem(botLeftTest);
+    menu->AddItem(botRightTest);
+    menu->AddItem(botMidTest);
 
     winPrompt = new TextMenuItem("You Win!",*colorText);
 	menu->AddItem(winPrompt);
@@ -52,7 +75,17 @@ void TicTacToeScene::draw() {
 
     wallpaper->setPosition(0,0);
     screen->drawTop(*wallpaper);
-    screen->drawTop(*rectangleTest);
+    screen->drawTop(*topLeftTest);
+    screen->drawTop(*topMidTest);
+    screen->drawTop(*topRightTest);
+
+    screen->drawTop(*midLeftTest);
+    screen->drawTop(*midMidTest);
+    screen->drawTop(*midRightTest);
+
+    screen->drawTop(*botLeftTest);
+    screen->drawTop(*botMidTest);
+    screen->drawTop(*botRightTest);
 
     /*if(currentState == TTTState::TutorialMessage)
     {   
