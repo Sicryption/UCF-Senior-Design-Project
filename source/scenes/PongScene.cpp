@@ -20,7 +20,7 @@ PongScene::PongScene(bool showTutorial)
 	if (!showTutorial)
 		tutCount = TUTORIAL_POPUP_COUNT;
 
-	showGridLines = false;
+	//showGridLines = false;
 
 	commandLister->OverrideTabCommandListObjects(
 		{
@@ -114,7 +114,7 @@ void PongScene::draw(){
 	m3d::Screen *screen = GameManager::getScreen();
 
 	wallpaper->setPosition(0, 0);
-	screen->drawTop(*wallpaper);
+	screen->drawTop(*wallpaper, m3d::RenderContext::Mode::Flat, 0);
 
 	ball->draw();
 
@@ -123,23 +123,24 @@ void PongScene::draw(){
 	rightPaddle->draw();
 	
 	for (int i = 0; i < TEAM_COUNT; i++)
-		screen->drawTop(*scoreBoard[i]);
+		screen->drawTop(*scoreBoard[i], m3d::RenderContext::Mode::Flat, 4);
 
 	if (currentState == PongState::TutorialMessage)
 	{
-		screen->drawTop(*popup);
+		screen->drawTop(*popup, m3d::RenderContext::Mode::Flat, 5);
 	}
 
 	// display win screen
 	if (currentState == PongState::Win)
 	{
+		screen->drawTop(*wPopup, m3d::RenderContext::Mode::Flat, 5);
 		screen->drawTop(*wPopup);
 	}
 
 	// display lose screen
 	if (currentState == PongState::Lose)
 	{
-		screen->drawTop(*lPopup);
+		screen->drawTop(*lPopup, m3d::RenderContext::Mode::Flat, 5);
 	}
 }
 		
@@ -206,7 +207,8 @@ void PongScene::update()
 			if (Input::btnReleased(m3d::buttons::A)) // restart the game without showing the tutorial message
 				SceneManager::setTransition(new PongScene(false));
 
-			m_sandbox->setThreadState(THREAD_CLEAR);
+			if (m_sandbox->getThreadState() == THREAD_RUNNING)
+				m_sandbox->setThreadState(THREAD_CLEAR);
 		break;
 		case PongState::Lose:
 			AddButton->SetActive(false);
@@ -219,7 +221,8 @@ void PongScene::update()
 			if (Input::btnReleased(m3d::buttons::A)) // restart the game 
 				SceneManager::setTransition(new PongScene());
 
-			m_sandbox->setThreadState(THREAD_CLEAR);
+			if(m_sandbox->getThreadState() == THREAD_RUNNING)
+				m_sandbox->setThreadState(THREAD_CLEAR);
 		break;
 		case PongState::Execute:
 

@@ -70,9 +70,7 @@ public:
         m3d::Screen *screen = GameManager::getScreen();
 
 		sprite->setPosition(x, y);
-        screen->drawTop(*sprite);
-
-
+		screen->drawTop(*sprite, m3d::RenderContext::Mode::Flat, 3);
     }
 
 	/**
