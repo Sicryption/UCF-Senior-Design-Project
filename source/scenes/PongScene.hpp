@@ -25,7 +25,6 @@ class PongScene : public Minigame
 		PongPaddle *leftPaddle, *rightPaddle;
 		array<int, 2> points; 
 		int matchPoint, tutCount;
-		bool notReadTut;
 		
 		enum PongState
 		{

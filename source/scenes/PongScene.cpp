@@ -1,11 +1,13 @@
 #include "PongScene.hpp"
 #include "MinigameSelectScene.hpp"
 
+#define TUTORIAL_POPUP_COUNT 5
+
 Util* util = Util::getInstance();
 
 PongScene::PongScene()
 {
-	notReadTut = true;
+
 }
 
 PongScene::~PongScene()
@@ -42,18 +44,15 @@ void PongScene::initialize(){
 
 
 	//  initialize the tutorial windows 
-	tutorial[0] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_1.png")));
-	tutorial[1] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_2.png")));
-	tutorial[2] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_3.png")));
-	tutorial[3] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_4.png")));
-	tutorial[4] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_5.png")));
+	for (int i = 0; i < TUTORIAL_POPUP_COUNT; i++)
+	{
+		tutorial[i] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_" + std::to_string(i + 1) + ".png")));
+		tutorial[i]->setPosition(80, 20);
+	}
 
 	
 	tutCount = 0;
-	popup = tutorial[tutCount++];
-	popup->setPosition(80, 20);
-
-
+	popup = tutorial[tutCount];
 
 	// initialize the game objects and add them to the hash map
 	ball = new PongBall();
@@ -92,9 +91,9 @@ void PongScene::draw(){
 
 	rightPaddle->draw();
 
-	if (currentState == PongState::TutorialMessage && notReadTut)
+	if (currentState == PongState::TutorialMessage)
 	{
-		//screen->drawTop(*popup);
+		screen->drawTop(*popup);
 	}
 
 	// display win screen
@@ -127,15 +126,19 @@ void PongScene::update()
 			// player reads the tutorial 
 			if (buttons::buttonPressed(buttons::A)) 
 			{
-				if (tutCount < 5)
+				if (tutCount < TUTORIAL_POPUP_COUNT)
 				{
-					popup = tutorial[tutCount++];
-					popup->setPosition(80, 20);
+					tutCount++;
+
+					if(tutCount < TUTORIAL_POPUP_COUNT)
+						popup = tutorial[tutCount];
 				}
 			}
 			// the player submits their code
-			if (buttons::buttonDown(buttons::Start) || tutCount >= 5)
+			if (buttons::buttonDown(buttons::Start) || tutCount >= TUTORIAL_POPUP_COUNT)
 			{
+				tutCount = 0;
+
 				currentState = PongState::Requesting;
 
 				std::vector<CommandObject*> startingCommands =
