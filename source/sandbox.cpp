@@ -31,7 +31,7 @@ std::pair<std::string, lua_CFunction> enabledFunctions[] = {
     std::make_pair( "get_y_scale", UserAPI::get_y_scale),
     std::make_pair( "set_color" , UserAPI::set_color),
     //std::make_pair( "select" , UserAPI::select_object),
-    std::make_pair( "delete" , UserAPI::delete_object)
+    std::make_pair( "delete_object" , UserAPI::delete_object)
 };
 
 void LuaSandbox::initialize(std::function<void()> before = 0, std::function<void()> after = 0)
