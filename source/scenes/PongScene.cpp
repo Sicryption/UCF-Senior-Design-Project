@@ -180,7 +180,7 @@ void PongScene::update()
 
 				std::vector<CommandObject*> startingCommands =
 				{
-					new WhileCommand("true", true, true),
+					new WhileCommand("true", true, false),
 					new SelectCommand("ball"),
 					new GetYCommand("by"),
 					new SelectCommand("player"),
