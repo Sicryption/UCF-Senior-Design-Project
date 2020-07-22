@@ -3,6 +3,13 @@
 
 #include "../sandbox.hpp"
 
+#define t(x) AddCommand(x)
+#define func(a) [&]() { t(a); }
+#define PAIR(name, command) { name, [&]() { t(command); }}
+#define NULLPartialPAIR(name) { name, nullptr }
+#define NULLPAIR PAIR("", nullptr)
+#define COLORPAIR(name, r, g, b) PAIR(name, new ColorCommand(name, m3d::Color(r,g,b,255)))
+
 #define SCOREBOARD_PADDING 30
 #define SCOREBOARD_TOP_PADDING 5
 
@@ -14,6 +21,16 @@ PongScene::PongScene(bool showTutorial)
 		tutCount = TUTORIAL_POPUP_COUNT;
 
 	showGridLines = false;
+
+	commandLister->OverrideTabCommandListObjects(
+		{
+			PAIR("Set_X", new SetXCommand("varName")),
+			PAIR("Set_Y", new SetYCommand("varName")),
+			PAIR("Scale", new ScaleCommand("1", "1")),
+			PAIR("Scale_X", new ScaleCommand("1", "-1")),
+			PAIR("Scale_Y", new ScaleCommand("-1", "1"))
+		}, 2
+		);
 }
 
 PongScene::~PongScene()
