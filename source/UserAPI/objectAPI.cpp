@@ -166,6 +166,58 @@ int UserAPI::make_text(lua_State* L)
     return 1;
 }
 
+int UserAPI::make_naught(lua_State* L)
+{
+    lua_Number x = lua_tonumber(L,-2);
+    lua_Number y = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    int t_id = currScene->addObject(new CircleObject(x,y,(DEFAULT_SIZE/2),0,DEFAULT_COLOR)); 
+    if(t_id == 0)
+    {
+        Util::PrintLine("Error: could not create Circle Object in Scene \'" + currScene->getSceneName() + "\'");
+        return 0;
+    }
+    
+    lua_pushinteger(L,t_id);
+    lua_setglobal(L,"current_object");
+    lua_pushinteger(L,t_id);
+    return 1;
+}
+
+int UserAPI::make_cross(lua_State* L)
+{
+    {
+    lua_Number x = lua_tonumber(L,-2);
+    lua_Number y = lua_tonumber(L,-1);
+
+    Scene *currScene = SceneManager::getScene();
+    if(currScene == nullptr)
+    {
+        Util::PrintLine("Error: no current scene");
+        return 0;
+    }
+
+    int t_id = currScene->addObject(new CircleObject(x,y,(DEFAULT_SIZE/2),0,DEFAULT_COLOR)); 
+    if(t_id == 0)
+    {
+        Util::PrintLine("Error: could not create Circle Object in Scene \'" + currScene->getSceneName() + "\'");
+        return 0;
+    }
+    
+    lua_pushinteger(L,t_id);
+    lua_setglobal(L,"current_object");
+    lua_pushinteger(L,t_id);
+    return 1;
+}
+}
+
 int make_paddle(lua_State* L)
 {
     return 0;
@@ -508,3 +560,6 @@ int UserAPI::delete_object(lua_State* L)
     m3d::Thread::sleep(STEP_TIME);
     return 0;
 }
+
+
+

@@ -96,3 +96,52 @@ public:
         return  m_params[0] + " = " + m_params[1] + "\n"; 
     }
 };
+
+class TTT_O_Command : public CommandObject
+{
+
+public:
+    TTT_O_Command(std::string t_x = "0", std::string t_y = "0",bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    {
+        m_name="Naught";
+		setParam(0, t_x);
+		setParam(1, t_y);
+        m_background = m3dCI::Sprite( *ResourceManager::getSprite("command_background_instance.png"));
+        m_background.setTint(COM_LOCK_TINT);
+    }
+
+    ~TTT_O_Command();
+
+    std::vector<std::string> getParamNames() {return {"coloumn", "row"};}
+
+    std::string convertToLua()
+    {
+        return "make_naught(" + m_params[0] + ", " +  m_params[1] +  ")\n"; 
+    }
+
+};
+
+class TTT_X_Command : public CommandObject
+{
+
+public:
+    TTT_X_Command(std::string t_x = "0", std::string t_y = "0",bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    {
+        m_name="Cross";
+		setParam(0, t_x);
+		setParam(1, t_y);
+        m_background = m3dCI::Sprite( *ResourceManager::getSprite("command_background_instance.png"));
+        m_background.setTint(COM_LOCK_TINT);
+    }
+
+    ~TTT_X_Command();
+
+    std::vector<std::string> getParamNames() {return {"coloumn", "row"};}
+
+    std::string convertToLua()
+    {
+        return "make_cross(" + m_params[0] + ", " +  m_params[1] +  ")\n"; 
+    }
+
+};
+

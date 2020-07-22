@@ -15,6 +15,8 @@ std::pair<std::string, lua_CFunction> enabledFunctions[] = {
     std::make_pair( "make_rectangle" , UserAPI::make_rectangle),
     std::make_pair( "make_circle" , UserAPI::make_circle),
     std::make_pair( "make_text" , UserAPI::make_text),
+    std::make_pair( "make_naught" , UserAPI::make_naught),
+    std::make_pair( "make_cross" , UserAPI::make_cross),
     std::make_pair( "move" , UserAPI::move_object),
     std::make_pair( "position" , UserAPI::set_position),
     std::make_pair( "set_x" , UserAPI::set_x_position),
