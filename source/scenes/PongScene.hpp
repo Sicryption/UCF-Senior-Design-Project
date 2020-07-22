@@ -43,7 +43,7 @@ class PongScene : public Minigame
 		/**
 		 *  @brief Default Constructor, should be inherited by child class constructors.
 		 */
-		PongScene();
+		PongScene(bool showTutorial = true);
 
 		/**
 		 *  @brief Default Destructor, should be inherited by child class destructor.

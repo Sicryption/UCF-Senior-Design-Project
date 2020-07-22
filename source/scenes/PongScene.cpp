@@ -5,9 +5,10 @@
 
 Util* util = Util::getInstance();
 
-PongScene::PongScene()
+PongScene::PongScene(bool showTutorial)
 {
-
+	if (!showTutorial)
+		tutCount = TUTORIAL_POPUP_COUNT;
 }
 
 PongScene::~PongScene()
@@ -42,8 +43,11 @@ void PongScene::initialize(){
 		tutorial[i]->setPosition(80, 20);
 	}
 
-	tutCount = 0;
-	popup = tutorial[tutCount];
+	if (tutCount != TUTORIAL_POPUP_COUNT)
+	{
+		tutCount = 0;
+		popup = tutorial[tutCount];
+	}
 
 	// initialize the game objects and add them to the hash map
 	ball = new PongBall();
@@ -110,6 +114,11 @@ void PongScene::update()
 	switch(currentState)
 	{
 		case PongState::TutorialMessage:
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
+			submitButton->SetActive(false);
+
 			// player reads the tutorial 
 			if (buttons::buttonPressed(buttons::A)) 
 			{
@@ -147,16 +156,30 @@ void PongScene::update()
 				SceneManager::setTransition(new MinigameSelectScene());
 		break;
 		case PongState::Win:
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
+			submitButton->SetActive(false);
+
 			if (Input::btnReleased(m3d::buttons::B))
 				SceneManager::setTransition(new MinigameSelectScene());
+			if (Input::btnReleased(m3d::buttons::A)) // restart the game without showing the tutorial message
+				SceneManager::setTransition(new PongScene(false));
 
 			m_sandbox->setThreadState(THREAD_CLEAR);
 		break;
 		case PongState::Lose:
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
+			submitButton->SetActive(false);
+
 			if (Input::btnReleased(m3d::buttons::B)) // return to minigame select screen
 				SceneManager::setTransition(new MinigameSelectScene());
 			if (Input::btnReleased(m3d::buttons::A)) // restart the game 
-				initialize();
+				SceneManager::setTransition(new PongScene());
+
+			m_sandbox->setThreadState(THREAD_CLEAR);
 		break;
 		case PongState::Execute:
 
