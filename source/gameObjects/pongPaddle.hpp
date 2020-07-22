@@ -223,8 +223,6 @@ public:
 	*/
 	void setScale(double t_x, double t_y)
 	{
-		Util::PrintLine("Set scale called");
-
 		xScale = t_x;
 		yScale = t_y;
 
