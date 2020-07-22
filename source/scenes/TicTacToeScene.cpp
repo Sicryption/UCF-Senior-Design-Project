@@ -108,3 +108,8 @@ void TicTacToeScene::loadWinScr() { Minigame::loadWinScr(); };
 void TicTacToeScene::loadLoseScr() { Minigame::loadLoseScr(); };
 void TicTacToeScene::requestUI() { Minigame::requestUI(); };
 void TicTacToeScene::closeGame() { Minigame::closeGame(); };
+
+void TicTacToeScene::runEnemyAI()
+{
+    
+}
