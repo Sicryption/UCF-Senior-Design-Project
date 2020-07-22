@@ -235,11 +235,17 @@ void MazeScene::update()
 			break;
 		case MazeState::Win:
 			if (buttons::buttonPressed(buttons::A))
-			{
 				SceneManager::setTransition(new MinigameSelectScene());
-			}
+			submitButton->SetActive(false);
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
 			break;
 		case MazeState::Lose:
+			submitButton->SetActive(false);
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
 			break;
 		case MazeState::Transistion:
 			transistion();
