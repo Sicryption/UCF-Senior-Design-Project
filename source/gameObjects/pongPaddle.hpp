@@ -74,19 +74,9 @@ public:
 	/**
 	* @brief Determine the paddle's velocity.
 	*/
-    void update() {
-		if (ball == nullptr)
-		{
-			// player paddle moves up or down based on button press (for testing purposes)
-			if (m3d::buttons::buttonDown(m3d::buttons::Button::Down)) {
-				moveTo(0, velo);
-			}
-
-			if (m3d::buttons::buttonDown(m3d::buttons::Button::Up)) {
-				moveTo(0, -velo); //
-			}
-		}
-		else
+    void update() 
+	{
+		if (ball != nullptr)
 		{
 			// calculate displacement between enemy paddle and ball 
 			int diff = (getYPosition() + (sprite->GetHeight() / 2)) - (ball->getYPosition() + (ball->getHeight() / 2));
