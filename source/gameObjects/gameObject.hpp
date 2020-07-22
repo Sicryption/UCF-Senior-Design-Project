@@ -172,7 +172,7 @@ public:
      * 
      *  @param t_color new m3d::Color value
      */
-    void setColor(m3d::Color t_color)
+    virtual void setColor(m3d::Color t_color)
     {
         m_color = t_color;
     }
