@@ -5,19 +5,19 @@ class GetAngleCommand : public CommandObject
 {
 
 public:
-    GetAngleCommand(std::string t_variable,bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    GetAngleCommand(std::string varName = "var", bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="get angle";
-		setParam(0, t_variable);
+		setParam(0, varName);
     }
 
     ~GetAngleCommand();
 
-    std::vector<std::string> getParamNames() {return { "Variable" };}
+    std::vector<std::string> getParamNames() { return { "Variable" }; }
 
     std::string convertToLua()
     {
-		return m_params[0] + " = get_angle()\n";
+        return "get_angle()\n"; 
     }
 
 };

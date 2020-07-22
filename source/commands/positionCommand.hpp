@@ -5,10 +5,10 @@ class GetXCommand : public CommandObject
 {
 
 public:
-    GetXCommand(std::string t_variable,bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    GetXCommand(std::string varName = "var", bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="get x";
-		setParam(0, t_variable);
+		setParam(0, varName);
     }
 
     ~GetXCommand();
@@ -26,10 +26,10 @@ class GetYCommand : public CommandObject
 {
 
 public:
-    GetYCommand(std::string t_variable,bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    GetYCommand(std::string varName = "var", bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="get y";
-		setParam(0, t_variable);
+		setParam(0, varName);
     }
 
     ~GetYCommand();
@@ -47,7 +47,7 @@ class SetXCommand : public CommandObject
 {
 
 public:
-    SetXCommand(std::string t_value,bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    SetXCommand(std::string t_value = 0,bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="set x";
 		setParam(0, t_value);
@@ -68,7 +68,7 @@ class SetYCommand : public CommandObject
 {
 
 public:
-    SetYCommand(std::string t_value, bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    SetYCommand(std::string t_value = 0, bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="set y";
 		setParam(0, t_value);
