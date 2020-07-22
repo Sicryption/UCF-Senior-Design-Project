@@ -2,10 +2,10 @@ name_table = {}
 current_object = nil
 _lock = false
 _EXEC_STATE = 0
-function select_object(name)
+select_object = function(name)
     current_object = name_table[name]
 end
-function delete(name)
+delete = function(name)
     name_table[name] = nil
 end
 function IsRunning()
