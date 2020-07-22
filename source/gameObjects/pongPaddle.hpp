@@ -33,6 +33,8 @@ public:
 		y = _y;
 		startX = _x;
 		startY = _y;
+		xScale = 1;
+		yScale = 1;
 	}
 
 	/**
@@ -45,6 +47,8 @@ public:
 		y = _y;
 		startX = _x;
 		startY = _y;
+		xScale = 1;
+		yScale = 1;
 
 		ball = _ball;
 	}
@@ -97,8 +101,11 @@ public:
 	*/
     void draw() {
         m3d::Screen *screen = GameManager::getScreen();
-		
+
 		PongRec->setPosition(x, y);
+		PongRec->setWidth(xScale * width);
+		PongRec->setHeight(yScale * height);
+
 		screen->drawTop(*PongRec, m3d::RenderContext::Mode::Flat, 3);
     }
 
@@ -168,10 +175,18 @@ public:
 	* @brief Place the paddle in its original position when a goal is scored and
 	* and reset the enemy paddle's chance to fail. 
 	*/
-	void reset()
+	void reset(bool resetScale = false)
 	{
 		x = startX;
 		y = startY;
+
+		if (resetScale)
+		{
+			xScale = 1;
+			yScale = 1;
+		}
+
+		m_color = m3d::Color(255, 255, 255);
 
 		chanceToFail = 0;
 		purposelyFail = false;
@@ -180,7 +195,11 @@ public:
 	/**
 	*  @brief Calls the destructor.
 	*/
-	void destroy() { this->~PongPaddle(); }
+	void destroy() 
+	{ 
+		delete(PongRec);
+		//this->~PongPaddle(); 
+	}
 
 	/**
 	* @brief Rotates the paddle to a given degree (unimplemented).
@@ -225,9 +244,6 @@ public:
 	{
 		xScale = t_x;
 		yScale = t_y;
-
-		PongRec->setWidth(t_x * width);
-		PongRec->setHeight(t_y * height);
 	}
 
 	/**

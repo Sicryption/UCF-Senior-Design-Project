@@ -257,8 +257,6 @@ void MazeScene::update()
 				SceneManager::setTransition(new MinigameSelectScene());
 			break;
 	}
-
-	Util::PrintLine(std::to_string(currentState));
 };
 
 void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)

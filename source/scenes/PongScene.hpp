@@ -73,6 +73,11 @@ class PongScene : public Minigame
 		*	This is called each game frame.
 		**/
 		void unload();
+
+		/**
+			@brief Resets all game objects to their origin and sets the points to 0
+		**/
+		void reset();
         
 		/**
 		*  @brief Sets the current state of the game, handles collisions, and calculates the score, and requests user code.

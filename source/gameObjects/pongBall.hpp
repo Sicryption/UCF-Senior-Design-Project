@@ -58,8 +58,8 @@ public:
 	*/
 	void reset()
 	{
-		x = 180;
-		y = 110;
+		x = TOPSCREEN_WIDTH / 2 - sprite->GetWidth() / 2;
+		y = TOPSCREEN_HEIGHT / 2 - sprite->GetHeight() / 2;
 	}
 
 	/**

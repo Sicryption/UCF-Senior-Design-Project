@@ -147,6 +147,52 @@ void PongScene::draw(){
 void PongScene::load(){ Minigame::load(); }; //any data files
         
 void PongScene::unload(){ Minigame::unload(); };
+
+void PongScene::reset()
+{
+	m_sandbox->setThreadState(THREAD_CLEAR);
+
+	currentState = PongState::Requesting;
+
+	for (int i = 0; i < TEAM_COUNT; i++)
+		points[i] = 0;
+
+	for (int i = 0; i < TEAM_COUNT; i++)
+		scoreBoard[i]->setText(std::to_string(points[i]));
+
+	if (ball == nullptr)
+	{
+		ball = new PongBall();
+		int ballID = addObject(ball);
+		setObjectName("ball", ballID);
+
+		ball->initialize();
+	}
+
+	if (leftPaddle == nullptr)
+	{
+		leftPaddle = new PongPaddle(20, 90);
+		int paddleID = addObject(leftPaddle);
+		setObjectName("player", paddleID);
+
+		leftPaddle->initialize();
+	}
+
+
+	if (rightPaddle == nullptr)
+	{
+		rightPaddle = new PongPaddle(380, 90, ball);
+		int enemyID = addObject(rightPaddle);
+		setObjectName("enemy", enemyID);
+
+		rightPaddle->initialize();
+	}
+
+	leftPaddle->reset(true);
+	rightPaddle->reset(true);
+	ball->reset();
+}
+
         
 void PongScene::update()
 {
@@ -202,13 +248,13 @@ void PongScene::update()
 			EditButton->SetActive(false);
 			submitButton->SetActive(false);
 
+			if (m_sandbox->getThreadState() != THREAD_HALT)
+				m_sandbox->setThreadState(THREAD_HALT);
+
 			if (Input::btnReleased(m3d::buttons::B))
 				SceneManager::setTransition(new MinigameSelectScene());
 			if (Input::btnReleased(m3d::buttons::A)) // restart the game without showing the tutorial message
-				SceneManager::setTransition(new PongScene(false));
-
-			if (m_sandbox->getThreadState() == THREAD_RUNNING)
-				m_sandbox->setThreadState(THREAD_CLEAR);
+				reset();
 		break;
 		case PongState::Lose:
 			AddButton->SetActive(false);
@@ -221,15 +267,15 @@ void PongScene::update()
 			if (Input::btnReleased(m3d::buttons::A)) // restart the game 
 				SceneManager::setTransition(new PongScene());
 
-			if(m_sandbox->getThreadState() == THREAD_RUNNING)
-				m_sandbox->setThreadState(THREAD_CLEAR);
+			if(m_sandbox->getThreadState() != THREAD_HALT)
+				m_sandbox->setThreadState(THREAD_HALT);
 		break;
 		case PongState::Execute:
 
 			// determine winner and loser
 			if (points[0] == MATCH_POINT)
 				currentState = PongState::Win;
-			else if (points[1] == MATCH_POINT)
+			else if (points[1] == MATCH_POINT || ball == nullptr)
 				currentState = PongState::Lose;
 
 			BoundingBox ballAABB = ball->getAABB();
