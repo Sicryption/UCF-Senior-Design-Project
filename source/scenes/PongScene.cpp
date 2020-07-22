@@ -12,6 +12,8 @@ PongScene::PongScene(bool showTutorial)
 {
 	if (!showTutorial)
 		tutCount = TUTORIAL_POPUP_COUNT;
+
+	showGridLines = false;
 }
 
 PongScene::~PongScene()
