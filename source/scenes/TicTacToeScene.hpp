@@ -14,6 +14,16 @@ class TicTacToeScene : public Minigame
         RectangleMenuItem *topLeftTest, *topMidTest, *topRightTest;
         RectangleMenuItem *midLeftTest, *midMidTest, *midRightTest;
         RectangleMenuItem *botLeftTest, *botMidTest, *botRightTest;
+        m3d::BoundingBox topLeftBB, topMidBB, topRightBB;
+        m3d::BoundingBox midLeftBB, midMidBB, midRightBB;
+        m3d::BoundingBox botLeftBB, botMidBB, botRightBB;
+
+        m3d::Circle *cTL, *cTM, *cTR;
+        m3d::Circle *cML, *cMM, *cMR;
+        m3d::Circle *cBL, *cBM, *cBR;
+        m3d::BoundingBox cTLBB, cTMBB, cTRBB;
+        m3d::BoundingBox cMLBB, cMMBB, cMRBB;
+        m3d::BoundingBox cBLBB, cBMBB, cBRBB;
 
         enum TTTState 
         {

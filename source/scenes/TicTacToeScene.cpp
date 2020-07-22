@@ -21,27 +21,62 @@ void TicTacToeScene::initialize() {
     topMidTest = new RectangleMenuItem(280,40,40,40,*colorRec);
     topRightTest = new RectangleMenuItem(340,40,40,40,*colorRec);
 
-    midLeftTest = new RectangleMenuItem(220,100,40,40,*colorRec);
-    midMidTest = new RectangleMenuItem(280,100,40,40,*colorRec);
-    midRightTest = new RectangleMenuItem(340,100,40,40,*colorRec);
-
-    botLeftTest = new RectangleMenuItem(220,160,40,40,*colorRec);
-    botMidTest = new RectangleMenuItem(280,160,40,40,*colorRec);
-    botRightTest = new RectangleMenuItem(340,160,40,40,*colorRec);
-
-
-
     menu->AddItem(topLeftTest);
     menu->AddItem(topRightTest);
     menu->AddItem(topMidTest);
+
+    midLeftTest = new RectangleMenuItem(220,100,40,40,*colorRec);
+    midMidTest = new RectangleMenuItem(280,100,40,40,*colorRec);
+    midRightTest = new RectangleMenuItem(340,100,40,40,*colorRec);
 
     menu->AddItem(midLeftTest);
     menu->AddItem(midRightTest);
     menu->AddItem(midMidTest);
 
+    botLeftTest = new RectangleMenuItem(220,160,40,40,*colorRec);
+    botMidTest = new RectangleMenuItem(280,160,40,40,*colorRec);
+    botRightTest = new RectangleMenuItem(340,160,40,40,*colorRec);
+
     menu->AddItem(botLeftTest);
     menu->AddItem(botRightTest);
     menu->AddItem(botMidTest);
+
+    topLeftBB = topLeftTest->getBoundingBox();
+    topMidBB = topMidTest->getBoundingBox();
+    topRightBB = topRightTest->getBoundingBox();
+
+    midLeftBB = midLeftTest->getBoundingBox();
+    midMidBB = midMidTest->getBoundingBox();
+    midRightBB = midRightTest->getBoundingBox();
+
+    botLeftBB = botLeftTest->getBoundingBox();
+    botMidBB = botMidTest->getBoundingBox();
+    botRightBB = botRightTest->getBoundingBox();
+
+    cTL = new m3d::Circle(240,60,20,*colorText);
+    cTM = new m3d::Circle(300,60,20,*colorText);
+    cTR = new m3d::Circle(360,60,20,*colorText);
+
+    cML = new m3d::Circle(240,120,20,*colorText);
+    cMM = new m3d::Circle(300,120,20,*colorText);
+    cMR = new m3d::Circle(360,120,20,*colorText);
+
+    cBL = new m3d::Circle(240,180,20,*colorText);
+    cBM = new m3d::Circle(300,180,20,*colorText);
+    cBR = new m3d::Circle(360,180,20,*colorText);
+
+    cTLBB= cTL->getBoundingBox();
+    cTMBB= cTM->getBoundingBox();
+    cTRBB= cTR->getBoundingBox();
+
+    cMLBB= cML->getBoundingBox();
+    cMMBB= cMM->getBoundingBox();
+    cMRBB= cMR->getBoundingBox();
+    
+    cBLBB= cBL->getBoundingBox();
+    cBMBB= cBM->getBoundingBox();
+    cBRBB= cBR->getBoundingBox();
+    
 
     winPrompt = new TextMenuItem("You Win!",*colorText);
 	menu->AddItem(winPrompt);
@@ -87,12 +122,65 @@ void TicTacToeScene::draw() {
     screen->drawTop(*botMidTest);
     screen->drawTop(*botRightTest);
 
-    /*if(currentState == TTTState::TutorialMessage)
-    {   
-        screen->drawTop(*popup);
-		screen->drawTop(*prompt);
-		//use m3dci for prompt
-    }*/
+    screen->drawTop(*cTL);
+    screen->drawTop(*cTM);
+    screen->drawTop(*cTR);
+
+    screen->drawTop(*cML);
+    screen->drawTop(*cMM);
+    screen->drawTop(*cMR);
+
+    screen->drawTop(*cBL);
+    screen->drawTop(*cBM);
+    screen->drawTop(*cBR);
+
+    if (topLeftBB.intersects(cTLBB))
+    {
+        winPrompt->setPosition(20,20);
+        screen->drawTop(*winPrompt);
+    }
+    if (topMidBB.intersects(cTMBB))
+    {
+        winPrompt->setPosition(20,30);
+        screen->drawTop(*winPrompt);
+    }
+    if (topRightBB.intersects(cTRBB))
+    {
+        winPrompt->setPosition(20,40);
+        screen->drawTop(*winPrompt);
+    }
+    if (midLeftBB.intersects(cMLBB))
+    {
+        winPrompt->setPosition(20,50);
+        screen->drawTop(*winPrompt);
+    }
+    if (midMidBB.intersects(cMMBB))
+    {
+        winPrompt->setPosition(20,60);
+        screen->drawTop(*winPrompt);
+    }
+    if (midRightBB.intersects(cMRBB))
+    {
+        winPrompt->setPosition(20,70);
+        screen->drawTop(*winPrompt);
+    }
+    if (botLeftBB.intersects(cBLBB))
+    {
+        winPrompt->setPosition(20,80);
+        screen->drawTop(*winPrompt);
+    }
+    if (botMidBB.intersects(cBMBB))
+    {
+        winPrompt->setPosition(20,90);
+        screen->drawTop(*winPrompt);
+    }
+    if (botRightBB.intersects(cBRBB))
+    {
+        winPrompt->setPosition(20,100);
+        screen->drawTop(*winPrompt);
+    }
+
+    
 }
 
 void TicTacToeScene::load(){Minigame::load();};
