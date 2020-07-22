@@ -59,7 +59,7 @@ namespace m3dCI
             },
 			{ 
                 PAIR("If", new IfCommand()), 
-                NULLPartialPAIR("Loop"), 
+                PAIR("Loop", new LoopCommand()), 
                 PAIR("While", new WhileCommand()), 
                 PAIR("End", new EndCommand()), 
                 PAIR("Label", new LabelCommand()), 
