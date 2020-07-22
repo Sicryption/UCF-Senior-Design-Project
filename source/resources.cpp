@@ -26,6 +26,7 @@ void ResourceManager::initialize()
     ResourceManager::loadSpritesheet("gfx/mazeSprites");
 	ResourceManager::loadSpritesheet("gfx/menuSprites");
 	ResourceManager::loadSpritesheet("gfx/commands");
+    ResourceManager::loadSpritesheet("gfx/TTT");
 
 
 
