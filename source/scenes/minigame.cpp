@@ -117,6 +117,11 @@ void Minigame::update()
 			EditButton->SetActive(isExecuting ? false : codeEditor->canEdit());
 			RemoveButton->SetActive(isExecuting ? false : codeEditor->canRemove());
 			submitButton->SetActive(isExecuting ? false : true);
+
+			if (Input::btnPressed(m3d::buttons::CPadUp) || Input::btnPressed(m3d::buttons::DPadUp))
+				codeEditor->SelectAbove();
+			else if (Input::btnPressed(m3d::buttons::CPadDown) || Input::btnPressed(m3d::buttons::DPadDown))
+				codeEditor->SelectBelow();
 		}
 	}
 

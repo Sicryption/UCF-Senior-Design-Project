@@ -51,3 +51,21 @@ void CodeEditorMenuItem::ShiftToBottom()
 
 	refreshCommandList();
 }
+
+void CodeEditorMenuItem::SelectAbove()
+{
+	if (GetSelectedCommandIndex() == -1)
+		return;
+
+	if(GetSelectedCommandIndex() - 1 != -1)
+		SelectCommand(GetSelectedCommandIndex() - 1);
+}
+
+void CodeEditorMenuItem::SelectBelow()
+{
+	if (GetSelectedCommandIndex() == -1)
+		return;
+
+	if (GetSelectedCommandIndex() + 1 < commands.size())
+	SelectCommand(GetSelectedCommandIndex() + 1);
+}
