@@ -14,8 +14,6 @@ TicTacToeScene::~TicTacToeScene()
 void TicTacToeScene::initialize() {
     Minigame::initialize();
 
-
-
     colorRec = new m3d::Color(150,150,150);
 	colorText = new m3d::Color(0,0,0);
 
@@ -54,7 +52,7 @@ void TicTacToeScene::draw() {
 
     wallpaper->setPosition(0,0);
     screen->drawTop(*wallpaper);
-    screen->drawtop(*rectangleTest);
+    screen->drawTop(*rectangleTest);
 
     /*if(currentState == TTTState::TutorialMessage)
     {   
