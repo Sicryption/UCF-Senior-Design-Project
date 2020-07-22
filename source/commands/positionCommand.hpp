@@ -5,9 +5,10 @@ class GetXCommand : public CommandObject
 {
 
 public:
-    GetXCommand(bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    GetXCommand(std::string varName = "var", bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="get x";
+		setParam(0, varName);
     }
 
     ~GetXCommand();
@@ -25,9 +26,10 @@ class GetYCommand : public CommandObject
 {
 
 public:
-    GetYCommand(bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    GetYCommand(std::string varName = "var", bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="get y";
+		setParam(0, varName);
     }
 
     ~GetYCommand();
