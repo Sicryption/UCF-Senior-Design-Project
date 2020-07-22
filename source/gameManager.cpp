@@ -39,7 +39,6 @@ void GameManager::Update()
     {
         //instance->applet->exit();
     }
-    Util::PrintLine("time: " + std::to_string( instance->deltaTime ));
 	
 }
 
