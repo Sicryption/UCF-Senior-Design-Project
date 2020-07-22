@@ -14,8 +14,13 @@ TicTacToeScene::~TicTacToeScene()
 void TicTacToeScene::initialize() {
     Minigame::initialize();
 
+
+
     colorRec = new m3d::Color(150,150,150);
 	colorText = new m3d::Color(0,0,0);
+
+    rectangleTest = new RectangleMenuItem(50,130,50,50,*colorRec);
+    menu->AddItem(rectangleTest);
 
     winPrompt = new TextMenuItem("You Win!",*colorText);
 	menu->AddItem(winPrompt);
@@ -24,12 +29,12 @@ void TicTacToeScene::initialize() {
 	winPrompt->setFontWeight(.5);
 	winPrompt->setPosition(160,120);
 
-    prompt = new TextMenuItem(" Use move commands to traverse \n the maze. In order to add a move \n command select Add, then go to\n the tab with the arrows. There\n you can select up, down, left \n or right as a direction to\n move in the maze. You can then\n change the amount of spaces you\n want to move by selecting it and\n clicking edit. Be sure to enter all\n commands you will need to get to\n the end of the maze before running.",*colorText);
+    prompt = new TextMenuItem("Welcome to Tic Tac Toe",*colorText);
 	menu->AddItem(prompt);
 	prompt->setPosition(90,30);
 	prompt->setFontSize(.5);
 	prompt->setFontWeight(.5);
-	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("tictactoe1.png")));
+	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("TTT_BG.png")));
 	menu->AddItem(wallpaper);
 
     popup = new SpriteMenuItem(*(ResourceManager::getSprite("menu_popup.png")));
@@ -49,6 +54,7 @@ void TicTacToeScene::draw() {
 
     wallpaper->setPosition(0,0);
     screen->drawTop(*wallpaper);
+    screen->drawtop(*rectangleTest);
 
     /*if(currentState == TTTState::TutorialMessage)
     {   
