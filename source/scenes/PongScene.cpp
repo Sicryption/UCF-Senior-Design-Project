@@ -3,6 +3,9 @@
 
 #include "../sandbox.hpp"
 
+#define SCOREBOARD_PADDING 30
+#define SCOREBOARD_TOP_PADDING 5
+
 Util* util = Util::getInstance();
 
 PongScene::PongScene(bool showTutorial)
@@ -35,6 +38,21 @@ void PongScene::initialize(){
 	//  initialize the lose popup window 
 	lPopup = new SpriteMenuItem(*(ResourceManager::getSprite("lose_popup.png")));
 	lPopup->setPosition(80, 20);
+
+	//	initialize Score menu items
+	for (int i = 0; i < TEAM_COUNT; i++)
+	{
+		scoreBoard[i] = new TextMenuItem(std::to_string(points[i]));
+
+		scoreBoard[i]->setFontSize(2.0f);
+		scoreBoard[i]->setFontWeight(2.0f);
+	}
+
+	//For some reason, the text->getWidth for scoreBoard[0] returns 34 when the real result is 23.
+	//Not sure how to fix it inside the Text object.
+	int realWidth = 23;
+	scoreBoard[0]->setPosition(TOPSCREEN_WIDTH / 2 - realWidth - SCOREBOARD_PADDING, SCOREBOARD_TOP_PADDING);
+	scoreBoard[1]->setPosition(TOPSCREEN_WIDTH / 2 + SCOREBOARD_PADDING, SCOREBOARD_TOP_PADDING);
 	
 	//  initialize the tutorial windows 
 	for (int i = 0; i < TUTORIAL_POPUP_COUNT; i++)
@@ -84,6 +102,9 @@ void PongScene::draw(){
 	leftPaddle->draw();
 
 	rightPaddle->draw();
+	
+	for (int i = 0; i < TEAM_COUNT; i++)
+		screen->drawTop(*scoreBoard[i]);
 
 	if (currentState == PongState::TutorialMessage)
 	{
@@ -185,13 +206,9 @@ void PongScene::update()
 
 			// determine winner and loser
 			if (points[0] == MATCH_POINT)
-			{
-				currentState = PongState::Lose;
-			}
-			else if (points[1] == MATCH_POINT)
-			{
 				currentState = PongState::Win;
-			}
+			else if (points[1] == MATCH_POINT)
+				currentState = PongState::Lose;
 
 			BoundingBox ballAABB = ball->getAABB();
 
@@ -243,11 +260,11 @@ void PongScene::update()
 			{
 				if (ball->getXPosition() < 0) // enemy scores
 				{
-					points[0]++;
+					points[1]++;
 				}
 				else // player scores 
 				{
-					points[1]++;
+					points[0]++;
 				}
 
 				ball->reset();
@@ -264,6 +281,10 @@ void PongScene::update()
 			leftPaddle->update();
 			rightPaddle->update();
 			ball->update();
+
+			//update score
+			for (int i = 0; i < TEAM_COUNT; i++)
+				scoreBoard[i]->setText(std::to_string(points[i]));
 		break;
 	}
 }

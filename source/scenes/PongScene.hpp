@@ -13,7 +13,7 @@
 #define TEAM_COUNT 2
 #define TUTORIAL_POPUP_COUNT 5
 
-#define MATCH_POINT 1
+#define MATCH_POINT 3
 
 class PongScene : public Minigame
 {
@@ -22,6 +22,8 @@ class PongScene : public Minigame
 	**/
 	private:
 		TextMenuItem *losePrompt, *winPrompt;
+		TextMenuItem *scoreBoard[TEAM_COUNT];
+
 		SpriteMenuItem *popup, *wallpaper, *wPopup, *lPopup;
 		SpriteMenuItem* tutorial[TUTORIAL_POPUP_COUNT];
 		m3dCI::Button *retryBtn, *exitBtn;
