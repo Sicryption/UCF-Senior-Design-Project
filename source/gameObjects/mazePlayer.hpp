@@ -130,16 +130,12 @@ public:
         
     };
     //void Rotate(double deg){};
-    int winCond() {
-			if((x/20) == 18 && (y/20) == 9)
-			{
-				return 1;
-			}
-			else
-			{
-				return 0;
-			}
-		}
+    int getX() {
+		return x;
+	}
+    int getY() {
+		return y;
+	}
     void setposition(int xcoor, int ycoor, bool (*walls)[12][20]){
         x = xcoor;
         y = ycoor;
