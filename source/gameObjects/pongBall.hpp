@@ -1,4 +1,4 @@
-#include "../gameObject.hpp"
+#include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
 
@@ -19,8 +19,8 @@ public:
 	*/
 	PongBall()
     {
-        x = 180;
-        y = 110;
+		x = TOPSCREEN_WIDTH / 2;
+        y = TOPSCREEN_HEIGHT / 2;
         xScale = 1;
         yScale = 1;
         angle = 0;
@@ -28,9 +28,6 @@ public:
 		dirX = -1;
 		dirY = 1; 
     }
-
-	
-   
 
 	/**
 	* @brief Set the ball's sprite's position and scale. 
@@ -40,6 +37,10 @@ public:
         sprite = new SpriteMenuItem(*(ResourceManager::getSprite("ball.png")));
         sprite->setScale(xScale,yScale);
         sprite->setPosition(x,y);
+
+		//ball needs to be centered on the screen from the center of the ball
+		x -= sprite->GetWidth() / 2;
+		y -= sprite->GetHeight() / 2;
     }
 
 	/**
@@ -69,9 +70,7 @@ public:
         m3d::Screen *screen = GameManager::getScreen();
 
 		sprite->setPosition(x, y);
-        screen->drawTop(*sprite);
-
-
+		screen->drawTop(*sprite, m3d::RenderContext::Mode::Flat, 3);
     }
 
 	/**

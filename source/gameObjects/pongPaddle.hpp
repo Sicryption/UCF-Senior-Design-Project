@@ -1,4 +1,4 @@
-#include "../gameObject.hpp"
+#include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
 //#include "../scenes/PongScene.hpp"
@@ -13,16 +13,14 @@ class PongPaddle : public GameObject
 		@brief A custom game object used for Pong.
 	**/
 private:
-    m3d::Color *color;
     m3d::Rectangle *PongRec;
-    m3d::BoundingBox *paddleBox;
-	SpriteMenuItem *sprite;
 	PongBall* ball = nullptr; 
 	int velo; 
 
 	int chanceToFail = 0;
 	bool purposelyFail = false;
 
+	int width, height;
 	int startX, startY;
 
 public:
@@ -35,11 +33,6 @@ public:
 		y = _y;
 		startX = _x;
 		startY = _y;
-		xScale = 0.5;
-		yScale = 2;
-		angle = 0;
-
-		velo = 3;
 	}
 
 	/**
@@ -52,11 +45,6 @@ public:
 		y = _y;
 		startX = _x;
 		startY = _y;
-		xScale = 0.5;
-		yScale = 2;
-		angle = 0;
-
-		velo = 3;
 
 		ball = _ball;
 	}
@@ -65,31 +53,24 @@ public:
 	* @brief Set the paddle's sprite's position and scale.
 	*/
     void initialize() {
- 	
-		sprite = new SpriteMenuItem(*(ResourceManager::getSprite("paddle.png")));
-		sprite->setScale(xScale, yScale);
-		sprite->setPosition(x, y);
+		width = 10;
+		height = 45;
+
+		angle = 0;
+		velo = 3;
+
+		PongRec = new Rectangle((int)x, (int)y, width, height, m3d::Color(255,255,255));
     }
 
 	/**
 	* @brief Determine the paddle's velocity.
 	*/
-    void update() {
-		if (ball == nullptr)
-		{
-			// player paddle moves up or down based on button press (for testing purposes)
-			if (m3d::buttons::buttonDown(m3d::buttons::Button::Down)) {
-				moveTo(0, velo);
-			}
-
-			if (m3d::buttons::buttonDown(m3d::buttons::Button::Up)) {
-				moveTo(0, -velo); //
-			}
-		}
-		else
+    void update() 
+	{
+		if (ball != nullptr)
 		{
 			// calculate displacement between enemy paddle and ball 
-			int diff = (getYPosition() + (sprite->GetHeight() / 2)) - (ball->getYPosition() + (ball->getHeight() / 2));
+			int diff = (y + (PongRec->getHeight() / 2)) - (ball->getYPosition() + (ball->getHeight() / 2));
 
 			// enemy paddle moves towards the ball based on its displacement
 			if (diff > 0)
@@ -116,8 +97,9 @@ public:
 	*/
     void draw() {
         m3d::Screen *screen = GameManager::getScreen();
-		sprite->setPosition(x, y);
-		screen->drawTop(*sprite);
+		
+		PongRec->setPosition(x, y);
+		screen->drawTop(*PongRec, m3d::RenderContext::Mode::Flat, 3);
     }
 
 	/**
@@ -129,31 +111,31 @@ public:
     void moveTo(double _x, double _y) {
 		y += _y;
 		x += _x;
-
+		
 		if (x < 0)
 			x = 0;
 		if (y < 0)
 			y = 0;
 		if (x > TOPSCREEN_WIDTH)
 			x = TOPSCREEN_WIDTH;
-		if (y + sprite->GetHeight() > TOPSCREEN_HEIGHT)
-			y = TOPSCREEN_HEIGHT - sprite->GetHeight();
+		if (y + PongRec->getHeight() > TOPSCREEN_HEIGHT)
+			y = TOPSCREEN_HEIGHT - PongRec->getHeight();
     }
 
 	/**
-	* @brief Returns the top right x position of the paddle.
+	* @brief Returns the top left x position of the paddle.
 	* @return The top right x position
 	*/
 	int getXPosition() {
-		return sprite->getXPosition();
+		return x;
 	}
 
 	/**
-	* @brief Returns the top right y position of the paddle.
+	* @brief Returns the top left y position of the paddle.
 	* @return The top right y position
 	*/
 	int getYPosition() {
-		return sprite->getYPosition();
+		return y;
 	}
 
 	/**
@@ -161,7 +143,7 @@ public:
 	* @return The center x position
 	*/
 	int getCenterX() {
-		return sprite->getCenterX();
+		return PongRec->getXPosition() + PongRec->getWidth() / 2;
 	}
 
 	/**
@@ -169,7 +151,7 @@ public:
 	* @return The y position
 	*/
 	int getCenterY() {
-		return sprite->getCenterY();
+		return PongRec->getYPosition() + PongRec->getHeight() / 2;
 	}
 
 	/**
@@ -178,7 +160,7 @@ public:
 	* @param t_y The y position
 	*/
 	void setCenter(int t_x, int t_y) {
-		sprite->setCenter(t_x, t_y);
+		//PongRec->setCenter(t_x, t_y);
 	}
 
 
@@ -212,6 +194,51 @@ public:
 	*/
 	BoundingBox getAABB()
 	{
-		return sprite->getBoundingBox();
+		return PongRec->getBoundingBox();
+	}
+
+	/**
+		@brief Overrides the GameObject SetPosition function. 
+		Keeps the paddle within screen bounds.
+	*/
+	void setPosition(double t_x, double t_y)
+	{
+		if (t_x < 0)
+			t_x = 0;
+		if (t_y < 0)
+			t_y = 0;
+		if (t_x > TOPSCREEN_WIDTH)
+			t_x = TOPSCREEN_WIDTH;
+		if (t_y + PongRec->getHeight() > TOPSCREEN_HEIGHT)
+			t_y = TOPSCREEN_HEIGHT - PongRec->getHeight();
+
+		x = t_x;
+		y = t_y;
+	}
+
+	/**
+		@brief Implement the GameObject setScale function.
+		@param t_x X Scale
+		@param t_y Y Scale
+	*/
+	void setScale(double t_x, double t_y)
+	{
+		Util::PrintLine("Set scale called");
+
+		xScale = t_x;
+		yScale = t_y;
+
+		PongRec->setWidth(t_x * width);
+		PongRec->setHeight(t_y * height);
+	}
+
+	/**
+		@brief Implement the GameObject setColor function.
+		@param t_color Color to change to
+	*/
+	void setColor(m3d::Color t_color)
+	{
+		m_color = t_color;
+		PongRec->setColor(t_color);
 	}
 };

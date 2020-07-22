@@ -10,6 +10,10 @@
 #ifdef DEBUG
 #endif
 
+#define TEAM_COUNT 2
+#define TUTORIAL_POPUP_COUNT 5
+
+#define MATCH_POINT 5
 
 class PongScene : public Minigame
 {
@@ -18,14 +22,15 @@ class PongScene : public Minigame
 	**/
 	private:
 		TextMenuItem *losePrompt, *winPrompt;
+		TextMenuItem *scoreBoard[TEAM_COUNT];
+
 		SpriteMenuItem *popup, *wallpaper, *wPopup, *lPopup;
-		SpriteMenuItem* tutorial[5];
+		SpriteMenuItem* tutorial[TUTORIAL_POPUP_COUNT];
 		m3dCI::Button *retryBtn, *exitBtn;
 		PongBall *ball;
 		PongPaddle *leftPaddle, *rightPaddle;
-		array<int, 2> points; 
-		int matchPoint, tutCount;
-		bool notReadTut;
+		int points[TEAM_COUNT];
+		int tutCount;
 		
 		enum PongState
 		{
@@ -40,7 +45,7 @@ class PongScene : public Minigame
 		/**
 		 *  @brief Default Constructor, should be inherited by child class constructors.
 		 */
-		PongScene();
+		PongScene(bool showTutorial = true);
 
 		/**
 		 *  @brief Default Destructor, should be inherited by child class destructor.

@@ -1,11 +1,36 @@
 #include "PongScene.hpp"
 #include "MinigameSelectScene.hpp"
 
+#include "../sandbox.hpp"
+
+#define t(x) AddCommand(x)
+#define func(a) [&]() { t(a); }
+#define PAIR(name, command) { name, [&]() { t(command); }}
+#define NULLPartialPAIR(name) { name, nullptr }
+#define NULLPAIR PAIR("", nullptr)
+#define COLORPAIR(name, r, g, b) PAIR(name, new ColorCommand(name, m3d::Color(r,g,b,255)))
+
+#define SCOREBOARD_PADDING 30
+#define SCOREBOARD_TOP_PADDING 5
+
 Util* util = Util::getInstance();
 
-PongScene::PongScene()
+PongScene::PongScene(bool showTutorial)
 {
-	notReadTut = true;
+	if (!showTutorial)
+		tutCount = TUTORIAL_POPUP_COUNT;
+
+	//showGridLines = false;
+
+	commandLister->OverrideTabCommandListObjects(
+		{
+			PAIR("Set_X", new SetXCommand("varName")),
+			PAIR("Set_Y", new SetYCommand("varName")),
+			PAIR("Scale", new ScaleCommand("1", "1")),
+			PAIR("Scale_X", new ScaleCommand("1", "-1")),
+			PAIR("Scale_Y", new ScaleCommand("-1", "1"))
+		}, 2
+		);
 }
 
 PongScene::~PongScene()
@@ -17,21 +42,14 @@ void PongScene::initialize(){
 	Minigame::initialize();
 
 	// assign player and enemy points and points to win 
-	points = { 0,0 };
-	matchPoint = 1;
+	for (int i = 0; i < TEAM_COUNT; i++)
+		points[i] = 0;
 	
 	// initalize the scene background
 	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("pong1.png")));
 	wallpaper->setCenter(0, 0);
 	wallpaper->setScale(1, 1);
-
-	//  initialize the popup window 
-	/*
-	popup = new SpriteMenuItem(*(ResourceManager::getSprite("menu_popup.png")));
-	popup->setPosition(80, 20);
-	*/
-
-
+	
 	//  initialize the win popup window 
 	wPopup = new SpriteMenuItem(*(ResourceManager::getSprite("win_popup.png")));
 	wPopup->setPosition(80, 20);
@@ -40,20 +58,33 @@ void PongScene::initialize(){
 	lPopup = new SpriteMenuItem(*(ResourceManager::getSprite("lose_popup.png")));
 	lPopup->setPosition(80, 20);
 
+	//	initialize Score menu items
+	for (int i = 0; i < TEAM_COUNT; i++)
+	{
+		scoreBoard[i] = new TextMenuItem(std::to_string(points[i]));
 
-	//  initialize the tutorial windows 
-	tutorial[0] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_1.png")));
-	tutorial[1] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_2.png")));
-	tutorial[2] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_3.png")));
-	tutorial[3] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_4.png")));
-	tutorial[4] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_5.png")));
+		scoreBoard[i]->setFontSize(2.0f);
+		scoreBoard[i]->setFontWeight(2.0f);
+	}
 
+	//For some reason, the text->getWidth for scoreBoard[0] returns 34 when the real result is 23.
+	//Not sure how to fix it inside the Text object.
+	int realWidth = 23;
+	scoreBoard[0]->setPosition(TOPSCREEN_WIDTH / 2 - realWidth - SCOREBOARD_PADDING, SCOREBOARD_TOP_PADDING);
+	scoreBoard[1]->setPosition(TOPSCREEN_WIDTH / 2 + SCOREBOARD_PADDING, SCOREBOARD_TOP_PADDING);
 	
-	tutCount = 0;
-	popup = tutorial[tutCount++];
-	popup->setPosition(80, 20);
+	//  initialize the tutorial windows 
+	for (int i = 0; i < TUTORIAL_POPUP_COUNT; i++)
+	{
+		tutorial[i] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_" + std::to_string(i + 1) + ".png")));
+		tutorial[i]->setPosition(80, 20);
+	}
 
-
+	if (tutCount != TUTORIAL_POPUP_COUNT)
+	{
+		tutCount = 0;
+		popup = tutorial[tutCount];
+	}
 
 	// initialize the game objects and add them to the hash map
 	ball = new PongBall();
@@ -74,7 +105,6 @@ void PongScene::initialize(){
 
 	rightPaddle->initialize();
 
-	
 	currentState = PongState::TutorialMessage;
 }
 
@@ -84,33 +114,34 @@ void PongScene::draw(){
 	m3d::Screen *screen = GameManager::getScreen();
 
 	wallpaper->setPosition(0, 0);
-	screen->drawTop(*wallpaper);
+	screen->drawTop(*wallpaper, m3d::RenderContext::Mode::Flat, 0);
 
 	ball->draw();
 
 	leftPaddle->draw();
 
 	rightPaddle->draw();
+	
+	for (int i = 0; i < TEAM_COUNT; i++)
+		screen->drawTop(*scoreBoard[i], m3d::RenderContext::Mode::Flat, 4);
 
-	if (currentState == PongState::TutorialMessage && notReadTut)
+	if (currentState == PongState::TutorialMessage)
 	{
-		//screen->drawTop(*popup);
+		screen->drawTop(*popup, m3d::RenderContext::Mode::Flat, 5);
 	}
 
 	// display win screen
 	if (currentState == PongState::Win)
 	{
+		screen->drawTop(*wPopup, m3d::RenderContext::Mode::Flat, 5);
 		screen->drawTop(*wPopup);
 	}
 
 	// display lose screen
 	if (currentState == PongState::Lose)
 	{
-		screen->drawTop(*lPopup);
+		screen->drawTop(*lPopup, m3d::RenderContext::Mode::Flat, 5);
 	}
-
-
-
 }
 		
 void PongScene::load(){ Minigame::load(); }; //any data files
@@ -124,18 +155,27 @@ void PongScene::update()
 	switch(currentState)
 	{
 		case PongState::TutorialMessage:
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
+			submitButton->SetActive(false);
+
 			// player reads the tutorial 
 			if (buttons::buttonPressed(buttons::A)) 
 			{
-				if (tutCount < 5)
+				if (tutCount < TUTORIAL_POPUP_COUNT)
 				{
-					popup = tutorial[tutCount++];
-					popup->setPosition(80, 20);
+					tutCount++;
+
+					if(tutCount < TUTORIAL_POPUP_COUNT)
+						popup = tutorial[tutCount];
 				}
 			}
 			// the player submits their code
-			if (buttons::buttonDown(buttons::Start) || tutCount >= 5)
+			if (buttons::buttonDown(buttons::Start) || tutCount >= TUTORIAL_POPUP_COUNT)
 			{
+				tutCount = 0;
+
 				currentState = PongState::Requesting;
 
 				std::vector<CommandObject*> startingCommands =
@@ -157,26 +197,40 @@ void PongScene::update()
 				SceneManager::setTransition(new MinigameSelectScene());
 		break;
 		case PongState::Win:
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
+			submitButton->SetActive(false);
+
 			if (Input::btnReleased(m3d::buttons::B))
 				SceneManager::setTransition(new MinigameSelectScene());
+			if (Input::btnReleased(m3d::buttons::A)) // restart the game without showing the tutorial message
+				SceneManager::setTransition(new PongScene(false));
+
+			if (m_sandbox->getThreadState() == THREAD_RUNNING)
+				m_sandbox->setThreadState(THREAD_CLEAR);
 		break;
 		case PongState::Lose:
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
+			submitButton->SetActive(false);
+
 			if (Input::btnReleased(m3d::buttons::B)) // return to minigame select screen
 				SceneManager::setTransition(new MinigameSelectScene());
 			if (Input::btnReleased(m3d::buttons::A)) // restart the game 
-				initialize();
+				SceneManager::setTransition(new PongScene());
+
+			if(m_sandbox->getThreadState() == THREAD_RUNNING)
+				m_sandbox->setThreadState(THREAD_CLEAR);
 		break;
 		case PongState::Execute:
 
 			// determine winner and loser
-			if (points[0] == matchPoint)
-			{
-				currentState = PongState::Lose;
-			}
-			else if (points[1] == matchPoint)
-			{
+			if (points[0] == MATCH_POINT)
 				currentState = PongState::Win;
-			}
+			else if (points[1] == MATCH_POINT)
+				currentState = PongState::Lose;
 
 			BoundingBox ballAABB = ball->getAABB();
 
@@ -228,11 +282,11 @@ void PongScene::update()
 			{
 				if (ball->getXPosition() < 0) // enemy scores
 				{
-					points[0]++;
+					points[1]++;
 				}
 				else // player scores 
 				{
-					points[1]++;
+					points[0]++;
 				}
 
 				ball->reset();
@@ -249,6 +303,10 @@ void PongScene::update()
 			leftPaddle->update();
 			rightPaddle->update();
 			ball->update();
+
+			//update score
+			for (int i = 0; i < TEAM_COUNT; i++)
+				scoreBoard[i]->setText(std::to_string(points[i]));
 		break;
 	}
 }

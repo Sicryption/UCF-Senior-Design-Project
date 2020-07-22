@@ -230,4 +230,20 @@ namespace m3dCI
 
 		commands[tab][id]->setText(commandListObject.first);
 	}
+
+	void CommandLister::OverrideTabCommandListObjects(std::vector<pair<string, function<void()>>> commandListObjects, int tab)
+	{
+		if (tab >= NUM_TABS || tab < 0)
+			return;
+
+		for (int i = 0; i < NUM_COMMANDS_PER_TAB; i++)
+		{
+			if (i >= commandListObjects.size())
+				listOfCommandsByTab[tab][i] = NULLPAIR;
+			else
+				listOfCommandsByTab[tab][i] = commandListObjects[i];
+
+			commands[tab][i]->setText(listOfCommandsByTab[tab][i].first);
+		}
+	}
 }

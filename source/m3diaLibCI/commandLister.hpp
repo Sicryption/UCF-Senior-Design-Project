@@ -129,5 +129,13 @@ namespace m3dCI
 				@parma id The index of the commandListerItem
 			**/
 			void OverrideCommandListObject(pair<string, function<void()>> commandListObject, int tab, int id);
+
+			/**
+				@brief Provide Option for Minigames to Override which CommandListerItems exist inside the menu.
+				Overrides an entire Tab. Missing Entries will be filled by blanks.
+				@param commandListObject A list of CommandListObjects to replace
+				@param tab The ID of the tab
+			**/
+			void OverrideTabCommandListObjects(std::vector<pair<string, function<void()>>> commandListObjects, int tab);
 	};
 }
