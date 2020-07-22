@@ -10,6 +10,10 @@
 #ifdef DEBUG
 #endif
 
+#define TEAM_COUNT 2
+#define TUTORIAL_POPUP_COUNT 5
+
+#define MATCH_POINT 1
 
 class PongScene : public Minigame
 {
@@ -19,12 +23,12 @@ class PongScene : public Minigame
 	private:
 		TextMenuItem *losePrompt, *winPrompt;
 		SpriteMenuItem *popup, *wallpaper, *wPopup, *lPopup;
-		SpriteMenuItem* tutorial[5];
+		SpriteMenuItem* tutorial[TUTORIAL_POPUP_COUNT];
 		m3dCI::Button *retryBtn, *exitBtn;
 		PongBall *ball;
 		PongPaddle *leftPaddle, *rightPaddle;
-		array<int, 2> points; 
-		int matchPoint, tutCount;
+		int points[TEAM_COUNT];
+		int tutCount;
 		
 		enum PongState
 		{

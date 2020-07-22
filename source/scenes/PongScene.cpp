@@ -1,7 +1,7 @@
 #include "PongScene.hpp"
 #include "MinigameSelectScene.hpp"
 
-#define TUTORIAL_POPUP_COUNT 5
+#include "../sandbox.hpp"
 
 Util* util = Util::getInstance();
 
@@ -19,21 +19,14 @@ void PongScene::initialize(){
 	Minigame::initialize();
 
 	// assign player and enemy points and points to win 
-	points = { 0,0 };
-	matchPoint = 1;
+	for (int i = 0; i < TEAM_COUNT; i++)
+		points[i] = 0;
 	
 	// initalize the scene background
 	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("pong1.png")));
 	wallpaper->setCenter(0, 0);
 	wallpaper->setScale(1, 1);
-
-	//  initialize the popup window 
-	/*
-	popup = new SpriteMenuItem(*(ResourceManager::getSprite("menu_popup.png")));
-	popup->setPosition(80, 20);
-	*/
-
-
+	
 	//  initialize the win popup window 
 	wPopup = new SpriteMenuItem(*(ResourceManager::getSprite("win_popup.png")));
 	wPopup->setPosition(80, 20);
@@ -41,8 +34,7 @@ void PongScene::initialize(){
 	//  initialize the lose popup window 
 	lPopup = new SpriteMenuItem(*(ResourceManager::getSprite("lose_popup.png")));
 	lPopup->setPosition(80, 20);
-
-
+	
 	//  initialize the tutorial windows 
 	for (int i = 0; i < TUTORIAL_POPUP_COUNT; i++)
 	{
@@ -50,7 +42,6 @@ void PongScene::initialize(){
 		tutorial[i]->setPosition(80, 20);
 	}
 
-	
 	tutCount = 0;
 	popup = tutorial[tutCount];
 
@@ -73,7 +64,6 @@ void PongScene::initialize(){
 
 	rightPaddle->initialize();
 
-	
 	currentState = PongState::TutorialMessage;
 }
 
@@ -107,9 +97,6 @@ void PongScene::draw(){
 	{
 		screen->drawTop(*lPopup);
 	}
-
-
-
 }
 		
 void PongScene::load(){ Minigame::load(); }; //any data files
@@ -162,6 +149,8 @@ void PongScene::update()
 		case PongState::Win:
 			if (Input::btnReleased(m3d::buttons::B))
 				SceneManager::setTransition(new MinigameSelectScene());
+
+			m_sandbox->setThreadState(THREAD_CLEAR);
 		break;
 		case PongState::Lose:
 			if (Input::btnReleased(m3d::buttons::B)) // return to minigame select screen
@@ -172,11 +161,11 @@ void PongScene::update()
 		case PongState::Execute:
 
 			// determine winner and loser
-			if (points[0] == matchPoint)
+			if (points[0] == MATCH_POINT)
 			{
 				currentState = PongState::Lose;
 			}
-			else if (points[1] == matchPoint)
+			else if (points[1] == MATCH_POINT)
 			{
 				currentState = PongState::Win;
 			}
