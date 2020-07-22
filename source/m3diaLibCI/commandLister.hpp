@@ -121,5 +121,13 @@ namespace m3dCI
 				@param t_context The context to draw in
 			**/
 			void draw(m3d::RenderContext t_context);
+
+			/**
+				@brief Provide Option for Minigames to Override which CommandListerItems exist inside the menu.
+				@param commandListObject The object which will replace the existing one
+				@param tab The ID of the tab
+				@parma id The index of the commandListerItem
+			**/
+			void OverrideCommandListObject(pair<string, function<void()>> commandListObject, int tab, int id);
 	};
 }

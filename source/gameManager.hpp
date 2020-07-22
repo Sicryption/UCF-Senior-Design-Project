@@ -26,7 +26,7 @@ private:
 
     GameManager()
     {
-        lastTime = curTime = time(NULL);
+        lastTime = curTime = osGetTime();
         deltaTime = 0;
     }
 
@@ -70,7 +70,7 @@ public:
      */
     static double getDeltaTime()
     {
-        return (1.0/60.0) ;
+        return instance->deltaTime ;
     }
 
     /**

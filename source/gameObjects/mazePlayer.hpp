@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../gameObject.hpp"
+#include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
 #include "../util.hpp"
@@ -53,6 +53,7 @@ public:
         m3d::Screen * screen = GameManager::getScreen();
 
 		sprite->setPosition(x, y);
+        sprite->setRotation(angle);
         screen->drawTop(*sprite);
     }
 
@@ -133,7 +134,7 @@ public:
 		#endif*/
         
     };
-    void Rotate(double deg){};
+    //void Rotate(double deg){};
     int winCond() {
 			if((x/ XWidth) == 18 && (y/ YWidth) == 9)
 			{

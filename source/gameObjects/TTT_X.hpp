@@ -1,25 +1,22 @@
 /**
- *  @file circle.hpp
- *  @brief Defines the Circle Object
+ *  @file TTT_Token.hpp
+ *  @brief Defines the Tic-Tac_toe Naughts Object
  */
 #include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
 
 /**
- *  @class CircleObject "gameObjects/circle.hpp"
+ *  @class TTT_X "gameObjects/circle.hpp"
  *  @brief
  *  
  */
-class CircleObject : public GameObject
+class TTT_Token : public GameObject
 {
 
 private:
 
-    m3d::Circle* circle;
-    m3d::Color color;
-
-    double radius;
+    m3dCI::Sprite* m_sprite;
 
 public:
     /**
@@ -30,19 +27,21 @@ public:
      *  @param t_angle angle of the circle
      *  @param t_color color of the circle
      */
-    CircleObject( double t_x = 0, double t_y = 0 , 
+    TTT_Token(bool t_cross = true, double t_x = 0, double t_y = 0 , 
                   double t_radius = DEFAULT_SIZE, double t_angle = 0,
                   m3d::Color t_color = DEFAULT_COLOR)
     {
+        // TODO custom positioning 
         x = t_x;
         y = t_y;
         xScale = t_radius;
         yScale = t_radius;
         angle = t_angle;
-        circle = new m3d::Circle(x,y,xScale,color);
+        m_color = t_color;
+        m_sprite = new m3dCI::Sprite(ResourceManager::getSprite( (t_cross) ? "TTT_X.png":"TTT_O.png" ));
     }
 
-    ~CircleObject()
+    ~TTT_Token()
     {
         
     }
@@ -66,13 +65,13 @@ public:
         updateShape();
         m3d::Screen * screen = GameManager::getScreen();
 
-        screen->drawTop(*circle);
+        screen->drawTop(*m_sprite);
     
     }
 
     void destroy()
     { 
-        this->~CircleObject(); 
+        this->~TTT_Piece(); 
     }
     
     void moveTo(double t_x,double t_y)
@@ -82,9 +81,4 @@ public:
     }
 
     void Rotate(double deg){};
-
-	BoundingBox getAABB()
-	{
-		return m3d::BoundingBox(x, y, radius * 2, radius * 2);
-	}
 };

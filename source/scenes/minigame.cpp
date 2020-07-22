@@ -57,9 +57,15 @@ Minigame::~Minigame()
 	m_sandbox->close();
 }
 
+void Minigame::initialize()
+{
+    m_gridOverlay = new m3dCI::Sprite( *ResourceManager::getSprite("minigame_grid.png"));
+    m_gridOverlay->setOpacity(50);
+}
+
 void Minigame::update()
 {
-    #ifdef DEBUG_THREAD
+    #ifdef DEBUG_MINIGAME
 	if (buttons::buttonPressed(buttons::X))
 	{
 		if(m_sandbox->getThreadState() == THREAD_HALT)
@@ -74,8 +80,8 @@ void Minigame::update()
 	}
 	if (buttons::buttonPressed(buttons::Y))
 	{
-        Util::PrintLine("Thread Stopped");
-		m_sandbox->setThreadState(THREAD_CLOSE);
+        Util::PrintLine("Thread Queue Clear");
+		m_sandbox->setThreadState(THREAD_CLEAR);
 
 	}
     #endif
@@ -105,9 +111,11 @@ void Minigame::update()
 		else if (!showCommandEditor && !editCommandFromCommandEditor)
 		{
 			scr->drawBottom(*codeEditor);
-			AddButton->SetActive(codeEditor->canAdd());
-			EditButton->SetActive(codeEditor->canEdit());
-			RemoveButton->SetActive(codeEditor->canRemove());
+
+			AddButton->SetActive(isExecuting?false:codeEditor->canAdd());
+			EditButton->SetActive(isExecuting ? false : codeEditor->canEdit());
+			RemoveButton->SetActive(isExecuting ? false : codeEditor->canRemove());
+			submitButton->SetActive(isExecuting ? false : true);
 		}
 	}
 
@@ -298,8 +306,23 @@ void Minigame::SetSubmitFunction(std::function<void(std::vector<CommandObject*>)
 	submitFunction = callbackFunction;
 }
 
+void Minigame::onExecutionBegin()
+{
+	isExecuting = true;
+}
+
 void Minigame::onExecutionEnd()
 {
-	//Until a hault option is made here. We don't want the execution to run twice.
-	submitButton->SetActive(true);
+	isExecuting = false;
 }
+
+void Minigame::draw()
+{
+    Scene::draw();
+    
+    if(m_gridOverlay != nullptr)
+    {
+        GameManager::getScreen()->drawTop(*m_gridOverlay, m3d::RenderContext::Mode::Flat, 1);
+    }
+};
+

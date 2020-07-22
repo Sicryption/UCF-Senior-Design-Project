@@ -5,7 +5,7 @@
 
 
 #pragma once
-#include "IUpdateable.hpp"
+#include "../IUpdateable.hpp"
 
 /** 
  *  @def DEFAULT_SIZE
@@ -20,7 +20,7 @@
 #define DEFAULT_COLOR m3d::Color(255,0,0)
 
 /**
- *  @class GameObject "gameObject.hpp"
+ *  @class GameObject "gameObjects/gameObject.hpp"
  *  @brief The GameObject Class
  *  
  *  Used to encapsulate updatable objects within a @ref Scene.
@@ -90,8 +90,11 @@ public:
      *  Must be implimented by children. This function will recieve movement as steps.
      *  @param deg [in] relative x movement
      */
-    virtual void Rotate(double deg)=0;
-	virtual m3d::BoundingBox getAABB() = 0;
+    virtual void Rotate(double deg)
+    {
+        angle += deg;
+        angle = fmod(angle,360);
+    }
 
     /**
      *  @brief Sets the angle 
@@ -184,6 +187,11 @@ public:
         return m_color;
     } 
 
-    //bool screenIntersect();
 
+    /**
+     *  @brief Get the gameObjects Bounding box
+     * 
+     *  @returns BoundingBox of the object
+     */
+	virtual m3d::BoundingBox getAABB() = 0;
 };

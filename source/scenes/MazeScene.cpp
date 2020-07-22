@@ -80,6 +80,38 @@ void MazeScene::initialize(){
 }
 
 void MazeScene::transistion(){
+	std::vector<CommandObject*> startingCommands =
+	{
+		new SelectCommand("runner",true,true),
+		new RightCommand("5"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+		new UpCommand("1"),
+		new RightCommand("1"),
+	};
+
+	SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
+
 	current = wallpapers[1];
 	runner->setposition(20,180,wallHolderToo);
 };
@@ -93,14 +125,14 @@ void MazeScene::draw(){
 
     if(currentState == MazeState::TutorialMessage)
     {   
-        screen->drawTop(*popup);
+        screen->drawTop(*popup, m3d::RenderContext::Mode::Flat, 2);
 		//screen->drawTop(*prompt);
 		//use m3dci for prompt
     }
 
 	if(currentState == MazeState::Win)
     {   
-        screen->drawTop(*wPopup);
+        screen->drawTop(*wPopup, m3d::RenderContext::Mode::Flat, 2);
 		//screen->drawTop(*winPrompt);
 		//use m3dci for prompt
     }
@@ -125,8 +157,8 @@ void MazeScene::update()
 	{
 		case MazeState::TutorialMessage:
 
-			if (buttons::buttonPressed(buttons::A)){
-				if(tutCount >= 5)
+			if (buttons::buttonPressed(buttons::A) || buttons::buttonDown(buttons::Start)){
+				if(tutCount >= 5 || buttons::buttonDown(buttons::Start))
 				{
 					currentState = MazeState::Requesting;
 
@@ -145,36 +177,30 @@ void MazeScene::update()
 					};
 
 					SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
+
+					//Enable buttons for use once Code has been requested
+					submitButton->SetActive(true);
+					AddButton->SetActive(true);
+					RemoveButton->SetActive(true);
+					EditButton->SetActive(true);
+					tutCount = 0;
 					break;
 				}
 				popup = tutorial[tutCount++];
 				popup->setPosition(80,20);
 			}
-			if (buttons::buttonDown(buttons::Start))
-			{
-				currentState = MazeState::Requesting;
 
-				std::vector<CommandObject*> startingCommands =
-				{
-					new SelectCommand("runner",true,true),
-					new RightCommand("18"),
-					new DownCommand("5"),
-					new LeftCommand("18"),
-					new DownCommand("5"),
-					new RightCommand("18"),
-					new DownCommand("5"),
-					new LeftCommand("18"),
-					new DownCommand("5"),
-					new RightCommand("18")
-				};
-
-				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
-			}
+			//Disable all buttons during tutorial
+			submitButton->SetActive(false);
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
 			break;
 		case MazeState::Execute:
 			if(checkWinCond() == 1)
 			{
 				currentState = MazeState::Transistion;
+				break;
 			}
 			break;
 		case MazeState::Win:
@@ -183,6 +209,7 @@ void MazeScene::update()
 			break;
 		case MazeState::Transistion:
 			transistion();
+
 			currentState = MazeState::Requesting;
 			break;
 		case MazeState::Requesting:
@@ -190,17 +217,28 @@ void MazeScene::update()
 				SceneManager::setTransition(new MinigameSelectScene());
 			break;
 	}
+
+	Util::PrintLine(std::to_string(currentState));
 };
 
 void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)
-{
-	
-    Util::PrintLine("maze: queue commands");
+{	
+    #ifdef DEBUG_MINIGAME
+    Util::PrintLine("Maze: queue commands");
+    #endif
     std::string str = CommandObject::ConvertBulk(luaCode);
 
+    /*
+        Encapsulate code into a function. then call the function.
+    */
+    stringstream fn;
+    fn << "userCode = function()" << str << " end\n" << "\n";
+    m_sandbox->executeStringQueued(fn.str()); // if this returns false theres an error in the usercode
+    m_sandbox->executeStringQueued("userCode()\n");
 
-    m_sandbox->executeStringQueued(str);
-
+    #ifdef DEBUG_MINIGAME
+    Util::PrintLine("Maze: done");
+    #endif
 	currentState = MazeState::Execute;
 }
 
