@@ -54,7 +54,7 @@ void TicTacToeScene::draw() {
 
     wallpaper->setPosition(0,0);
     screen->drawTop(*wallpaper);
-    screen->drawtop(*rectangleTest);
+    screen->drawTop(*rectangleTest);
 
     /*if(currentState == TTTState::TutorialMessage)
     {   
