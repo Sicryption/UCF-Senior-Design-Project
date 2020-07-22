@@ -57,5 +57,6 @@ class TicTacToeScene : public Minigame
 		void loadLoseScr();
 		void requestUI();
 		void closeGame();
+        void runEnemyAI();
 
 };
