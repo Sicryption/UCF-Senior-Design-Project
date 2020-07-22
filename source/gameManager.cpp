@@ -32,8 +32,8 @@ void GameManager::Update()
     getInstance();
 
     instance->lastTime = instance->curTime;
-    instance->curTime = time(0);
-    instance->deltaTime = abs( difftime(instance->lastTime, instance->curTime));
+    instance->curTime = osGetTime();
+    instance->deltaTime = (instance->curTime - instance->lastTime)/1000.0f ;
     
     if (buttonDown(m3d::buttons::Button::Start) && buttonDown(m3d::buttons::Button::Select))
     {

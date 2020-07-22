@@ -1,17 +1,17 @@
 /**
- *  @file circle.hpp
- *  @brief Defines the Circle Object
+ *  @file TTT_O.hpp
+ *  @brief Defines the Tic-Tac_toe Naughts Object
  */
 #include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
 
 /**
- *  @class CircleObject "gameObjects/circle.hpp"
+ *  @class TTT_O "gameObjects/circle.hpp"
  *  @brief
  *  
  */
-class CircleObject : public GameObject
+class TTT_O : public GameObject
 {
 
 private:
@@ -30,7 +30,7 @@ public:
      *  @param t_angle angle of the circle
      *  @param t_color color of the circle
      */
-    CircleObject( double t_x = 0, double t_y = 0 , 
+    TTT_O( double t_x = 0, double t_y = 0 , 
                   double t_radius = DEFAULT_SIZE, double t_angle = 0,
                   m3d::Color t_color = DEFAULT_COLOR)
     {
@@ -42,7 +42,7 @@ public:
         circle = new m3d::Circle(x,y,xScale,color);
     }
 
-    ~CircleObject()
+    ~TTT_O()
     {
         
     }
@@ -82,9 +82,4 @@ public:
     }
 
     void Rotate(double deg){};
-
-	BoundingBox getAABB()
-	{
-		return m3d::BoundingBox(x, y, radius * 2, radius * 2);
-	}
 };

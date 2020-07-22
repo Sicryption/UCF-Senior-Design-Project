@@ -2,9 +2,9 @@
 #include "../scenes/minigame.hpp"
 #include "../commands/commands.h"
 
-#define t(x) mini->AddCommand(x)
-#define func(a) [mini]() { t(a); }
-#define PAIR(name, command) { name, [mini]() { t(command); }}
+#define t(x) minigame->AddCommand(x)
+#define func(a) [&]() { t(a); }
+#define PAIR(name, command) { name, [&]() { t(command); }}
 #define NULLPartialPAIR(name) { name, nullptr }
 #define NULLPAIR PAIR("", nullptr)
 #define COLORPAIR(name, r, g, b) PAIR(name, new ColorCommand(name, m3d::Color(r,g,b,255)))
@@ -116,9 +116,6 @@ namespace m3dCI
 		int sizeOfArray = sizeof(listOfCommandsByTab[index]) / sizeof(listOfCommandsByTab[index][0]);
 		for (int i = 0; i < sizeOfArray; i++)
 		{
-			if (listOfCommandsByTab[index][i].first == "")
-				continue;
-
 			m3dCI::commandListerItem* command = new m3dCI::commandListerItem(
 				x + tabWidthAndHeight,
 				y + commandObjectHeight * i,
@@ -160,7 +157,7 @@ namespace m3dCI
 		{
 			for (unsigned int i = 0; i < commands[selectedTab].size(); i++)
 			{
-				if (commands[selectedTab][i] != nullptr)
+				if (commands[selectedTab][i] != nullptr && listOfCommandsByTab[selectedTab][i].first != "")
 					commands[selectedTab][i]->draw(t_context);
 			}
 		}
@@ -181,7 +178,9 @@ namespace m3dCI
 		int commandObjectHeight = BOTTOMSCREEN_HEIGHT / NUM_COMMANDS_PER_TAB;
 		int selectedCommand = py / commandObjectHeight;
 
-		if (selectedCommand == -1 || listOfCommandsByTab[selectedTab][selectedCommand].first == "" || listOfCommandsByTab[selectedTab][selectedCommand].second == nullptr)
+		if (selectedCommand == -1 
+			|| listOfCommandsByTab[selectedTab][selectedCommand].first == "" 
+			|| listOfCommandsByTab[selectedTab][selectedCommand].second == nullptr)
 			return;
 
 		listOfCommandsByTab[selectedTab][selectedCommand].second();
@@ -220,5 +219,15 @@ namespace m3dCI
 			
 			currentlySelectedTab = tabIndex;
 		}
+	}
+
+	void CommandLister::OverrideCommandListObject(pair<string, function<void()>> commandListObject, int tab, int id)
+	{
+		if (tab >= NUM_TABS || id >= NUM_COMMANDS_PER_TAB || tab < 0 || id < 0)
+			return;
+
+		listOfCommandsByTab[tab][id] = commandListObject;
+
+		commands[tab][id]->setText(commandListObject.first);
 	}
 }

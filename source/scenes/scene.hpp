@@ -6,7 +6,7 @@
 #include <map>
 #include <memory>
 
-#include "../gameObject.hpp"
+#include "../gameObjects/gameObject.hpp"
 #include "../sandbox.hpp"
 #include "../util.hpp"
 #include "../Menu/Menu.hpp"

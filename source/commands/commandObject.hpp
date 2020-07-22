@@ -191,7 +191,7 @@ public:
         std::stringstream stream;
         for (CommandObject* cmd : t_list)
         {
-            stream << /*"if (not IsRunning()) then return end\n" <<*/ cmd->convertToLua() ;
+            stream << "if (not IsRunning()) then do return end end\n" << cmd->convertToLua() ;
         }
         return stream.str();
     }

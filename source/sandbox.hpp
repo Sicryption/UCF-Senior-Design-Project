@@ -16,13 +16,14 @@
 #define DEBUG_SANDBOX
 #endif
 
-#define SANDBOX_MEM_CAPACITY 4096 /** Memory capacity of the  sandbox in bytes*/
+#define SANDBOX_MEM_CAPACITY 4096 /** Memory capacity of the  sandbox in bytes*/ 
 #define THREAD_STACK (unsigned long long) 4096 /** Memory capacity of the sandbox thread stack in bytes*/
 
+#define THREAD_CLEAR    3
+#define THREAD_SKIP     2
 #define THREAD_HALT     1 /**Thread State Value. Pauses thread execution*/
 #define THREAD_RUNNING  0 /**Thread State Value. Continues thread execution*/
 #define THREAD_CLOSE   -1 /**Thread State Value. Closes the thread*/
-
 
 
 /**  

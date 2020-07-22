@@ -14,16 +14,15 @@
 class MazeScene : public Minigame
 {
 	private:
-		SpriteMenuItem *wallpaper, *wallpaper2, *texture, *popup, *wPopup, *lPopup, *current;
+		SpriteMenuItem *wallpaper, *wallpaper2, *texture, *popup, *wPopup, *current;
 		SpriteMenuItem *tutorial[5];
 		SpriteMenuItem *wallpapers[3];
 		int tutCount;
 		RectangleMenuItem *winScreen, *loseScreen;
 		m3d::Color *colorRec, *colorText;
-		TextMenuItem *prompt, *winPrompt;
+		TextMenuItem *prompt, *timePrompt;
         TerminalObject *runner;
-		int x, y, runnerID;
-		double timer; 
+		int x, y, runnerID, mazeState, winX, winY;
         bool walls[12][20] ={{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 							{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 							{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
@@ -50,9 +49,23 @@ class MazeScene : public Minigame
 							{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, 
 							{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
+		bool wallsThree[12][20] ={{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+							{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+							{ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
+							{ 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+							{ 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1},
+							{ 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1},
+							{ 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+							{ 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
+							{ 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+							{ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+							{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 
+							{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
+
             //2d array acting as map of array
         bool (*wallHolder)[12][20] = &walls;
 		bool (*wallHolderToo)[12][20] = &wallsToo;
+		bool (*wallHolderThree)[12][20] = &wallsThree;
 		//wallHolder = &walls;
 
 		enum MazeState
