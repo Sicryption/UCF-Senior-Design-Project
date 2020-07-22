@@ -41,7 +41,7 @@ void TicTacToeScene::initialize() {
     menu->AddItem(botRightTest);
     menu->AddItem(botMidTest);
 
-    topLeftBB = topLeftTest->getBoundingBox();
+    /*topLeftBB = topLeftTest->getBoundingBox();
     topMidBB = topMidTest->getBoundingBox();
     topRightBB = topRightTest->getBoundingBox();
 
@@ -52,6 +52,7 @@ void TicTacToeScene::initialize() {
     botLeftBB = botLeftTest->getBoundingBox();
     botMidBB = botMidTest->getBoundingBox();
     botRightBB = botRightTest->getBoundingBox();
+    */
 
     cTL = new m3d::Circle(240,60,20,*colorText);
     cTM = new m3d::Circle(300,60,20,*colorText);
@@ -65,7 +66,7 @@ void TicTacToeScene::initialize() {
     cBM = new m3d::Circle(300,180,20,*colorText);
     cBR = new m3d::Circle(360,180,20,*colorText);
 
-    cTLBB= cTL->getBoundingBox();
+    /*cTLBB= cTL->getBoundingBox();
     cTMBB= cTM->getBoundingBox();
     cTRBB= cTR->getBoundingBox();
 
@@ -76,6 +77,7 @@ void TicTacToeScene::initialize() {
     cBLBB= cBL->getBoundingBox();
     cBMBB= cBM->getBoundingBox();
     cBRBB= cBR->getBoundingBox();
+    */
     
 
     winPrompt = new TextMenuItem("You Win!",*colorText);
@@ -134,52 +136,51 @@ void TicTacToeScene::draw() {
     screen->drawTop(*cBM);
     screen->drawTop(*cBR);
 
-    if (topLeftBB.intersects(cTLBB))
+    if (topLeftTest->getBoundingBox().intersects(cTL->getBoundingBox()))
     {
         winPrompt->setPosition(20,20);
         screen->drawTop(*winPrompt);
     }
-    if (topMidBB.intersects(cTMBB))
+    if (topMidTest->getBoundingBox().intersects(cTM->getBoundingBox()))
     {
         winPrompt->setPosition(20,30);
         screen->drawTop(*winPrompt);
     }
-    if (topRightBB.intersects(cTRBB))
+    if (topRightTest->getBoundingBox().intersects(cTR->getBoundingBox()))
     {
         winPrompt->setPosition(20,40);
         screen->drawTop(*winPrompt);
     }
-    if (midLeftBB.intersects(cMLBB))
+    if (midLeftTest->getBoundingBox().intersects(cML->getBoundingBox()))
     {
         winPrompt->setPosition(20,50);
         screen->drawTop(*winPrompt);
     }
-    if (midMidBB.intersects(cMMBB))
+    if (midMidTest->getBoundingBox().intersects(cMM->getBoundingBox()))
     {
         winPrompt->setPosition(20,60);
         screen->drawTop(*winPrompt);
     }
-    if (midRightBB.intersects(cMRBB))
+    if (midRightTest->getBoundingBox().intersects(cMR->getBoundingBox()))
     {
         winPrompt->setPosition(20,70);
         screen->drawTop(*winPrompt);
     }
-    if (botLeftBB.intersects(cBLBB))
+    if (botLeftTest->getBoundingBox().intersects(cBL->getBoundingBox()))
     {
         winPrompt->setPosition(20,80);
         screen->drawTop(*winPrompt);
     }
-    if (botMidBB.intersects(cBMBB))
+    if (botMidTest->getBoundingBox().intersects(cBM->getBoundingBox()))
     {
         winPrompt->setPosition(20,90);
         screen->drawTop(*winPrompt);
     }
-    if (botRightBB.intersects(cBRBB))
+    if (botRightTest->getBoundingBox().intersects(cBR->getBoundingBox()))
     {
         winPrompt->setPosition(20,100);
         screen->drawTop(*winPrompt);
     }
-
     
 }
 
