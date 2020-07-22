@@ -214,4 +214,19 @@ public:
 	{
 		return sprite->getBoundingBox();
 	}
+
+	void setPosition(double t_x, double t_y)
+	{
+		if (t_x < 0)
+			t_x = 0;
+		if (t_y < 0)
+			t_y = 0;
+		if (t_x > TOPSCREEN_WIDTH)
+			t_x = TOPSCREEN_WIDTH;
+		if (t_y + sprite->GetHeight() > TOPSCREEN_HEIGHT)
+			t_y = TOPSCREEN_HEIGHT - sprite->GetHeight();
+
+		x = t_x;
+		y = t_y;
+	}
 };
