@@ -43,11 +43,7 @@ void MazeScene::initialize(){
 	timePrompt->setFontWeight(.5);
 	timePrompt->setPosition(160,120);
 			
-	//prompt = new TextMenuItem(" Use move commands to traverse \n the maze. In order to add a move \n command select Add, then go to\n the tab with the arrows. There\n you can select up, down, left \n or right as a direction to\n move in the maze. You can then\n change the amount of spaces you\n want to move by selecting it and\n clicking edit. Be sure to enter all\n commands you will need to get to\n the end of the maze before running.",*colorText);
-	//menu->AddItem(prompt);
-	//prompt->setPosition(90,30);
-	//prompt->setFontSize(.5);
-	//prompt->setFontWeight(.5);
+	
 	wallpapers[0] = new SpriteMenuItem(*(ResourceManager::getSprite("maze1.png")));
 	menu->AddItem(wallpapers[0]);
 	wallpapers[1] = new SpriteMenuItem(*(ResourceManager::getSprite("maze2.png")));
@@ -78,11 +74,45 @@ void MazeScene::initialize(){
 	popup->setPosition(80,20);
 
 	currentState = MazeState::TutorialMessage;
+
+	lPopup = new SpriteMenuItem(*(ResourceManager::getSprite("lose_popup.png")));
+	menu->AddItem(lPopup);
+	lPopup->setPosition(80, 20);
+	timer = 15.00;
+	timerS = std::to_string(timer);
+	timerS.resize(5);
+	timerP = new TextMenuItem(timerS);
+    timerP->setFontSize(0.75f);
+	timerP->setFontWeight(0.75f);
+	timerP->getWidth();
+	timerP->setPosition(200-((timerP->getWidth())/2),0);
 }
 
 void MazeScene::transistion(){
-		if(mazeState == 2)
+	currentState = MazeState::Requesting;
+	if(mazeState == 1)
 	{
+		timer = 15.00;
+		std::vector<CommandObject*> startingCommands =
+					{
+						new SelectCommand("runner",true,true),
+						new RightCommand("18"),
+						new DownCommand("5"),
+						new LeftCommand("18"),
+						new DownCommand("5"),
+						new RightCommand("18"),
+						new DownCommand("5"),
+						new LeftCommand("18"),
+						new DownCommand("5"),
+						new RightCommand("18")
+					};
+		SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
+		current = wallpapers[0];
+		runner->setposition(20,20,wallHolder);
+	}
+	if(mazeState == 2)
+	{
+		timer = 10.00;
 		std::vector<CommandObject*> startingCommands =
 		{
 			new SelectCommand("runner",true,true),
@@ -118,6 +148,7 @@ void MazeScene::transistion(){
 	}
 	if(mazeState == 3)
 	{
+		timer = 20.00;
 		std::vector<CommandObject*> startingCommands =
 		{
 			new SelectCommand("runner",true,true),
@@ -135,15 +166,19 @@ void MazeScene::transistion(){
 		current = wallpapers[2];
 		runner->setposition(360,200,wallHolderThree);
 	}
-	
+	timerS = std::to_string(timer);
+	timerS.resize(5);
+	timerP->setText(timerS);
+	timerP->setPosition(200-((timerP->getWidth())/2),0);
 };
 
 void MazeScene::draw(){
-    //Scene::draw();
+
 	m3d::Screen * screen = GameManager::getScreen();
 
 	current->setPosition(0,0);
     screen->drawTop(*current);
+	screen->drawTop(*timerP, m3d::RenderContext::Mode::Flat, 4);
 
     if(currentState == MazeState::TutorialMessage)
     {   
@@ -159,18 +194,30 @@ void MazeScene::draw(){
 		//use m3dci for prompt
     }
 
-	//screen->drawBottom(*bwallpaper);
-	//screen->drawBottom(*prompt);
+	if(currentState == MazeState::Lose)
+    {   
+        screen->drawTop(*lPopup, m3d::RenderContext::Mode::Flat, 2);
+    }
 
 	Minigame::draw();
-    //runner->draw();
+    runner->draw();
 
 }
 		
 void MazeScene::load(){ Minigame::load(); }; //any data files
-        
+
 void MazeScene::unload(){ Minigame::unload(); };
-        
+
+void MazeScene::onExecutionBegin()
+{
+	//isExecuting = true;
+}
+
+void MazeScene::onExecutionEnd()
+{
+
+}
+
 void MazeScene::update()
 {
 	Minigame::update();
@@ -178,6 +225,7 @@ void MazeScene::update()
 	switch (currentState)
 	{
 		case MazeState::TutorialMessage:
+			isExecuting = true;
 
 			if (buttons::buttonPressed(buttons::A) || buttons::buttonDown(buttons::Start)){
 				if(tutCount >= 5 || buttons::buttonDown(buttons::Start))
@@ -199,12 +247,6 @@ void MazeScene::update()
 					};
 
 					SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
-
-					//Enable buttons for use once Code has been requested
-					submitButton->SetActive(true);
-					AddButton->SetActive(true);
-					RemoveButton->SetActive(true);
-					EditButton->SetActive(true);
 					tutCount = 0;
 					break;
 				}
@@ -213,55 +255,75 @@ void MazeScene::update()
 			}
 
 			//Disable all buttons during tutorial
-			submitButton->SetActive(false);
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
 			break;
 		case MazeState::Execute:
+			isExecuting = true;
+
+			timer -= GameManager::getDeltaTime();	
+			if(timer <= 0)
+				timer = 0.00;
+			timerS = std::to_string(timer);
+			if(timer < 10)
+				timerS.resize(4);
+			else
+			{
+				timerS.resize(5);
+				timerP->setPosition(200-((timerP->getWidth())/2),0);
+			}
+			timerP->setText(timerS);
+
 			
 			if(checkWinCond() == 1)
 			{
 				if(mazeState == 3)
 				{
 					currentState = MazeState::Win;
+					m_sandbox->setThreadState(THREAD_CLEAR);
 					break;
-				}	
+				}
+				currentState = MazeState::Transistion;
 				m_sandbox->setThreadState(THREAD_CLEAR);
 				mazeState++;
-				currentState = MazeState::Transistion;
 				break;
+			}
+			else if (timer == 0 && checkWinCond() == 0)
+			{
+				currentState = MazeState::Lose;
+				m_sandbox->setThreadState(THREAD_CLEAR);
 			}
 			break;
 		case MazeState::Win:
 			if (buttons::buttonPressed(buttons::A))
 				SceneManager::setTransition(new MinigameSelectScene());
-			submitButton->SetActive(false);
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
+			};
 			break;
 		case MazeState::Lose:
-			submitButton->SetActive(false);
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
+			if (Input::btnReleased(m3d::buttons::B)) // return to minigame select screen
+                SceneManager::setTransition(new MinigameSelectScene());
+			if (Input::btnReleased(m3d::buttons::A)) // restart the game 
+			{
+				currentState = MazeState::Transistion;
+				isExecuting = false;
+			}
 			break;
 		case MazeState::Transistion:
+			isExecuting = false;
 			transistion();
-
-			currentState = MazeState::Requesting;
 			break;
 		case MazeState::Requesting:
+			isExecuting = false;
+
 			if (Input::btnReleased(m3d::buttons::B))
 				SceneManager::setTransition(new MinigameSelectScene());
 			break;
 	}
+
+	Util::PrintLine(std::to_string(currentState));
 };
 
 void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)
 {	
-    #ifdef DEBUG_MINIGAME
+	#ifdef DEBUG_MINIGAME
     Util::PrintLine("Maze: queue commands");
     #endif
     std::string str = CommandObject::ConvertBulk(luaCode);

@@ -1,3 +1,8 @@
+/**
+ *  @file MazeScene.h
+ *  @brief Defines the MazeScene class and any other structures to handle transitions and win states in the maze.
+ *  
+ */
 #pragma once
 #include "../gameManager.hpp"
 #include "../sceneManager.hpp"
@@ -10,14 +15,23 @@
 #define DEBUG_MAZE
 #endif
 
+/** @class MazeScene "MazeScene.h"
+ *  MazeScene Managment class.
+ *  Load Mazes, Maze states, and maze transitions. 
+ *  Using this allows you to move through the 3 mazes as well as win and lose
+ * 
+ */
 
 class MazeScene : public Minigame
 {
 	private:
-		SpriteMenuItem *wallpaper, *wallpaper2, *texture, *popup, *wPopup, *current;
+		SpriteMenuItem *wallpaper, *wallpaper2, *texture, *popup, *wPopup, *current, *lPopup;
 		SpriteMenuItem *tutorial[5];
 		SpriteMenuItem *wallpapers[3];
+		TextMenuItem *timerP;
+		string timerS;
 		int tutCount;
+		double timer; 
 		RectangleMenuItem *winScreen, *loseScreen;
 		m3d::Color *colorRec, *colorText;
 		TextMenuItem *prompt, *timePrompt;
@@ -78,6 +92,10 @@ class MazeScene : public Minigame
 			Lose
 		};
 		MazeState currentState;
+
+		void onExecutionBegin();
+
+		void onExecutionEnd();
 	public:
 		MazeScene();
 		~MazeScene();
