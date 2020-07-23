@@ -78,9 +78,19 @@ void MazeScene::initialize(){
 	popup->setPosition(80,20);
 
 	currentState = MazeState::TutorialMessage;
+
+	lPopup = new SpriteMenuItem(*(ResourceManager::getSprite("lose_popup.png")));
+	menu->AddItem(lPopup);
+	lPopup->setPosition(80, 20);
+	timer = 2000;
+	timerP = new TextMenuItem(std::to_string(timer));
+    timerP->setFontSize(2.0f);
+
 }
 
 void MazeScene::transistion(){
+	timer = 20;
+	timerP->setText(std::to_string(timer));
 	if(mazeState == 1)
 	{
 		std::vector<CommandObject*> startingCommands =
@@ -163,6 +173,7 @@ void MazeScene::draw(){
 
 	current->setPosition(0,0);
     screen->drawTop(*current);
+	screen->drawTop(*timerP, m3d::RenderContext::Mode::Flat, 4);
 
     if(currentState == MazeState::TutorialMessage)
     {   
@@ -176,6 +187,11 @@ void MazeScene::draw(){
         screen->drawTop(*wPopup, m3d::RenderContext::Mode::Flat, 2);
 		//screen->drawTop(*winPrompt);
 		//use m3dci for prompt
+    }
+
+	if(currentState == MazeState::Lose)
+    {   
+        screen->drawTop(*lPopup, m3d::RenderContext::Mode::Flat, 2);
     }
 
 	Minigame::draw();
@@ -236,6 +252,9 @@ void MazeScene::update()
 			break;
 		case MazeState::Execute:
 			
+			timer -= GameManager::getDeltaTime();
+			timerP->setText(std::to_string(timer));
+			
 			if(checkWinCond() == 1)
 			{
 				if(mazeState == 3)
@@ -248,9 +267,10 @@ void MazeScene::update()
 				currentState = MazeState::Transistion;
 				break;
 			}
-			if(checkWinCond() == 0)
+			//else if (timer <= 0 && checkWinCond() == 0)
 			//{
-			//	currentState = MazeState::Transistion;
+			//	m_sandbox->setThreadState(THREAD_HALT);
+			//	currentState = MazeState::Lose;
 			//}
 
 			break;
@@ -258,9 +278,17 @@ void MazeScene::update()
 			if (buttons::buttonPressed(buttons::A))
 			{
 				SceneManager::setTransition(new MinigameSelectScene());
-			}
+			};
+			submitButton->SetActive(false);
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
 			break;
 		case MazeState::Lose:
+			submitButton->SetActive(false);
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
 			break;
 		case MazeState::Transistion:
 			transistion();
