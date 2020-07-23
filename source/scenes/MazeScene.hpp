@@ -92,6 +92,10 @@ class MazeScene : public Minigame
 			Lose
 		};
 		MazeState currentState;
+
+		void onExecutionBegin();
+
+		void onExecutionEnd();
 	public:
 		MazeScene();
 		~MazeScene();

@@ -205,9 +205,19 @@ void MazeScene::draw(){
 }
 		
 void MazeScene::load(){ Minigame::load(); }; //any data files
-        
+
 void MazeScene::unload(){ Minigame::unload(); };
-        
+
+void MazeScene::onExecutionBegin()
+{
+	//isExecuting = true;
+}
+
+void MazeScene::onExecutionEnd()
+{
+
+}
+
 void MazeScene::update()
 {
 	Minigame::update();
@@ -215,6 +225,7 @@ void MazeScene::update()
 	switch (currentState)
 	{
 		case MazeState::TutorialMessage:
+			isExecuting = true;
 
 			if (buttons::buttonPressed(buttons::A) || buttons::buttonDown(buttons::Start)){
 				if(tutCount >= 5 || buttons::buttonDown(buttons::Start))
@@ -236,12 +247,6 @@ void MazeScene::update()
 					};
 
 					SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
-
-					//Enable buttons for use once Code has been requested
-					submitButton->SetActive(true);
-					AddButton->SetActive(true);
-					RemoveButton->SetActive(true);
-					EditButton->SetActive(true);
 					tutCount = 0;
 					break;
 				}
@@ -250,16 +255,10 @@ void MazeScene::update()
 			}
 
 			//Disable all buttons during tutorial
-			submitButton->SetActive(false);
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
 			break;
 		case MazeState::Execute:
-			submitButton->SetActive(false);
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
+			isExecuting = true;
+
 			timer -= GameManager::getDeltaTime();	
 			if(timer <= 0)
 				timer = 0.00;
@@ -279,47 +278,42 @@ void MazeScene::update()
 				if(mazeState == 3)
 				{
 					currentState = MazeState::Win;
+					m_sandbox->setThreadState(THREAD_CLEAR);
 					break;
-				}	
+				}
+				currentState = MazeState::Transistion;
 				m_sandbox->setThreadState(THREAD_CLEAR);
 				mazeState++;
-				currentState = MazeState::Transistion;
 				break;
 			}
 			else if (timer == 0 && checkWinCond() == 0)
 			{
-				m_sandbox->setThreadState(THREAD_CLEAR);
 				currentState = MazeState::Lose;
+				m_sandbox->setThreadState(THREAD_CLEAR);
 			}
-			submitButton->SetActive(false);
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
 			break;
 		case MazeState::Win:
 			if (buttons::buttonPressed(buttons::A))
 			{
 				SceneManager::setTransition(new MinigameSelectScene());
 			};
-			submitButton->SetActive(false);
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
 			break;
 		case MazeState::Lose:
 			if (Input::btnReleased(m3d::buttons::B)) // return to minigame select screen
                 SceneManager::setTransition(new MinigameSelectScene());
-            if (Input::btnReleased(m3d::buttons::A)) // restart the game 
-                currentState = MazeState::Transistion;
-			submitButton->SetActive(false);
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
+			if (Input::btnReleased(m3d::buttons::A)) // restart the game 
+			{
+				currentState = MazeState::Transistion;
+				isExecuting = false;
+			}
 			break;
 		case MazeState::Transistion:
+			isExecuting = false;
 			transistion();
 			break;
 		case MazeState::Requesting:
+			isExecuting = false;
+
 			if (Input::btnReleased(m3d::buttons::B))
 				SceneManager::setTransition(new MinigameSelectScene());
 			break;
