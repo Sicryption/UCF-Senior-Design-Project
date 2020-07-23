@@ -46,11 +46,10 @@ public:
 	/**
 	* @brief Calculate and apply ball's velocity.
 	*/
-    void update() {
-
+    void update() 
+	{
 		moveTo(speed * dirX, speed * dirY);
-
-    };
+    }
 
 
 	/**

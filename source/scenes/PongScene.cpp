@@ -13,7 +13,15 @@
 #define SCOREBOARD_PADDING 30
 #define SCOREBOARD_TOP_PADDING 5
 
-Util* util = Util::getInstance();
+#define Ball static_cast<PongBall*>(findObject(ballID))
+#define LeftPaddle static_cast<PongPaddle*>(findObject(paddleID))
+#define RightPaddle static_cast<PongPaddle*>(findObject(enemyID))
+
+#define CallFunc(ob, func) if(ob != nullptr) ob->func
+
+#define LPF(funcName) CallFunc(LeftPaddle, funcName)
+#define RPF(funcName) CallFunc(RightPaddle, funcName)
+#define BF(funcName) CallFunc(Ball, funcName)
 
 PongScene::PongScene(bool showTutorial)
 {
@@ -87,23 +95,17 @@ void PongScene::initialize(){
 	}
 
 	// initialize the game objects and add them to the hash map
-	ball = new PongBall();
-	int ballID = addObject(ball);
+	ballID = addObject(new PongBall());
 	setObjectName("ball", ballID);
+	BF(initialize)();
 
-	ball->initialize();
-
-	leftPaddle = new PongPaddle(20, 90);
-	int paddleID = addObject(leftPaddle);
+	paddleID = addObject(new PongPaddle(20, 90));
 	setObjectName("player", paddleID);
+	LPF(initialize)();
 
-	leftPaddle->initialize();
-
-	rightPaddle = new PongPaddle(380, 90, ball);
-	int enemyID = addObject(rightPaddle);
+	enemyID = addObject(new PongPaddle(380, 90, ballID));
 	setObjectName("enemy", enemyID);
-
-	rightPaddle->initialize();
+	RPF(initialize)();
 
 	currentState = PongState::TutorialMessage;
 }
@@ -116,11 +118,9 @@ void PongScene::draw(){
 	wallpaper->setPosition(0, 0);
 	screen->drawTop(*wallpaper, m3d::RenderContext::Mode::Flat, 0);
 
-	ball->draw();
-
-	leftPaddle->draw();
-
-	rightPaddle->draw();
+	BF(draw)();
+	LPF(draw)();
+	RPF(draw)();
 	
 	for (int i = 0; i < TEAM_COUNT; i++)
 		screen->drawTop(*scoreBoard[i], m3d::RenderContext::Mode::Flat, 4);
@@ -143,7 +143,7 @@ void PongScene::draw(){
 		screen->drawTop(*lPopup, m3d::RenderContext::Mode::Flat, 5);
 	}
 }
-		
+
 void PongScene::load(){ Minigame::load(); }; //any data files
         
 void PongScene::unload(){ Minigame::unload(); };
@@ -160,37 +160,33 @@ void PongScene::reset()
 	for (int i = 0; i < TEAM_COUNT; i++)
 		scoreBoard[i]->setText(std::to_string(points[i]));
 
-	if (ball == nullptr)
+	if (Ball == nullptr)
 	{
-		ball = new PongBall();
-		int ballID = addObject(ball);
+		ballID = addObject(new PongBall());
 		setObjectName("ball", ballID);
-
-		ball->initialize();
+		BF(initialize)();
 	}
 
-	if (leftPaddle == nullptr)
+
+	if (LeftPaddle == nullptr)
 	{
-		leftPaddle = new PongPaddle(20, 90);
-		int paddleID = addObject(leftPaddle);
+		paddleID = addObject(new PongPaddle(20, 90));
 		setObjectName("player", paddleID);
 
-		leftPaddle->initialize();
+		LPF(initialize)();
 	}
 
 
-	if (rightPaddle == nullptr)
+	if (RightPaddle == nullptr)
 	{
-		rightPaddle = new PongPaddle(380, 90, ball);
-		int enemyID = addObject(rightPaddle);
+		enemyID = addObject(new PongPaddle(380, 90, ballID));
 		setObjectName("enemy", enemyID);
-
-		rightPaddle->initialize();
+		RPF(initialize)();
 	}
 
-	leftPaddle->reset(true);
-	rightPaddle->reset(true);
-	ball->reset();
+	BF(reset)();
+	LPF(reset)(true);
+	RPF(reset)(true);
 }
 
         
@@ -226,6 +222,8 @@ void PongScene::update()
 
 				std::vector<CommandObject*> startingCommands =
 				{
+					new SelectCommand("enemy"),
+					new DeleteCommand(),
 					new WhileCommand("true", true, false),
 					new SelectCommand("ball"),
 					new GetYCommand("by"),
@@ -275,80 +273,86 @@ void PongScene::update()
 			// determine winner and loser
 			if (points[0] == MATCH_POINT)
 				currentState = PongState::Win;
-			else if (points[1] == MATCH_POINT || ball == nullptr)
+			else if (points[1] == MATCH_POINT || Ball == nullptr)
 				currentState = PongState::Lose;
 
-			BoundingBox ballAABB = ball->getAABB();
-
-			// handle ball bouncing
-			for (int i = 0; i < m_hashmap.size(); i++)
+			if (Ball != nullptr)
 			{
-				// We don't want the ball interacting with itself
-				if (m_hashmap[i] == ball)
-					continue;
+				BoundingBox ballAABB = Ball->getAABB();
 
-				BoundingBox aabb = m_hashmap[i]->getAABB();
-
-				// check if ball is inside object
-				if (aabb.intersects(ballAABB))
+				// handle ball bouncing
+				// We don't want the ball interacting with itself hence i != ballID
+				for (int i = 0; i < m_hashmap.size(); i++)
 				{
-					//if so, bounce off
+					if (m_hashmap[i] == nullptr || i == ballID)
+						continue;
 
-					//Determine which side of the ball hit the wall
+					BoundingBox aabb = m_hashmap[i]->getAABB();
 
-					int pixelDifference = 3;
+					// check if ball is inside object
+					if (aabb.intersects(ballAABB))
+					{
+						//if so, bounce off
 
-					//We can't take corners, and instead need to detect using a one pixel BB on each side of each corner.
-					BoundingBox TL = BoundingBox(ballAABB.getX() + pixelDifference, ballAABB.getY(), 1, 1),
-						TR = BoundingBox(ballAABB.getX() + ballAABB.getWidth() - pixelDifference, ballAABB.getY(), 1, 1),
-						LT = BoundingBox(ballAABB.getX(), ballAABB.getY() + pixelDifference, 1, 1),
-						LB = BoundingBox(ballAABB.getX(), ballAABB.getY() + ballAABB.getHeight() - pixelDifference, 1, 1),
-						BL = BoundingBox(ballAABB.getX() + pixelDifference, ballAABB.getY() + ballAABB.getHeight(), 1, 1),
-						BR = BoundingBox(ballAABB.getX() + ballAABB.getWidth() - pixelDifference, ballAABB.getY() + ballAABB.getHeight(), 1, 1),
-						RT = BoundingBox(ballAABB.getX() + ballAABB.getWidth(), ballAABB.getY() + pixelDifference, 1, 1),
-						RB = BoundingBox(ballAABB.getX() + ballAABB.getWidth(), ballAABB.getY() + ballAABB.getHeight() - pixelDifference, 1, 1);
+						//Determine which side of the ball hit the wall
 
-					// set ball's direction based on where it collided
-					if (aabb.intersects(TL) || aabb.intersects(TR))
-						ball->SetDirection(0, 1);
-					else if (aabb.intersects(BL) || aabb.intersects(BR))
-						ball->SetDirection(0, -1);
-					else if (aabb.intersects(LT) || aabb.intersects(LB))
-						ball->SetDirection(1, 0);
-					else if (aabb.intersects(RT) || aabb.intersects(RB))
-						ball->SetDirection(-1, 0);
+						int pixelDifference = 3;
 
-					if (m_hashmap[i] == rightPaddle)
-						rightPaddle->ballBouncedOffPaddle();
+						//We can't take corners, and instead need to detect using a one pixel BB on each side of each corner.
+						BoundingBox TL = BoundingBox(ballAABB.getX() + pixelDifference, ballAABB.getY(), 1, 1),
+							TR = BoundingBox(ballAABB.getX() + ballAABB.getWidth() - pixelDifference, ballAABB.getY(), 1, 1),
+							LT = BoundingBox(ballAABB.getX(), ballAABB.getY() + pixelDifference, 1, 1),
+							LB = BoundingBox(ballAABB.getX(), ballAABB.getY() + ballAABB.getHeight() - pixelDifference, 1, 1),
+							BL = BoundingBox(ballAABB.getX() + pixelDifference, ballAABB.getY() + ballAABB.getHeight(), 1, 1),
+							BR = BoundingBox(ballAABB.getX() + ballAABB.getWidth() - pixelDifference, ballAABB.getY() + ballAABB.getHeight(), 1, 1),
+							RT = BoundingBox(ballAABB.getX() + ballAABB.getWidth(), ballAABB.getY() + pixelDifference, 1, 1),
+							RB = BoundingBox(ballAABB.getX() + ballAABB.getWidth(), ballAABB.getY() + ballAABB.getHeight() - pixelDifference, 1, 1);
+
+						// set ball's direction based on where it collided
+						if (aabb.intersects(TL) || aabb.intersects(TR))
+							Ball->SetDirection(0, 1);
+						else if (aabb.intersects(BL) || aabb.intersects(BR))
+							Ball->SetDirection(0, -1);
+						else if (aabb.intersects(LT) || aabb.intersects(LB))
+							Ball->SetDirection(1, 0);
+						else if (aabb.intersects(RT) || aabb.intersects(RB))
+							Ball->SetDirection(-1, 0);
+
+						if (RightPaddle != nullptr && m_hashmap[i] == RightPaddle)
+							RightPaddle->ballBouncedOffPaddle();
+					}
 				}
-			}
-
-			// ball goes out of x bounds, a goal has been scored
-			if (ball->getXPosition() < 0 || ball->getXPosition() + ball->getWidth() > TOPSCREEN_WIDTH)
-			{
-				if (ball->getXPosition() < 0) // enemy scores
+				
+				// ball goes out of x bounds, a goal has been scored
+				if (Ball->getXPosition() < 0 || Ball->getXPosition() + Ball->getWidth() > TOPSCREEN_WIDTH)
 				{
-					points[1]++;
+					if (Ball->getXPosition() < 0) // enemy scores
+					{
+						points[1]++;
+					}
+					else // player scores 
+					{
+						points[0]++;
+					}
+
+					BF(reset)();
+					RPF(reset)();
 				}
-				else // player scores 
+
+				// ball goes out of y bounds, a collision with the wall occurs 
+				if (Ball->getYPosition() < 0 || Ball->getYPosition() + Ball->getHeight() >= TOPSCREEN_HEIGHT)
 				{
-					points[0]++;
+					// Bounce off top or bottom wall
+					Ball->toggleYDir();
 				}
 
-				ball->reset();
-				rightPaddle->reset();
+				if(LeftPaddle != nullptr)
+					LeftPaddle->update();
+				if (RightPaddle != nullptr)
+					RightPaddle->update();
+				if (Ball != nullptr)
+					Ball->update();
 			}
-
-			// ball goes out of y bounds, a collision with the wall occurs 
-			if (ball->getYPosition() < 0 || ball->getYPosition() + ball->getHeight() >= TOPSCREEN_HEIGHT)
-			{
-				// Bounce off top or bottom wall
-				ball->toggleYDir();
-			}
-
-			leftPaddle->update();
-			rightPaddle->update();
-			ball->update();
 
 			//update score
 			for (int i = 0; i < TEAM_COUNT; i++)

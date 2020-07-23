@@ -27,10 +27,10 @@ class PongScene : public Minigame
 		SpriteMenuItem *popup, *wallpaper, *wPopup, *lPopup;
 		SpriteMenuItem* tutorial[TUTORIAL_POPUP_COUNT];
 		m3dCI::Button *retryBtn, *exitBtn;
-		PongBall *ball;
-		PongPaddle *leftPaddle, *rightPaddle;
 		int points[TEAM_COUNT];
 		int tutCount;
+
+		int ballID, paddleID, enemyID;
 		
 		enum PongState
 		{

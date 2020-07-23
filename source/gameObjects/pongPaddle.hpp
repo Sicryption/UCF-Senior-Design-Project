@@ -3,6 +3,7 @@
 #include "../resources.h"
 //#include "../scenes/PongScene.hpp"
 #include "../gameObjects/pongBall.hpp"
+#include "../sceneManager.hpp"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,7 +15,6 @@ class PongPaddle : public GameObject
 	**/
 private:
     m3d::Rectangle *PongRec;
-	PongBall* ball = nullptr; 
 	int velo; 
 
 	int chanceToFail = 0;
@@ -22,6 +22,8 @@ private:
 
 	int width, height;
 	int startX, startY;
+
+	int ballid;
 
 public:
 	/**
@@ -41,7 +43,7 @@ public:
 	* @brief A custom constructor for setting the enemy paddle's velocity, position, angle, scale and ball.
 	* 
 	*/
-	PongPaddle(int _x, int _y, PongBall *_ball)
+	PongPaddle(int _x, int _y, int ballID)
 	{
 		x = _x;
 		y = _y;
@@ -50,7 +52,7 @@ public:
 		xScale = 1;
 		yScale = 1;
 
-		ball = _ball;
+		ballid = ballID;
 	}
 	
 	/**
@@ -71,6 +73,10 @@ public:
 	*/
     void update() 
 	{
+		if(ballid == -1)
+			return;
+
+		PongBall* ball = static_cast<PongBall*>(SceneManager::getScene()->findObject(ballid));
 		if (ball != nullptr)
 		{
 			// calculate displacement between enemy paddle and ball 
