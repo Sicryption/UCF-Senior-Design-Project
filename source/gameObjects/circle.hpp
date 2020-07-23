@@ -34,6 +34,7 @@ public:
                   double t_radius = DEFAULT_SIZE, double t_angle = 0,
                   m3d::Color t_color = DEFAULT_COLOR)
     {
+        name = "circle";
         x = t_x;
         y = t_y;
 		color = t_color;

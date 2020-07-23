@@ -132,6 +132,7 @@ public:
 		setParam(1, t_y);
         m_background = m3dCI::Sprite( *ResourceManager::getSprite("command_background_instance.png"));
         m_background.setTint(COM_LOCK_TINT);
+        Util::PrintLine("test command");
     }
 
     ~TTT_X_Command();

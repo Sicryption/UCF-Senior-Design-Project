@@ -17,6 +17,7 @@ public:
                   double t_length = DEFAULT_SIZE, double t_angle = 0,
                   m3d::Color t_color = DEFAULT_COLOR)
     {
+        name = "triangle";
         x = t_x;
         y = t_y;
         xScale = t_length;

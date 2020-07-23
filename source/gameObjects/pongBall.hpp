@@ -19,6 +19,7 @@ public:
 	*/
 	PongBall()
     {
+        name = "ball";
 		x = TOPSCREEN_WIDTH / 2;
         y = TOPSCREEN_HEIGHT / 2;
         xScale = 1;
