@@ -150,8 +150,6 @@ void PongScene::unload(){ Minigame::unload(); };
 
 void PongScene::reset()
 {
-	m_sandbox->setThreadState(THREAD_CLEAR);
-
 	currentState = PongState::Requesting;
 
 	for (int i = 0; i < TEAM_COUNT; i++)
@@ -246,9 +244,6 @@ void PongScene::update()
 			EditButton->SetActive(false);
 			submitButton->SetActive(false);
 
-			if (m_sandbox->getThreadState() != THREAD_HALT)
-				m_sandbox->setThreadState(THREAD_HALT);
-
 			if (Input::btnReleased(m3d::buttons::B))
 				SceneManager::setTransition(new MinigameSelectScene());
 			if (Input::btnReleased(m3d::buttons::A)) // restart the game without showing the tutorial message
@@ -264,17 +259,22 @@ void PongScene::update()
 				SceneManager::setTransition(new MinigameSelectScene());
 			if (Input::btnReleased(m3d::buttons::A)) // restart the game 
 				SceneManager::setTransition(new PongScene());
-
-			if(m_sandbox->getThreadState() != THREAD_HALT)
-				m_sandbox->setThreadState(THREAD_HALT);
 		break;
 		case PongState::Execute:
 
 			// determine winner and loser
 			if (points[0] == MATCH_POINT)
+			{
+				m_sandbox->setThreadState(THREAD_CLEAR);
+
 				currentState = PongState::Win;
+			}
 			else if (points[1] == MATCH_POINT || Ball == nullptr)
+			{
+				m_sandbox->setThreadState(THREAD_CLEAR);
+
 				currentState = PongState::Lose;
+			}
 
 			if (Ball != nullptr)
 			{
