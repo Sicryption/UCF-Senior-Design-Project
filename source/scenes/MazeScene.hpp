@@ -36,6 +36,7 @@ class MazeScene : public Minigame
 		m3d::Color *colorRec, *colorText;
 		TextMenuItem *prompt, *timePrompt;
         TerminalObject *runner;
+		
 		int x, y, runnerID, mazeState, winX, winY;
         bool walls[12][20] ={{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 							{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
