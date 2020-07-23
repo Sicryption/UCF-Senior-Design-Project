@@ -148,7 +148,7 @@ void PongScene::draw(){
 }
 
 void PongScene::load(){ Minigame::load(); }; //any data files
-        
+
 void PongScene::unload(){ Minigame::unload(); };
 
 void PongScene::reset()
@@ -190,7 +190,6 @@ void PongScene::reset()
 	RightPaddleNullSafeCallFunction(reset)(true);
 }
 
-        
 void PongScene::update()
 {
 	Minigame::update();
@@ -198,21 +197,6 @@ void PongScene::update()
 	switch(currentState)
 	{
 		case PongState::TutorialMessage:
-			if (codeEditor->GetCommands().size() == 1)
-			{
-				std::vector<CommandObject*> startingCommands =
-				{
-					new WhileCommand("true", true, false),
-					new SelectCommand("ball"),
-					new GetYCommand("by"),
-					new SelectCommand("player"),
-					new SetYCommand("by"),
-					new EndCommand(true)
-
-				};
-
-				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitPongCode(commands); });
-			}
 
 			AddButton->SetActive(false);
 			RemoveButton->SetActive(false);
@@ -234,6 +218,19 @@ void PongScene::update()
 			if (buttons::buttonDown(buttons::Start) || tutCount >= TUTORIAL_POPUP_COUNT)
 			{
 				tutCount = 0;
+
+				std::vector<CommandObject*> startingCommands =
+				{
+					new WhileCommand("true", true, false),
+					new SelectCommand("ball"),
+					new GetYCommand("by"),
+					new SelectCommand("player"),
+					new SetYCommand("by"),
+					new EndCommand(true)
+
+				};
+
+				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitPongCode(commands); });
 
 				currentState = PongState::Requesting;
 
