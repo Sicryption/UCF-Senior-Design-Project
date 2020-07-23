@@ -29,6 +29,7 @@ class MazeScene : public Minigame
 		SpriteMenuItem *tutorial[5];
 		SpriteMenuItem *wallpapers[3];
 		TextMenuItem *timerP;
+		string timerS;
 		int tutCount;
 		double timer; 
 		RectangleMenuItem *winScreen, *loseScreen;
