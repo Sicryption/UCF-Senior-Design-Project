@@ -36,13 +36,6 @@ void MazeScene::initialize(){
 //initializes text and bottom screen background
 	winScreen = new RectangleMenuItem(0,0,320,240,*colorRec);
 	menu->AddItem(winScreen);
-	timePrompt = new TextMenuItem("You Win!",*colorText);
-	menu->AddItem(timePrompt);
-	timePrompt->setPosition(90,30);
-	timePrompt->setFontSize(.5);
-	timePrompt->setFontWeight(.5);
-	timePrompt->setPosition(160,120);
-			
 	
 	wallpapers[0] = new SpriteMenuItem(*(ResourceManager::getSprite("maze1.png")));
 	menu->AddItem(wallpapers[0]);
