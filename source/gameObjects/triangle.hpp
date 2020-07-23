@@ -82,4 +82,10 @@ public:
     }
 
     void Rotate(double deg){};
+
+	BoundingBox getAABB()
+	{
+		//TODO
+		return BoundingBox(-1, -1, -1, -1);
+	}
 };

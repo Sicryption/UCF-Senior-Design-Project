@@ -226,8 +226,8 @@ int make_paddle(lua_State* L)
 int UserAPI::set_position(lua_State* L)
 {
     lua_Number t_id = lua_tonumber(L,-3);
-    lua_Number t_y  = lua_tonumber(L,-2);
-    lua_Number t_x  = lua_tonumber(L,-1);
+    lua_Number t_x  = lua_tonumber(L,-2);
+    lua_Number t_y  = lua_tonumber(L,-1);
 
     Scene *currScene = SceneManager::getScene();
     if(currScene == nullptr)
@@ -339,8 +339,8 @@ int UserAPI::get_y_position(lua_State* L)
    
 int UserAPI::rotate(lua_State* L)
 {
-    lua_Number t_id = lua_tonumber(L,-1);
-    lua_Number t_angle = lua_tonumber(L,-2);
+    lua_Number t_id = lua_tonumber(L,-2);
+    lua_Number t_angle = lua_tonumber(L,-1);
 
     Scene *currScene = SceneManager::getScene();
     if(currScene == nullptr)
@@ -412,7 +412,7 @@ int UserAPI::get_angle(lua_State* L)
 int UserAPI::set_scale(lua_State* L)
 {
     lua_Number t_id     = lua_tonumber(L,-3);
-    lua_Number t_width  = lua_tonumber(L,-2);
+    lua_Number t_width = lua_tonumber(L,-2);
     lua_Number t_height = lua_tonumber(L,-1);
 
     Scene *currScene = SceneManager::getScene();
@@ -532,16 +532,14 @@ int UserAPI::select_object(lua_State* L)
         lua_pushnumber(L,t_id);
     }
     lua_setglobal(L,"current_object");
-
-
-    
+    return 0;
 }
 
 int UserAPI::delete_object(lua_State* L)
 {
     lua_Number t_id = lua_tonumber(L,-1);
-
     Scene *currScene = SceneManager::getScene();
+    
     if(currScene == nullptr)
     {
         Util::PrintLine("Error: no current scene");
@@ -554,9 +552,8 @@ int UserAPI::delete_object(lua_State* L)
         Util::PrintLine("Error: could not get specified object " + std::to_string( t_id) +" in Scene" + currScene->getSceneName() + " \n");
         return 0;
     }
-
-    currObj->destroy();
-    currObj = nullptr;
+    currScene->removeObject(t_id);
+    //currObj->destroy();
     m3d::Thread::sleep(STEP_TIME);
     return 0;
 }

@@ -18,7 +18,7 @@ public:
 
     std::string convertToLua()
     {
-        return "rotate_object(" + m_params[0] + ")\n"; 
+        return "rotate_object(current_object," + m_params[0] + ")\n"; 
     }
 
 };

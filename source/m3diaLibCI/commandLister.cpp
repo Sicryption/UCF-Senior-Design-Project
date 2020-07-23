@@ -24,7 +24,7 @@ namespace m3dCI
                 //NULLPartialPAIR("Triangle"), 
                 PAIR("Text", new TextCommand("TEXT")), 
                 PAIR("Select", new SelectCommand()), 
-                PAIR("Delete", new DeleteCommand), 
+                PAIR("Delete", new DeleteCommand()), 
                 NULLPAIR, 
                 NULLPAIR, 
                 NULLPAIR 
@@ -49,17 +49,17 @@ namespace m3dCI
                 PAIR("Scale_Y", new ScaleCommand("-1", "1")) 
             },
 			{ 
-                PAIR("Var", new VarCommand()), 
-                PAIR("Get_X", new GetXCommand()), 
-                PAIR("Get_Y", new GetYCommand()), 
-                PAIR("Get_Angle", new GetAngleCommand()), 
+                PAIR("Var", new VarCommand("varName", "value")), 
+                PAIR("Get_X", new GetXCommand("x_var")), 
+                PAIR("Get_Y", new GetYCommand("y_var")), 
+                PAIR("Get_Angle", new GetAngleCommand("angle_var")),
                 PAIR("Set_Angle", new SetAngleCommand()), 
-                PAIR("Get_Scale_X", new Get_ScaleXCommand()), 
-                PAIR("Get_Scale_Y", new Get_ScaleYCommand()) 
+                PAIR("Get_Scale_X", new Get_ScaleXCommand("sx_var")), 
+                PAIR("Get_Scale_Y", new Get_ScaleYCommand("sy_var"))
             },
 			{ 
                 PAIR("If", new IfCommand()), 
-                NULLPartialPAIR("Loop"), 
+                PAIR("Loop", new LoopCommand()), 
                 PAIR("While", new WhileCommand()), 
                 PAIR("End", new EndCommand()), 
                 PAIR("Label", new LabelCommand()), 
@@ -229,5 +229,21 @@ namespace m3dCI
 		listOfCommandsByTab[tab][id] = commandListObject;
 
 		commands[tab][id]->setText(commandListObject.first);
+	}
+
+	void CommandLister::OverrideTabCommandListObjects(std::vector<pair<string, function<void()>>> commandListObjects, int tab)
+	{
+		if (tab >= NUM_TABS || tab < 0)
+			return;
+
+		for (int i = 0; i < NUM_COMMANDS_PER_TAB; i++)
+		{
+			if (i >= commandListObjects.size())
+				listOfCommandsByTab[tab][i] = NULLPAIR;
+			else
+				listOfCommandsByTab[tab][i] = commandListObjects[i];
+
+			commands[tab][i]->setText(listOfCommandsByTab[tab][i].first);
+		}
 	}
 }

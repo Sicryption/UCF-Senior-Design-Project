@@ -10,6 +10,8 @@ private:
     m3dCI::Text* text;
     m3d::Color color;
 
+	int fontSize, fontWeight;
+
 public:
     /**
      *  @brief Constructor of the Text object
@@ -30,7 +32,11 @@ public:
         yScale = t_yScale;
         angle = t_angle;
         color = t_color;
+
         text = new m3dCI::Text(t_text,color);
+
+		fontSize = text->getFontSize();
+		fontWeight = text->getFontWeight();
     }
 
     ~TextObject()
@@ -41,8 +47,8 @@ public:
     void updateShape()
     {
         text->setPosition(x,y);
-        //text->setHeight(yScale);
-        //text->setWidth(xScale);
+		text->setFontSize(xScale * fontSize);
+		text->setFontWeight(yScale * fontWeight);
         
         text->setColor(color);        
     }
@@ -78,4 +84,24 @@ public:
     }
 
     void Rotate(double deg){};
+
+	/**
+		@brief Implement the GameObject setScale function.
+		@param t_x X Scale
+		@param t_y Y Scale
+	*/
+	void setScale(double t_x, double t_y)
+	{
+		xScale = t_x;
+		yScale = t_y;
+	}
+
+	/**
+		@brief Implement the GameObject setColor function.
+		@param t_color Color to change to
+	*/
+	void setColor(m3d::Color t_color)
+	{
+		m_color = t_color;
+	}
 };

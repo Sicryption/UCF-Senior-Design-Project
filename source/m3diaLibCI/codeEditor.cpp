@@ -44,11 +44,17 @@ namespace m3dCI
 
 	void CodeEditor::draw(m3d::RenderContext t_context)
 	{
-		if(borderRectangle != nullptr)
+		if (borderRectangle != nullptr)
+		{
+			borderRectangle->setXPosition(x + xShift);
 			borderRectangle->draw(t_context);
+		}
 
 		if (innerRectangle != nullptr)
+		{
+			innerRectangle->setXPosition(x + xShift + borderWidth);
 			innerRectangle->draw(t_context);
+		}
 
 		//from 0 - CELLHEIGHT draw first box as top box
 		//int topIndex = scrollY / CELL_HEIGHT - 1;

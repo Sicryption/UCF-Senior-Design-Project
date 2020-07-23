@@ -5,9 +5,10 @@ class GetXCommand : public CommandObject
 {
 
 public:
-    GetXCommand(bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    GetXCommand(std::string varName = "var", bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="get x";
+		setParam(0, varName);
     }
 
     ~GetXCommand();
@@ -16,7 +17,7 @@ public:
 
     std::string convertToLua()
     {
-        return m_params[0] + " = get_x()\n"; 
+        return m_params[0] + " = get_x(current_object)\n"; 
     }
 
 };
@@ -25,9 +26,10 @@ class GetYCommand : public CommandObject
 {
 
 public:
-    GetYCommand(bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    GetYCommand(std::string varName = "var", bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="get y";
+		setParam(0, varName);
     }
 
     ~GetYCommand();
@@ -36,7 +38,7 @@ public:
 
     std::string convertToLua()
     {
-        return m_params[0] + " = get_y()\n"; 
+        return m_params[0] + " = get_y(current_object)\n"; 
     }
 
 };

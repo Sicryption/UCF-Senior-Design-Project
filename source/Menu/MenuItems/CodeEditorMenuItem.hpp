@@ -33,7 +33,17 @@ public:
 	
 	void ShiftToTop();
 	/**
-		@brief Function used to move the CodeEditor from the top screen back to the botto screen
+		@brief Function used to move the CodeEditor from the top screen back to the bottom screen
 	**/
 	void ShiftToBottom();
+
+	/**
+		@brief Move the selected item index up one.
+	**/
+	void SelectAbove();
+
+	/**
+		@brief Move the selected item index down one.
+	**/
+	void SelectBelow();
 };
