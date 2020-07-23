@@ -111,6 +111,7 @@ public:
 		PongRec->setPosition(x, y);
 		PongRec->setWidth(xScale * width);
 		PongRec->setHeight(yScale * height);
+		PongRec->setColor(m_color);
 
 		screen->drawTop(*PongRec, m3d::RenderContext::Mode::Flat, 3);
     }
@@ -259,6 +260,5 @@ public:
 	void setColor(m3d::Color t_color)
 	{
 		m_color = t_color;
-		PongRec->setColor(t_color);
 	}
 };
