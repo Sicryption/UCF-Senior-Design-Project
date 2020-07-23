@@ -30,7 +30,7 @@ std::pair<std::string, lua_CFunction> enabledFunctions[] = {
     std::make_pair( "get_x_scale", UserAPI::get_x_scale),
     std::make_pair( "get_y_scale", UserAPI::get_y_scale),
     std::make_pair( "set_color" , UserAPI::set_color),
-    //std::make_pair( "select" , UserAPI::select_object),
+    std::make_pair( "select_object" , UserAPI::select_object),
     std::make_pair( "delete_object" , UserAPI::delete_object)
 };
 

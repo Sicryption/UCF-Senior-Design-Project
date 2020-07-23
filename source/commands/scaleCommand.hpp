@@ -19,7 +19,7 @@ public:
 
     std::string convertToLua()
     {
-        return "set_scale(current_object, " + m_params[0] + "," + m_params[1] + ")\n"; 
+        return "scale_object(current_object," + m_params[0] + "," + m_params[1] + ")\n"; 
     }
 
 };

@@ -339,8 +339,8 @@ int UserAPI::get_y_position(lua_State* L)
    
 int UserAPI::rotate(lua_State* L)
 {
-    lua_Number t_id = lua_tonumber(L,-1);
-    lua_Number t_angle = lua_tonumber(L,-2);
+    lua_Number t_id = lua_tonumber(L,-2);
+    lua_Number t_angle = lua_tonumber(L,-1);
 
     Scene *currScene = SceneManager::getScene();
     if(currScene == nullptr)

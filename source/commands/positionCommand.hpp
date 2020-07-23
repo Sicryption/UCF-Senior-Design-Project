@@ -17,7 +17,7 @@ public:
 
     std::string convertToLua()
     {
-        return m_params[0] + " = get_x()\n"; 
+        return m_params[0] + " = get_x(current_object)\n"; 
     }
 
 };
@@ -38,7 +38,7 @@ public:
 
     std::string convertToLua()
     {
-        return m_params[0] + " = get_y()\n"; 
+        return m_params[0] + " = get_y(current_object)\n"; 
     }
 
 };
