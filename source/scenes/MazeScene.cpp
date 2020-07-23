@@ -86,6 +86,7 @@ void MazeScene::initialize(){
 	timerP->setFontWeight(0.75f);
 	timerP->getWidth();
 	timerP->setPosition(200-((timerP->getWidth())/2),0);
+	menu->AddItem(timerP);
 }
 
 void MazeScene::transistion(){
