@@ -5,6 +5,14 @@
 #include "../scenes/scene.hpp"
 #include "../scenes/MainMenuScene.hpp"
 
+#define TTT_NUM_ROWS 3
+#define TTT_NUM_COLS TTT_NUM_ROWS
+#define TTT_NUM_CELLS TTT_NUM_ROWS * 3
+#define TTT_CELL_SIZE 60
+#define TTT_DETECTOR_SIZE 40
+#define TTT_X 220
+#define TTT_Y 40
+
 class TicTacToeScene : public Minigame 
 {
     private: 
@@ -14,14 +22,10 @@ class TicTacToeScene : public Minigame
         RectangleMenuItem *topLeftTest, *topMidTest, *topRightTest;
         RectangleMenuItem *midLeftTest, *midMidTest, *midRightTest;
         RectangleMenuItem *botLeftTest, *botMidTest, *botRightTest;
-        // m3d::BoundingBox topLeftBB, topMidBB, topRightBB;
-        // m3d::BoundingBox midLeftBB, midMidBB, midRightBB;
-        // m3d::BoundingBox botLeftBB, botMidBB, botRightBB; 
-        
 
-        m3d::Circle *cTL, *cTM, *cTR;
-        m3d::Circle *cML, *cMM, *cMR;
-        m3d::Circle *cBL, *cBM, *cBR;
+        m3d::BoundingBox *m_detectors[TTT_NUM_CELLS];
+
+        bool m_isPlayerTurn;
 
         enum TTTState 
         {
@@ -42,7 +46,7 @@ class TicTacToeScene : public Minigame
             ENEMY
         };
 
-        BoardState currentBoardState[3][3];
+        BoardState m_board[TTT_NUM_CELLS];
     public:
         TicTacToeScene();
         ~TicTacToeScene();
@@ -67,6 +71,8 @@ class TicTacToeScene : public Minigame
 		void loadLoseScr();
 		void requestUI();
 		void closeGame();
+
         void runEnemyAI();
+        void updateBoard();
 
 };

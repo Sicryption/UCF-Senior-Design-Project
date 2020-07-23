@@ -1,84 +1,41 @@
 #include "TicTacToeScene.hpp"
 #include "MinigameSelectScene.hpp"
 
-TicTacToeScene::TicTacToeScene()
+TicTacToeScene::TicTacToeScene() //: Minigame()
 {
 
 }
 
-TicTacToeScene::~TicTacToeScene()
+TicTacToeScene::~TicTacToeScene() 
 {
 
 }
 
+/**
+ *  @brief
+ * 
+ * 
+ */
 void TicTacToeScene::initialize() {
     Minigame::initialize();
 
     colorRec = new m3d::Color(150,150,150);
 	colorText = new m3d::Color(0,0,0);
 
-    topLeftTest = new RectangleMenuItem(220,40,40,40,*colorRec);
-    topMidTest = new RectangleMenuItem(280,40,40,40,*colorRec);
-    topRightTest = new RectangleMenuItem(340,40,40,40,*colorRec);
-
-    menu->AddItem(topLeftTest);
-    menu->AddItem(topRightTest);
-    menu->AddItem(topMidTest);
-
-    midLeftTest = new RectangleMenuItem(220,100,40,40,*colorRec);
-    midMidTest = new RectangleMenuItem(280,100,40,40,*colorRec);
-    midRightTest = new RectangleMenuItem(340,100,40,40,*colorRec);
-
-    menu->AddItem(midLeftTest);
-    menu->AddItem(midRightTest);
-    menu->AddItem(midMidTest);
-
-    botLeftTest = new RectangleMenuItem(220,160,40,40,*colorRec);
-    botMidTest = new RectangleMenuItem(280,160,40,40,*colorRec);
-    botRightTest = new RectangleMenuItem(340,160,40,40,*colorRec);
-
-    menu->AddItem(botLeftTest);
-    menu->AddItem(botRightTest);
-    menu->AddItem(botMidTest);
-
-    /*topLeftBB = topLeftTest->getBoundingBox();
-    topMidBB = topMidTest->getBoundingBox();
-    topRightBB = topRightTest->getBoundingBox();
-
-    midLeftBB = midLeftTest->getBoundingBox();
-    midMidBB = midMidTest->getBoundingBox();
-    midRightBB = midRightTest->getBoundingBox();
-
-    botLeftBB = botLeftTest->getBoundingBox();
-    botMidBB = botMidTest->getBoundingBox();
-    botRightBB = botRightTest->getBoundingBox();
-    */
-
-    cTL = new m3d::Circle(240,60,20,*colorText);
-    cTM = new m3d::Circle(300,60,20,*colorText);
-    cTR = new m3d::Circle(360,60,20,*colorText);
-
-    cML = new m3d::Circle(240,120,20,*colorText);
-    cMM = new m3d::Circle(300,120,20,*colorText);
-    cMR = new m3d::Circle(360,120,20,*colorText);
-
-    cBL = new m3d::Circle(240,180,20,*colorText);
-    cBM = new m3d::Circle(300,180,20,*colorText);
-    cBR = new m3d::Circle(360,180,20,*colorText);
-
-    /*cTLBB= cTL->getBoundingBox();
-    cTMBB= cTM->getBoundingBox();
-    cTRBB= cTR->getBoundingBox();
-
-    cMLBB= cML->getBoundingBox();
-    cMMBB= cMM->getBoundingBox();
-    cMRBB= cMR->getBoundingBox();
-    
-    cBLBB= cBL->getBoundingBox();
-    cBMBB= cBM->getBoundingBox();
-    cBRBB= cBR->getBoundingBox();
-    */
-    
+    //  Initialize Detectors
+    for (int i = 0; i < TTT_NUM_CELLS; i++)
+    {
+        int row = (i % TTT_NUM_ROWS);
+        int col = (i / TTT_NUM_ROWS);
+        m_detectors[i] = new BoundingBox(
+                                            TTT_X + (TTT_CELL_SIZE * row), 
+                                            TTT_Y + (TTT_CELL_SIZE * col), 
+                                            TTT_DETECTOR_SIZE, 
+                                            TTT_DETECTOR_SIZE
+                                        );
+        m_board[i] = BoardState::VACANT;
+    }
+       
 
     winPrompt = new TextMenuItem("You Win!",*colorText);
 	menu->AddItem(winPrompt);
@@ -110,77 +67,7 @@ void TicTacToeScene::draw() {
 
     m3d::Screen *screen = GameManager::getScreen();
 
-    wallpaper->setPosition(0,0);
     screen->drawTop(*wallpaper);
-    screen->drawTop(*topLeftTest);
-    screen->drawTop(*topMidTest);
-    screen->drawTop(*topRightTest);
-
-    screen->drawTop(*midLeftTest);
-    screen->drawTop(*midMidTest);
-    screen->drawTop(*midRightTest);
-
-    screen->drawTop(*botLeftTest);
-    screen->drawTop(*botMidTest);
-    screen->drawTop(*botRightTest);
-
-    screen->drawTop(*cTL);
-    screen->drawTop(*cTM);
-    screen->drawTop(*cTR);
-
-    screen->drawTop(*cML);
-    screen->drawTop(*cMM);
-    screen->drawTop(*cMR);
-
-    screen->drawTop(*cBL);
-    screen->drawTop(*cBM);
-    screen->drawTop(*cBR);
-
-    if (topLeftTest->getBoundingBox().intersects(cTL->getBoundingBox()))
-    {
-        winPrompt->setPosition(20,20);
-        screen->drawTop(*winPrompt);
-    }
-    if (topMidTest->getBoundingBox().intersects(cTM->getBoundingBox()))
-    {
-        winPrompt->setPosition(20,30);
-        screen->drawTop(*winPrompt);
-    }
-    if (topRightTest->getBoundingBox().intersects(cTR->getBoundingBox()))
-    {
-        winPrompt->setPosition(20,40);
-        screen->drawTop(*winPrompt);
-    }
-    if (midLeftTest->getBoundingBox().intersects(cML->getBoundingBox()))
-    {
-        winPrompt->setPosition(20,50);
-        screen->drawTop(*winPrompt);
-    }
-    if (midMidTest->getBoundingBox().intersects(cMM->getBoundingBox()))
-    {
-        winPrompt->setPosition(20,60);
-        screen->drawTop(*winPrompt);
-    }
-    if (midRightTest->getBoundingBox().intersects(cMR->getBoundingBox()))
-    {
-        winPrompt->setPosition(20,70);
-        screen->drawTop(*winPrompt);
-    }
-    if (botLeftTest->getBoundingBox().intersects(cBL->getBoundingBox()))
-    {
-        winPrompt->setPosition(20,80);
-        screen->drawTop(*winPrompt);
-    }
-    if (botMidTest->getBoundingBox().intersects(cBM->getBoundingBox()))
-    {
-        winPrompt->setPosition(20,90);
-        screen->drawTop(*winPrompt);
-    }
-    if (botRightTest->getBoundingBox().intersects(cBR->getBoundingBox()))
-    {
-        winPrompt->setPosition(20,100);
-        screen->drawTop(*winPrompt);
-    }
     
 }
 
@@ -193,23 +80,27 @@ void TicTacToeScene::update()
     Minigame::update();
     switch (currentState)
     {
-    case TutorialMessage:
-        /* code */
-        break;
-    case Requesting:
-        break;
-    case Execute:
-        break;
-    case EnemyTurn:
-        break; 
-    case Win:
-        break;
-    case Lose:
-        break;
-    default:
-        break;
+        case TutorialMessage:
+            break;
+        case Requesting:
+            break;
+        case Execute:
+            break;
+        case EnemyTurn:
+            break; 
+        case Win:
+            break;
+        case Lose:
+            break;
+        default:
+            break;
     }
 };
+
+void TicTacToeScene::updateBoard()
+{
+
+}
 
 void TicTacToeScene::SubmitTTTCode(std::vector<CommandObject*> luaCode)
 {
