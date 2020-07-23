@@ -23,6 +23,9 @@ class TicTacToeScene : public Minigame
         RectangleMenuItem *midLeftTest, *midMidTest, *midRightTest;
         RectangleMenuItem *botLeftTest, *botMidTest, *botRightTest;
 
+        SpriteMenuItem *tutorial[3];
+        int tutCount;
+
         m3d::BoundingBox *m_detectors[TTT_NUM_CELLS];
 
         bool m_isPlayerTurn;

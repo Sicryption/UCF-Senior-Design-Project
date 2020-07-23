@@ -52,29 +52,23 @@ void TicTacToeScene::initialize() {
                                         );
         m_board[i] = BoardState::VACANT;
     }
-       
-
-    winPrompt = new TextMenuItem("You Win!",*colorText);
-	menu->AddItem(winPrompt);
-	winPrompt->setPosition(90,30);
-	winPrompt->setFontSize(.5);
-	winPrompt->setFontWeight(.5);
-	winPrompt->setPosition(160,120);
-
-    prompt = new TextMenuItem("Welcome to Tic Tac Toe",*colorText);
-	menu->AddItem(prompt);
-	prompt->setPosition(90,30);
-	prompt->setFontSize(.5);
-	prompt->setFontWeight(.5);
-	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("TTT_BG.png")));
-	menu->AddItem(wallpaper);
-
-    popup = new SpriteMenuItem(*(ResourceManager::getSprite("menu_popup.png")));
-	menu->AddItem(popup);
-	popup->setPosition(80,20);
+     
+    wallpaper= new SpriteMenuItem(*(ResourceManager::getSprite("TTT_BG.png")));
+    menu->AddItem(wallpaper);
 
 	wallpaper->setCenter(0,0);
 	wallpaper->setScale(1,1);
+       
+    tutorial[0] = new SpriteMenuItem(*(ResourceManager::getSprite("TTT_Tutorial1.png")));
+    menu->AddItem(tutorial[0]);
+    tutorial[1] = new SpriteMenuItem(*(ResourceManager::getSprite("TTT_Tutorial2.png")));
+    menu->AddItem(tutorial[1]);
+    tutorial[2] = new SpriteMenuItem(*(ResourceManager::getSprite("TTT_Tutorial3.png")));
+    menu->AddItem(tutorial[2]);
+    tutCount = 0;
+
+    popup = tutorial[tutCount];
+    popup->setPosition(80,20);
 
 	currentState = TTTState::TutorialMessage;
 }
@@ -85,6 +79,11 @@ void TicTacToeScene::draw() {
     m3d::Screen *screen = GameManager::getScreen();
 
     screen->drawTop(*wallpaper);
+
+    if(currentState == TTTState::TutorialMessage)
+    {
+        screen->drawTop(*popup,m3d::RenderContext::Mode::Flat,2);
+    }
     
 }
 
@@ -98,6 +97,34 @@ void TicTacToeScene::update()
     switch (currentState)
     {
         case TutorialMessage:
+
+            AddButton->SetActive(false);
+            RemoveButton->SetActive(false);
+            EditButton->SetActive(false);
+            submitButton->SetActive(false);
+
+            if (m3d::buttons::buttonPressed(m3d::buttons::A))
+            {
+                if (tutCount < 3)
+                {
+                    tutCount++;
+                }
+
+                if (tutCount < 3)
+                {
+                    popup = tutorial[tutCount];
+                    popup->setPosition(80,20);
+                }    
+            }
+
+            if (m3d::buttons::buttonDown(m3d::buttons::Start) || tutCount >= 3)
+            {
+                tutCount = 0;
+
+                currentState = TTTState::Requesting;
+
+                codeEditor->SetActive(true);
+            }
             break;
         case Requesting:
             break;
