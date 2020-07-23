@@ -17,11 +17,11 @@
 #define LeftPaddle static_cast<PongPaddle*>(findObject(paddleID))
 #define RightPaddle static_cast<PongPaddle*>(findObject(enemyID))
 
-#define CallFunc(ob, func) if(ob != nullptr) ob->func
+#define NullSafeCallFunction(ob, func) if(ob != nullptr) ob->func
 
-#define LPF(funcName) CallFunc(LeftPaddle, funcName)
-#define RPF(funcName) CallFunc(RightPaddle, funcName)
-#define BF(funcName) CallFunc(Ball, funcName)
+#define LeftPaddleNullSafeCallFunction(funcName) NullSafeCallFunction(LeftPaddle, funcName)
+#define RightPaddleNullSafeCallFunction(funcName) NullSafeCallFunction(RightPaddle, funcName)
+#define BallNullSafeCallFunction(funcName) NullSafeCallFunction(Ball, funcName)
 
 PongScene::PongScene(bool showTutorial)
 {
@@ -97,15 +97,18 @@ void PongScene::initialize(){
 	// initialize the game objects and add them to the hash map
 	ballID = addObject(new PongBall());
 	setObjectName("ball", ballID);
-	BF(initialize)();
+	BallNullSafeCallFunction(initialize)();
 
 	paddleID = addObject(new PongPaddle(20, 90));
 	setObjectName("player", paddleID);
-	LPF(initialize)();
+	LeftPaddleNullSafeCallFunction(initialize)();
 
 	enemyID = addObject(new PongPaddle(380, 90, ballID));
 	setObjectName("enemy", enemyID);
-	RPF(initialize)();
+	RightPaddleNullSafeCallFunction(initialize)();
+
+
+	codeEditor->SetActive(false);
 
 	currentState = PongState::TutorialMessage;
 }
@@ -118,9 +121,9 @@ void PongScene::draw(){
 	wallpaper->setPosition(0, 0);
 	screen->drawTop(*wallpaper, m3d::RenderContext::Mode::Flat, 0);
 
-	BF(draw)();
-	LPF(draw)();
-	RPF(draw)();
+	BallNullSafeCallFunction(draw)();
+	LeftPaddleNullSafeCallFunction(draw)();
+	RightPaddleNullSafeCallFunction(draw)();
 	
 	for (int i = 0; i < TEAM_COUNT; i++)
 		screen->drawTop(*scoreBoard[i], m3d::RenderContext::Mode::Flat, 4);
@@ -162,7 +165,7 @@ void PongScene::reset()
 	{
 		ballID = addObject(new PongBall());
 		setObjectName("ball", ballID);
-		BF(initialize)();
+		BallNullSafeCallFunction(initialize)();
 	}
 
 
@@ -171,7 +174,7 @@ void PongScene::reset()
 		paddleID = addObject(new PongPaddle(20, 90));
 		setObjectName("player", paddleID);
 
-		LPF(initialize)();
+		LeftPaddleNullSafeCallFunction(initialize)();
 	}
 
 
@@ -179,12 +182,12 @@ void PongScene::reset()
 	{
 		enemyID = addObject(new PongPaddle(380, 90, ballID));
 		setObjectName("enemy", enemyID);
-		RPF(initialize)();
+		RightPaddleNullSafeCallFunction(initialize)();
 	}
 
-	BF(reset)();
-	LPF(reset)(true);
-	RPF(reset)(true);
+	BallNullSafeCallFunction(reset)();
+	LeftPaddleNullSafeCallFunction(reset)(true);
+	RightPaddleNullSafeCallFunction(reset)(true);
 }
 
         
@@ -195,6 +198,22 @@ void PongScene::update()
 	switch(currentState)
 	{
 		case PongState::TutorialMessage:
+			if (codeEditor->GetCommands().size() == 1)
+			{
+				std::vector<CommandObject*> startingCommands =
+				{
+					new WhileCommand("true", true, false),
+					new SelectCommand("ball"),
+					new GetYCommand("by"),
+					new SelectCommand("player"),
+					new SetYCommand("by"),
+					new EndCommand(true)
+
+				};
+
+				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitPongCode(commands); });
+			}
+
 			AddButton->SetActive(false);
 			RemoveButton->SetActive(false);
 			EditButton->SetActive(false);
@@ -218,18 +237,7 @@ void PongScene::update()
 
 				currentState = PongState::Requesting;
 
-				std::vector<CommandObject*> startingCommands =
-				{
-					new WhileCommand("true", true, false),
-					new SelectCommand("ball"),
-					new GetYCommand("by"),
-					new SelectCommand("player"),
-					new SetYCommand("by"),
-					new EndCommand(true)
-
-				};
-
-				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitPongCode(commands); });
+				codeEditor->SetActive(true);
 			}
 		break;
 		case PongState::Requesting:
@@ -333,8 +341,8 @@ void PongScene::update()
 						points[0]++;
 					}
 
-					BF(reset)();
-					RPF(reset)();
+					BallNullSafeCallFunction(reset)();
+					RightPaddleNullSafeCallFunction(reset)();
 				}
 
 				// ball goes out of y bounds, a collision with the wall occurs 
