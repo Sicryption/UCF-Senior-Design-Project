@@ -81,7 +81,26 @@ void MazeScene::initialize(){
 }
 
 void MazeScene::transistion(){
-		if(mazeState == 2)
+	if(mazeState == 1)
+	{
+		std::vector<CommandObject*> startingCommands =
+					{
+						new SelectCommand("runner",true,true),
+						new RightCommand("18"),
+						new DownCommand("5"),
+						new LeftCommand("18"),
+						new DownCommand("5"),
+						new RightCommand("18"),
+						new DownCommand("5"),
+						new LeftCommand("18"),
+						new DownCommand("5"),
+						new RightCommand("18")
+					};
+		SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
+		current = wallpapers[0];
+		runner->setposition(20,20,wallHolderToo);
+	}
+	if(mazeState == 2)
 	{
 		std::vector<CommandObject*> startingCommands =
 		{
@@ -139,7 +158,7 @@ void MazeScene::transistion(){
 };
 
 void MazeScene::draw(){
-    //Scene::draw();
+
 	m3d::Screen * screen = GameManager::getScreen();
 
 	current->setPosition(0,0);
@@ -159,11 +178,8 @@ void MazeScene::draw(){
 		//use m3dci for prompt
     }
 
-	//screen->drawBottom(*bwallpaper);
-	//screen->drawBottom(*prompt);
-
 	Minigame::draw();
-    //runner->draw();
+    runner->draw();
 
 }
 		
@@ -232,6 +248,11 @@ void MazeScene::update()
 				currentState = MazeState::Transistion;
 				break;
 			}
+			if(checkWinCond() == 0)
+			//{
+			//	currentState = MazeState::Transistion;
+			//}
+
 			break;
 		case MazeState::Win:
 			if (buttons::buttonPressed(buttons::A))
@@ -243,7 +264,6 @@ void MazeScene::update()
 			break;
 		case MazeState::Transistion:
 			transistion();
-
 			currentState = MazeState::Requesting;
 			break;
 		case MazeState::Requesting:
@@ -252,6 +272,7 @@ void MazeScene::update()
 			break;
 	}
 
+	Util::PrintLine(std::to_string(currentState));
 };
 
 void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)
