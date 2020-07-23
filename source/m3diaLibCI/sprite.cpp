@@ -140,7 +140,7 @@ namespace m3dCI {
         return m_scaleY;
     }
 
-    void Sprite::setScale(float t_yScale, float t_xScale) {
+    void Sprite::setScale(float t_xScale, float t_yScale) {
         m_scaleX = t_xScale;
         m_scaleY = t_yScale;
         C2D_SpriteSetScale(&m_sprite, m_scaleX, m_scaleY);
@@ -263,5 +263,15 @@ namespace m3dCI {
 
         return sprite;
     }
+
+	int m3dCI::Sprite::GetHeight()
+	{
+		return m_sprite.params.pos.h;
+	}
+
+	int m3dCI::Sprite::GetWidth()
+	{
+		return m_sprite.params.pos.w;
+	}
 
 } /* m3d */

@@ -62,7 +62,8 @@ public:
         auto it =  m_hashmap.cbegin();
         for(;it != m_hashmap.cend(); it++)
         {
-            it->second->destroy();
+			if(it->second != nullptr)
+				it->second->destroy();
         }
 
         //  Calls the default destructor of the menu
@@ -95,7 +96,17 @@ public:
      * 
      *  Called by @ref SceneManager::OnUpdate() once per game loop
 	*/
-    virtual void update()=0;
+    virtual void update()
+	{
+		for (auto objPair : m_hashmap)
+		{
+			if (objPair.second != nullptr)
+			{
+				objPair.second->update();
+			}
+		}
+
+	}
 	
 	/**
      *  @brief Draw the Scene
@@ -141,6 +152,9 @@ public:
 	*/
     GameObject* findObject(int t_id)
     {
+		if (t_id < 0 || t_id >= m_hashmap.size())
+			return nullptr;
+
         return m_hashmap[t_id];
     }
 
@@ -162,6 +176,6 @@ public:
 	**/
     void removeObject(unsigned int t_id)
     {
-        m_hashmap[t_id] = NULL;
+        m_hashmap[t_id] = nullptr;
     }
 };

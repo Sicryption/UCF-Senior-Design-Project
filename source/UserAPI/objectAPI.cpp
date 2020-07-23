@@ -412,7 +412,7 @@ int UserAPI::get_angle(lua_State* L)
 int UserAPI::set_scale(lua_State* L)
 {
     lua_Number t_id     = lua_tonumber(L,-3);
-    lua_Number t_width  = lua_tonumber(L,-2);
+    lua_Number t_width = lua_tonumber(L,-2);
     lua_Number t_height = lua_tonumber(L,-1);
 
     Scene *currScene = SceneManager::getScene();
@@ -553,7 +553,7 @@ int UserAPI::delete_object(lua_State* L)
         return 0;
     }
     currScene->removeObject(t_id);
-    currObj->destroy();
+    //currObj->destroy();
     m3d::Thread::sleep(STEP_TIME);
     return 0;
 }

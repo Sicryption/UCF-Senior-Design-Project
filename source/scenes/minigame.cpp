@@ -11,8 +11,7 @@ Minigame::Minigame()
 	m3d::Screen * screen = GameManager::getScreen();
     m_sandbox = new LuaSandbox( [this](){onExecutionBegin();},
                                 [this](){onExecutionEnd();});
-	   
-
+	
 	int margin = 5;
 
 	codeEditor = new CodeEditorMenuItem(margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), 1);
@@ -60,7 +59,7 @@ Minigame::~Minigame()
 
 void Minigame::initialize()
 {
-    m_gridOverlay = new m3dCI::Sprite( *ResourceManager::getSprite("minigame_grid.png"));
+    m_gridOverlay = new SpriteMenuItem( *ResourceManager::getSprite("minigame_grid.png"));
     m_gridOverlay->setOpacity(50);
 }
 
@@ -326,7 +325,7 @@ void Minigame::draw()
 {
     Scene::draw();
     
-    if(m_gridOverlay != nullptr)
+    if(m_gridOverlay != nullptr && showGridLines)
     {
         GameManager::getScreen()->drawTop(*m_gridOverlay, m3d::RenderContext::Mode::Flat, 1);
     }

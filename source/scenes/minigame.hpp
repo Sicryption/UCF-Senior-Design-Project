@@ -50,9 +50,11 @@ class Minigame : public Scene
 private:
 	std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
 
-	bool showCommandLister = false, showCommandEditor = false, editCommandFromCommandEditor = false;
+	bool showCommandLister = false,
+		showCommandEditor = false,
+		editCommandFromCommandEditor = false;
 
-    m3dCI::Sprite* m_gridOverlay = nullptr;
+    SpriteMenuItem* m_gridOverlay = nullptr;
 
 protected:
 	/**
@@ -66,7 +68,8 @@ protected:
 	CodeEditorMenuItem* codeEditor = nullptr;
 	CommandEditorMenuItem* commandEditor = nullptr;
 
-	bool isExecuting = false;
+	bool isExecuting = false,
+		showGridLines = true;
 
 	/**
 		@brief CommandLister is responsible for showing all objects which can be added to the CodeEditor.

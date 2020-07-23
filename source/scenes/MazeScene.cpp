@@ -294,9 +294,7 @@ void MazeScene::update()
 			break;
 		case MazeState::Win:
 			if (buttons::buttonPressed(buttons::A))
-			{
 				SceneManager::setTransition(new MinigameSelectScene());
-			};
 			break;
 		case MazeState::Lose:
 			if (Input::btnReleased(m3d::buttons::B)) // return to minigame select screen
