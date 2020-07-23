@@ -13,6 +13,7 @@
 #define TTT_X 220
 #define TTT_Y 40
 
+#define TTT_TUTORIAL_PAGES 5
 
 class TicTacToeScene : public Minigame 
 {
