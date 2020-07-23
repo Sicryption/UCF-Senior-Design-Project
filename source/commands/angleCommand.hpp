@@ -17,7 +17,7 @@ public:
 
     std::string convertToLua()
     {
-        return "get_angle()\n"; 
+        return "get_angle(current_object)\n"; 
     }
 
 };
@@ -39,7 +39,7 @@ public:
 
     std::string convertToLua()
     {
-        return "set_angle(" + m_params[0] +")\n"; 
+        return "set_angle(current_object," + m_params[0] +")\n"; 
     }
 
 };
