@@ -8,12 +8,12 @@
 #define NULLPAIR PAIR("", nullptr)
 #define COLORPAIR(name, r, g, b) PAIR(name, new ColorCommand(name, m3d::Color(r,g,b,255)))
 
-TicTacToeScene::TicTacToeScene()
+TicTacToeScene::TicTacToeScene() 
 {
 	commandLister->OverrideTabCommandListObjects(
 		{
 			PAIR("Naught", new TTT_O_Command()),
-			PAIR("Cross", new TTT_X_Command())
+			PAIR("Cross",  new TTT_X_Command())
 		}, 0
 	);
 	for (int i = 1; i < NUM_TABS; i++)
@@ -25,7 +25,7 @@ TicTacToeScene::TicTacToeScene()
 
 TicTacToeScene::~TicTacToeScene() 
 {
-
+    
 }
 
 /**
@@ -80,11 +80,11 @@ void TicTacToeScene::initialize() {
 }
 
 void TicTacToeScene::draw() {
-    Minigame::draw();
 
     m3d::Screen *screen = GameManager::getScreen();
 
     screen->drawTop(*wallpaper);
+    Minigame::draw();
     
 }
 
@@ -98,12 +98,45 @@ void TicTacToeScene::update()
     switch (currentState)
     {
         case TutorialMessage:
+            //  Disable all buttons during tutorial
+			submitButton->SetActive(false);
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
+
+            if (buttons::buttonPressed(buttons::A) || buttons::buttonDown(buttons::Start))
+            {
+                SceneManager::RequestUserCode( {
+                                                    new TTT_X_Command("1","1"),
+                                                    new TTT_X_Command("2","2"),
+                                                    new TTT_X_Command("3","3")
+                                                }, [&](std::vector<CommandObject*> list){ this->SubmitTTTCode(list);} 
+                                            );
+
+                //Enable buttons for use once Code has been requested
+                submitButton->SetActive(true);
+                AddButton->SetActive(true);
+                RemoveButton->SetActive(true);
+                EditButton->SetActive(true); 
+
+                currentState = TTTState::Requesting; 
+            }
+
             break;
-        case Requesting:
+        case Requesting: // Player Turn
+            
             break;
         case Execute:
+            submitButton->SetActive(false);
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
+            
             break;
         case EnemyTurn:
+            runEnemyAI();
+            updateBoard();
+            currentState = TTTState::Requesting; 
             break; 
         case Win:
             break;
@@ -116,19 +149,80 @@ void TicTacToeScene::update()
 
 void TicTacToeScene::updateBoard()
 {
+    for (int i = 0; i < TTT_NUM_CELLS; i++)
+    {
+        m3d::BoundingBox *d = m_detectors[i];
+        GameObject* g = nullptr;
 
+        for (auto objPair : m_hashmap)
+		{
+			g = objPair.second;
+            if(g->getAABB().intersects(*d))
+            {
+                if(g->getName() == "X" || g->getName() == "O" )
+                {
+                    m_board[i] = (g->getName() == "X") ? BoardState::ENEMY : BoardState::PLAYER;
+                }
+            }
+		}
+    }
+
+    //  Check for win
+    
 }
 
 void TicTacToeScene::SubmitTTTCode(std::vector<CommandObject*> luaCode)
 {
+    #ifdef DEBUG_MINIGAME
+    Util::PrintLine("TTT: queue commands");
+    #endif
+    std::string str = CommandObject::ConvertBulk(luaCode);
 
+    /*
+        Encapsulate code into a function. then call the function.
+    */
+    stringstream fn;
+    fn << "userCode = function()" << str << " end\n" << "\n";
+    m_sandbox->executeString(fn.str()); // if this returns false theres an error in the usercode
+    m_sandbox->executeStringQueued("userCode()\n");
+
+    #ifdef DEBUG_MINIGAME
+    Util::PrintLine("Maze: done");
+    #endif
+
+	currentState = TTTState::Execute;
 }
 
 void TicTacToeScene::onEnter(){Minigame::onEnter();};
 void TicTacToeScene::onExit(){Minigame::onExit();};
-bool TicTacToeScene::checkWinCond() 
+
+bool TicTacToeScene::checkWinCond(TicTacToeScene::BoardState id)
 {
-    return true;
+    //  Diagonals
+    if  ( 
+            (m_board[0] == id || m_board[4] == id || m_board[8] == id ) || 
+            (m_board[2] == id || m_board[4] == id || m_board[6] == id ) 
+        ){ return true;}
+
+    //  Horizontal
+    for (int i = 0; i < TTT_NUM_COLS; i++)
+    {
+        int shift = i * TTT_NUM_ROWS;
+        if ( m_board[ (shift+0) % TTT_NUM_CELLS ] == id && m_board[ (shift+1) % TTT_NUM_CELLS ] == id && m_board[ (shift+2) % TTT_NUM_CELLS ] == id )
+        {
+            return true;
+        } 
+    }
+
+    //  Vertical
+    for (int i = 0; i < TTT_NUM_ROWS; i++)
+    {
+        int shift = i * TTT_NUM_COLS;
+        if ( m_board[ (shift+0) % TTT_NUM_CELLS ] == id && m_board[ (shift+3) % TTT_NUM_CELLS ] == id && m_board[ (shift+6) % TTT_NUM_CELLS ] == id )
+        {
+            return true;
+        } 
+    }
     
     return false;
 }
@@ -141,5 +235,16 @@ void TicTacToeScene::closeGame() { Minigame::closeGame(); };
 
 void TicTacToeScene::runEnemyAI()
 {
-    
+    int n;
+    do{
+        n =  rand() % TTT_NUM_CELLS;
+    }while(m_board[n] != BoardState::VACANT);
+    m_board[n] = BoardState::ENEMY;
+}
+
+void TicTacToeScene::onExecutionEnd()
+{
+    updateBoard();
+    m_isPlayerTurn = false;
+    this->currentState = TTTState::EnemyTurn;
 }

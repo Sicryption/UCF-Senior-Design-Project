@@ -13,8 +13,17 @@
 #define TTT_X 220
 #define TTT_Y 40
 
+
 class TicTacToeScene : public Minigame 
 {
+    public:
+    enum BoardState
+    {
+        VACANT,
+        PLAYER,
+        ENEMY
+    };
+
     private: 
         SpriteMenuItem *wallpaper, *popup;
         m3d::Color *colorRec, *colorText;
@@ -38,13 +47,8 @@ class TicTacToeScene : public Minigame
         };
 
         TTTState currentState;
-
-        enum BoardState
-        {
-            VACANT,
-            PLAYER,
-            ENEMY
-        };
+    protected:
+        
 
         BoardState m_board[TTT_NUM_CELLS];
     public:
@@ -65,7 +69,7 @@ class TicTacToeScene : public Minigame
 
         void onEnter();
 		void onExit();
-		bool checkWinCond();
+        bool checkWinCond(TicTacToeScene::BoardState id);
 		void loadScene();
 		void loadWinScr();
 		void loadLoseScr();
@@ -74,5 +78,6 @@ class TicTacToeScene : public Minigame
 
         void runEnemyAI();
         void updateBoard();
+        void onExecutionEnd();
 
 };

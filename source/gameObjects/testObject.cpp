@@ -12,6 +12,7 @@ private:
 public:
     TestObject()
     {
+        name = "test";
         x = 50;
         y = 200;
         xScale = 2;
