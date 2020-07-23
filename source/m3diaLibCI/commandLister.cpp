@@ -71,7 +71,7 @@ namespace m3dCI
 
 		for (int i = 0; i < NUM_TABS; i++)
 			for (int j = 0; j < NUM_COMMANDS_PER_TAB; j++)
-				listOfCommandsByTab[i][j] = helper[i][j];		
+				listOfCommandsByTab[i][j] = helper[i][j];
 
 		x = 0;
 		y = 0;
@@ -84,7 +84,7 @@ namespace m3dCI
 		
 		for (int i = 0; i < NUM_TABS; i++)
 		{
-			m3dCI::Sprite* tab = new m3dCI::Sprite(*getTabSprite(i, false));
+			SpriteMenuItem* tab = new SpriteMenuItem(*getTabSprite(i, false));
 			//getTabSprite(i, true)->setPosition(0, i * tabWidthAndHeight);//set the selected sprites position ahead of time
 
 			//m3dCI::Sprite* tab = getTabSprite(i, false);//new m3dCI::Sprite(*getTabSprite(1, false));
@@ -197,22 +197,26 @@ namespace m3dCI
 	void CommandLister::SelectTab(int tabIndex)
 	{
 		int tabWidthAndHeight = (TOPSCREEN_HEIGHT / NUM_TABS);
+
 		//selected sprite other than current selection
 		// - deselect old
 		// - select new
 		// - replace selectedIndex
 		if (currentlySelectedTab != tabIndex)
 		{
+			if (tabs[tabIndex] == nullptr || !tabs[tabIndex]->GetActive())
+				return;
+
 			if (currentlySelectedTab != -1)
 			{
-				m3dCI::Sprite* oldSelected = new m3dCI::Sprite(*getTabSprite(currentlySelectedTab, false));
+				SpriteMenuItem* oldSelected = new SpriteMenuItem(*getTabSprite(currentlySelectedTab, false));
 				oldSelected->setPosition(0, currentlySelectedTab * tabWidthAndHeight);
 				delete(tabs[currentlySelectedTab]);
 
 				tabs[currentlySelectedTab] = oldSelected;
 			}
 
-			m3dCI::Sprite* newSelected = new m3dCI::Sprite(*getTabSprite(tabIndex, true));
+			SpriteMenuItem* newSelected = new SpriteMenuItem(*getTabSprite(tabIndex, true));
 			newSelected->setPosition(0, tabIndex * tabWidthAndHeight);
 			delete(tabs[tabIndex]);
 			tabs[tabIndex] = newSelected;
@@ -245,5 +249,13 @@ namespace m3dCI
 
 			commands[tab][i]->setText(listOfCommandsByTab[tab][i].first);
 		}
+	}
+
+	void CommandLister::SetTabState(int tabIndex, bool state)
+	{
+		if (tabIndex >= NUM_TABS || tabIndex < 0)
+			return;
+
+		tabs[tabIndex]->SetActive(state);
 	}
 }

@@ -16,6 +16,8 @@ MazeScene::~MazeScene()
 void MazeScene::initialize(){
 	Minigame::initialize();
 
+	commandLister->SetTabState(1, false);
+
 //loads and gets maze texture
 	//texture = new m3dCI::Sprite(*(ResourceManager::getSprite("wall.png")));
     //sprite* spr = new m3d::Sprite();

@@ -1,9 +1,26 @@
 #include "TicTacToeScene.hpp"
 #include "MinigameSelectScene.hpp"
 
+#define t(x) AddCommand(x)
+#define func(a) [&]() { t(a); }
+#define PAIR(name, command) { name, [&]() { t(command); }}
+#define NULLPartialPAIR(name) { name, nullptr }
+#define NULLPAIR PAIR("", nullptr)
+#define COLORPAIR(name, r, g, b) PAIR(name, new ColorCommand(name, m3d::Color(r,g,b,255)))
+
 TicTacToeScene::TicTacToeScene()
 {
-
+	commandLister->OverrideTabCommandListObjects(
+		{
+			PAIR("Naught", new TTT_O_Command()),
+			PAIR("Cross", new TTT_X_Command())
+		}, 0
+	);
+	for (int i = 1; i < NUM_TABS; i++)
+	{
+		commandLister->OverrideTabCommandListObjects({}, i);
+		commandLister->SetTabState(i, false);
+	}
 }
 
 TicTacToeScene::~TicTacToeScene()
