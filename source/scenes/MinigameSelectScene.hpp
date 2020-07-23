@@ -3,6 +3,7 @@
 #include "scene.hpp"
 #include "MinigameDescriptor.hpp"
 #include "MazeScene.hpp"
+#include "PongScene.hpp"
 #include "TicTacToeScene.hpp"
 
 #include "../gameManager.hpp"

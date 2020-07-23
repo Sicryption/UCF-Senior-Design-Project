@@ -34,8 +34,6 @@ void CodeEditorMenuItem::ShiftToTop()
 	int change = (TOPSCREEN_WIDTH - BOTTOMSCREEN_WIDTH) / 2;
 	xShift = change;
 
-	innerRectangle->setXPosition(x + xShift + borderWidth);
-	borderRectangle->setXPosition(x + xShift);
 	SetActive(false);
 
 	refreshCommandList();

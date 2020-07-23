@@ -19,7 +19,7 @@ public:
 
     std::string convertToLua()
     {
-        return "scale_object(current_object," + m_params[0] + "," + m_params[0] + ")\n"; 
+        return "scale_object(current_object," + m_params[0] + "," + m_params[1] + ")\n"; 
     }
 
 };
@@ -42,7 +42,7 @@ public:
 
     std::string convertToLua()
     {
-        return "scale_object(current_object," + m_params[0] + "," + m_params[0] + ")\n"; 
+        return "get_x_scale(current_object, " + m_params[0] + ")\n"; 
     }
 
 };
@@ -64,7 +64,7 @@ public:
 
     std::string convertToLua()
     {
-        return "scale_object(current_object," + m_params[0] + "," + m_params[0] + ")\n"; 
+        return "get_y_scale(current_object, " + m_params[0] + ")\n"; 
     }
 
 };

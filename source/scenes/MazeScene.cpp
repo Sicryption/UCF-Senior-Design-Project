@@ -235,11 +235,17 @@ void MazeScene::update()
 			break;
 		case MazeState::Win:
 			if (buttons::buttonPressed(buttons::A))
-			{
 				SceneManager::setTransition(new MinigameSelectScene());
-			}
+			submitButton->SetActive(false);
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
 			break;
 		case MazeState::Lose:
+			submitButton->SetActive(false);
+			AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
 			break;
 		case MazeState::Transistion:
 			transistion();
@@ -251,7 +257,6 @@ void MazeScene::update()
 				SceneManager::setTransition(new MinigameSelectScene());
 			break;
 	}
-
 };
 
 void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)
