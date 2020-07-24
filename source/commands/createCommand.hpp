@@ -68,7 +68,9 @@ public:
 
     std::string convertToLua()
     {
+        #ifdef DEBUG_COMMAND
         Util::PrintLine("make_text( 0, 0, " + m_params[0] + ")");
+        #endif
         return "make_text( 0, 0, " + m_params[0] + ")\n"; 
     }
 
@@ -132,7 +134,9 @@ public:
 		setParam(1, t_y);
         m_background = m3dCI::Sprite( *ResourceManager::getSprite("command_background_instance.png"));
         m_background.setTint(COM_LOCK_TINT);
+        #ifdef DEBUG_COMMAND
         Util::PrintLine("test command");
+        #endif
     }
 
     ~TTT_X_Command();

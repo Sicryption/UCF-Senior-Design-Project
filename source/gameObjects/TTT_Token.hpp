@@ -43,7 +43,9 @@ public:
         m_color = t_color;
         m_sprite = new m3dCI::Sprite( *(ResourceManager::getSprite( (t_cross) ? "TTT_X.png":"TTT_O.png" )) );
         
+        #ifdef DEBUG_GAMEOBJECT
         Util::PrintLine("created new " + name + " at " + std::to_string(x) + ", " + std::to_string(y));
+        #endif
     }
 
     ~TTT_Token()

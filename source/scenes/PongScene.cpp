@@ -372,7 +372,9 @@ void PongScene::update()
 // run user code 
 void PongScene::SubmitPongCode(std::vector<CommandObject*> luaCode)
 {
+    #ifdef DEBUG_MINIGAME
 	Util::PrintLine("pong: queue commands");
+    #endif DEBUG_MINIGAME
 	std::string str = CommandObject::ConvertBulk(luaCode);
 
 	m_sandbox->executeStringQueued(str);
