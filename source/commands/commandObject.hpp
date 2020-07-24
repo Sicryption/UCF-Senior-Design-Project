@@ -14,6 +14,10 @@
 #include "../resources.h"
 #include "../gameManager.hpp"
 
+#ifdef DEBUG
+#define DEBUG_COMMAND
+#endif
+
 #define MAX_PARAMS 3    /** Max number of Parameters per Command */
 #define COM_PADDING 3   /** Internal vertical padding of commands */
 #define COM_SPACING 5   /** External horizontal margin after parameters */

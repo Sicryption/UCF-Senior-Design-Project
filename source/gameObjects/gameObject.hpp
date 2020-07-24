@@ -7,6 +7,10 @@
 #pragma once
 #include "../IUpdateable.hpp"
 
+#ifdef DEBUG
+#define DEBUG_GAMEOBJECT
+#endif
+
 /** 
  *  @def DEFAULT_SIZE
  *  @brief The default size of a GameObject 

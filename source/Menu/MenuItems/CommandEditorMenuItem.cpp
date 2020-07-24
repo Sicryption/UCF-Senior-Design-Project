@@ -50,7 +50,9 @@ void CommandEditorMenuItem::HandleClick(int x, int y)
 
 			if (sk.getLastButton() != m3d::SoftwareKeyboard::Button::Right)
 			{
+                #ifdef DEBUG
 				Util::PrintLine("Keyboard Canceled");
+                #endif
 				return;
 			}
 			else
