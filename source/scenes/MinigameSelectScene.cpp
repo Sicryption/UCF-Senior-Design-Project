@@ -21,24 +21,36 @@ MinigameSelectScene::MinigameSelectScene()
 
 	MinigameSelectTopText->setPosition((topScreenWidth / 2) - (width / 2), (screenHeight / 2) - (height / 2));
 
+	int descriptorX = 125, topLeftY = 15, mwidth = 260, mheight = 170, border = 2;
+
 	MinigameName = new TextMenuItem("[SELECTED MINIGAME]");
 	MinigameName->setFontSize(0.9);
 	MinigameName->setFontWeight(0.9);
 	MinigameName->setColor(m3d::Color(0, 0, 0));
-	MinigameName->setPosition(20 + 100, 45);
+	MinigameName->setPosition(descriptorX + 10, topLeftY + 5);
 	menu->AddItem(MinigameName);
 
 	MinigameDescription = new TextMenuItem("If you see this then\n I made a mistake..");
 	MinigameDescription->setFontSize(0.6);
 	MinigameDescription->setFontWeight(0.6);
 	MinigameDescription->setColor(m3d::Color(0, 0, 0));
-	MinigameDescription->setPosition(20 + 100, 90);
+	MinigameDescription->setPosition(descriptorX + 10, topLeftY + 45);
 	menu->AddItem(MinigameDescription);
+
+	minigameDesciptorBackground = new RectangleMenuItem(descriptorX + border, topLeftY + border, mwidth - (border * 2), mheight - (border * 2), m3d::Color(255,255,255,180));
+	menu->AddItem(minigameDesciptorBackground);
+	
+	minigameDescriptorFrame[0] = new RectangleMenuItem(descriptorX, topLeftY, mwidth, 2, m3d::Color(17,15,11));
+	minigameDescriptorFrame[1] = new RectangleMenuItem(descriptorX, topLeftY, 2, mheight, m3d::Color(17, 15, 11));
+	minigameDescriptorFrame[2] = new RectangleMenuItem(descriptorX, topLeftY + mheight - border, mwidth, 2, m3d::Color(17, 15, 11));
+	minigameDescriptorFrame[3] = new RectangleMenuItem(descriptorX + mwidth - border, topLeftY, 2, mheight, m3d::Color(17, 15, 11));
+
+	for (int i = 0; i < 4; i++)
+		menu->AddItem(minigameDescriptorFrame[i]);
 
 	whiteBackground = new RectangleMenuItem(0, 0, 1000, 1000, m3d::Color(255, 255, 255));
 	menu->AddItem(whiteBackground);
 
-	
 	grass = new SpriteMenuItem(*ResourceManager::getSprite("grassB1.png"));
 	menu->AddItem(grass);
 
@@ -72,8 +84,6 @@ MinigameSelectScene::MinigameSelectScene()
 
 		newButton->SetOnRelease([&, i](int x, int y)
 		{
-			Util::PrintLine("CLICKED");
-
 			//second touch
 			if (selectedMinigame == i)
 			{
@@ -121,6 +131,10 @@ void MinigameSelectScene::draw()
 		scr->drawTop(*MinigameSelectTopText, RenderContext::Mode::Flat);
 	else
 	{
+		scr->drawTop(*minigameDesciptorBackground, RenderContext::Mode::Flat);
+		for (int i = 0; i < 4; i++)
+			scr->drawTop(*minigameDescriptorFrame[i], RenderContext::Mode::Flat);
+
 		scr->drawTop(*MinigameName, RenderContext::Mode::Flat);
 		scr->drawTop(*MinigameDescription, RenderContext::Mode::Flat);
 		scr->drawTop(*selectedMinigameLargeSprite, RenderContext::Mode::Flat);
@@ -192,7 +206,7 @@ void MinigameSelectScene::SelectMinigame(int index)
 
 	selectedMinigameLargeSprite = new SpriteMenuItem(*ResourceManager::getSprite(minigames[index].getLargeSpriteLocation()));
 	menu->AddItem(selectedMinigameLargeSprite);
-	selectedMinigameLargeSprite->setPosition(10, 45);
+	selectedMinigameLargeSprite->setPosition(10, 44);
 
 	int addedWidth = minigameOptions[index]->getWidth() * xScale - minigameOptions[index]->getWidth();
 	int x = minigameOptions[index]->getXPosition() - (addedWidth / 2);

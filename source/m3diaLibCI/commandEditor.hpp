@@ -40,12 +40,7 @@ namespace m3dCI
 				@brief The CommandObject being edited
 			**/
 			CommandObject* command;
-
-			/**
-				@brief If the CommandEditor is finished
-			**/
-			bool isComplete = false;
-
+			
 			m3dCI::Sprite* background = nullptr;
 
 			m3dCI::Text *name = nullptr;
@@ -75,22 +70,5 @@ namespace m3dCI
 				@param t_context The context to draw in
 			**/
 			void draw(m3d::RenderContext t_context);
-
-			/**
-				@brief Get if the CommandEditor is complete
-				@returns Boolean containing if the CommandEditor is complete
-			**/
-			bool getComplete()
-			{
-				return isComplete;
-			}
-
-			/**
-				@brief Sets the IsComplete boolean of the CommandEditor to true
-			**/
-			void ForceComplete()
-			{
-				isComplete = true;
-			}
 	};
 }

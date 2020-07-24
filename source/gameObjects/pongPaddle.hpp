@@ -55,6 +55,14 @@ public:
 
 		ballid = ballID;
 	}
+
+	/**
+	* @brief Delete the Paddles rectangle
+	*/
+	~PongPaddle()
+	{
+		delete(PongRec);
+	}
 	
 	/**
 	* @brief Set the paddle's sprite's position and scale.
@@ -66,7 +74,9 @@ public:
 		angle = 0;
 		velo = 3;
 
-		PongRec = new Rectangle((int)x, (int)y, width, height, m3d::Color(255,255,255));
+		m_color = m3d::Color(255, 255, 255);
+
+		PongRec = new Rectangle((int)x, (int)y, width, height, m_color);
     }
 
 	/**
@@ -112,6 +122,7 @@ public:
 		PongRec->setPosition(x, y);
 		PongRec->setWidth(xScale * width);
 		PongRec->setHeight(yScale * height);
+		PongRec->setColor(m_color);
 
 		screen->drawTop(*PongRec, m3d::RenderContext::Mode::Flat, 3);
     }
@@ -260,6 +271,5 @@ public:
 	void setColor(m3d::Color t_color)
 	{
 		m_color = t_color;
-		PongRec->setColor(t_color);
 	}
 };

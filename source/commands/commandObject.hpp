@@ -85,7 +85,12 @@ public:
         m_lockIcon.setCenter(-108,7);
     }
 
-    ~CommandObject(){}
+    ~CommandObject()
+	{
+		for(int i = 0; i < 4; i++)
+			if(m_text != nullptr)
+				delete(m_text[i]);
+	}
 
     /**
      *  @brief returns the names of the CommandObject parameters

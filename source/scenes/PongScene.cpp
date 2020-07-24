@@ -57,14 +57,17 @@ void PongScene::initialize(){
 	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("pong1.png")));
 	wallpaper->setCenter(0, 0);
 	wallpaper->setScale(1, 1);
+	menu->AddItem(wallpaper);
 	
 	//  initialize the win popup window 
 	wPopup = new SpriteMenuItem(*(ResourceManager::getSprite("win_popup.png")));
 	wPopup->setPosition(80, 20);
+	menu->AddItem(wPopup);
 
 	//  initialize the lose popup window 
 	lPopup = new SpriteMenuItem(*(ResourceManager::getSprite("lose_popup.png")));
 	lPopup->setPosition(80, 20);
+	menu->AddItem(lPopup);
 
 	//	initialize Score menu items
 	for (int i = 0; i < TEAM_COUNT; i++)
@@ -73,6 +76,7 @@ void PongScene::initialize(){
 
 		scoreBoard[i]->setFontSize(2.0f);
 		scoreBoard[i]->setFontWeight(2.0f);
+		menu->AddItem(scoreBoard[i]);
 	}
 
 	//For some reason, the text->getWidth for scoreBoard[0] returns 34 when the real result is 23.
@@ -86,6 +90,7 @@ void PongScene::initialize(){
 	{
 		tutorial[i] = new SpriteMenuItem(*(ResourceManager::getSprite("pong_tutorial_" + std::to_string(i + 1) + ".png")));
 		tutorial[i]->setPosition(80, 20);
+		menu->AddItem(tutorial[i]);
 	}
 
 	if (tutCount != TUTORIAL_POPUP_COUNT)
@@ -148,7 +153,7 @@ void PongScene::draw(){
 }
 
 void PongScene::load(){ Minigame::load(); }; //any data files
-        
+
 void PongScene::unload(){ Minigame::unload(); };
 
 void PongScene::reset()
@@ -190,7 +195,6 @@ void PongScene::reset()
 	RightPaddleNullSafeCallFunction(reset)(true);
 }
 
-        
 void PongScene::update()
 {
 	Minigame::update();
@@ -198,21 +202,6 @@ void PongScene::update()
 	switch(currentState)
 	{
 		case PongState::TutorialMessage:
-			if (codeEditor->GetCommands().size() == 1)
-			{
-				std::vector<CommandObject*> startingCommands =
-				{
-					new WhileCommand("true", true, false),
-					new SelectCommand("ball"),
-					new GetYCommand("by"),
-					new SelectCommand("player"),
-					new SetYCommand("by"),
-					new EndCommand(true)
-
-				};
-
-				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitPongCode(commands); });
-			}
 
 			AddButton->SetActive(false);
 			RemoveButton->SetActive(false);
@@ -234,6 +223,19 @@ void PongScene::update()
 			if (buttons::buttonDown(buttons::Start) || tutCount >= TUTORIAL_POPUP_COUNT)
 			{
 				tutCount = 0;
+
+				std::vector<CommandObject*> startingCommands =
+				{
+					new WhileCommand("true", true, false),
+					new SelectCommand("ball"),
+					new GetYCommand("by"),
+					new SelectCommand("player"),
+					new SetYCommand("by"),
+					new EndCommand(true)
+
+				};
+
+				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitPongCode(commands); });
 
 				currentState = PongState::Requesting;
 

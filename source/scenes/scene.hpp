@@ -62,8 +62,8 @@ public:
         auto it =  m_hashmap.cbegin();
         for(;it != m_hashmap.cend(); it++)
         {
-			if(it->second != nullptr)
-				it->second->destroy();
+			if (it->second != nullptr)
+				delete(it->second);
         }
 
         //  Calls the default destructor of the menu
