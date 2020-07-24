@@ -135,12 +135,8 @@ void TicTacToeScene::update()
             {
                 tutCount = 0;
 
-                currentState = TTTState::Requesting;
+                currentState = TTTState::PlayerTurn;
 				blockButtons = false;
-                SceneManager::RequestUserCode( {
-                                                    new TTT_O_Command("1","1")
-                                                }, [&](std::vector<CommandObject*> list){ this->SubmitTTTCode(list);} 
-                                            );
             }
 
             break;
@@ -150,7 +146,11 @@ void TicTacToeScene::update()
             break;
         case PlayerTurn:
             currentState = TTTState::Requesting;
-            SceneManager::RequestUserCode( {}, [&](std::vector<CommandObject*> list){ this->SubmitTTTCode(list);} );            
+			SceneManager::RequestUserCode(
+				{
+					new TTT_O_Command("1","1")
+				},
+				[&](std::vector<CommandObject*> list) { this->SubmitTTTCode(list); } );
             break;
         case Execute:
 			blockButtons = true;
@@ -159,7 +159,6 @@ void TicTacToeScene::update()
             currentState = TTTState::PlayerTurn; 
             runEnemyAI();
             updateBoard();
-            //SceneManager::RequestUserCode( {}, [&](std::vector<CommandObject*> list){ this->SubmitTTTCode(list);} );
 			blockButtons = false;
             break; 
         case Win:
@@ -220,7 +219,8 @@ void TicTacToeScene::updateBoard()
         #ifdef DEBUG_MINIGAME
         Util::PrintLine("You Win!");
         #endif
-    } else if(checkWinCond(BoardState::ENEMY))
+    } 
+	else if(checkWinCond(BoardState::ENEMY))
     {
         currentState = TTTState::Lose;
 		blockButtons = true;
@@ -228,8 +228,6 @@ void TicTacToeScene::updateBoard()
         Util::PrintLine("You Lose!"); 
         #endif
     }
-    
-    
 }
 
 void TicTacToeScene::SubmitTTTCode(std::vector<CommandObject*> luaCode)
@@ -315,6 +313,9 @@ void TicTacToeScene::runEnemyAI()
 void TicTacToeScene::onExecutionEnd()
 {
     this->isExecuting = false;
-    this->currentState = TTTState::EnemyTurn;
+
     updateBoard();
+
+	if(currentState != TTTState::Win && currentState != TTTState::Lose)
+		this->currentState = TTTState::EnemyTurn;
 }
