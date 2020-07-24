@@ -6,7 +6,8 @@
 #include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
-#include "../scenes/TicTacToeScene.hpp"
+//#include "../scenes/TicTacToeScene.hpp"
+#include "../scenes/TTT_config.h"
 
 /**
  *  @class TTT_X "gameObjects/circle.hpp"

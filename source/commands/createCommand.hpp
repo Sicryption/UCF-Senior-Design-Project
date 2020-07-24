@@ -101,7 +101,7 @@ class TTT_O_Command : public CommandObject
 {
 
 public:
-    TTT_O_Command(std::string t_x = "0", std::string t_y = "0",bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    TTT_O_Command(std::string t_x = "1", std::string t_y = "1",bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="Naught";
 		setParam(0, t_x);
