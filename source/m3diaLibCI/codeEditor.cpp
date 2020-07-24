@@ -1,17 +1,19 @@
 #include "codeEditor.hpp"
 
+#include "../commands/commands.h"
+
+#define TOPSCREEN_WIDTH 400
+#define BOTTOMSCREEN_WIDTH 320
+#define TOPSCREEN_HEIGHT 240
+#define BOTTOMSCREEN_HEIGHT 240
+
+#define CELL_HEIGHT 20
+#define CELLS_TALL 12
+
+#define LEAST_CELLS_ON_SCREEN 12
+
 namespace m3dCI
 {
-	#define TOPSCREEN_WIDTH 400
-	#define BOTTOMSCREEN_WIDTH 320
-	#define TOPSCREEN_HEIGHT 240
-	#define BOTTOMSCREEN_HEIGHT 240
-
-	#define CELL_HEIGHT 20
-	#define CELLS_TALL 12
-
-	#define LEAST_CELLS_ON_SCREEN 12
-
 	CodeEditor::CodeEditor(int px, int pw, int p_borderWidth)
 		: m3d::Drawable()
 	{
@@ -40,36 +42,19 @@ namespace m3dCI
 		}
 	}
 
-	void CodeEditor::ShiftToTop()
-	{
-		int change = (TOPSCREEN_WIDTH - BOTTOMSCREEN_WIDTH) / 2;
-		xShift = change;
-
-		innerRectangle->setXPosition(x + xShift + borderWidth);
-		borderRectangle->setXPosition(x + xShift);
-		SetActive(false);
-
-		refreshCommandList();
-	}
-
-	void CodeEditor::ShiftToBottom()
-	{
-		xShift = 0;
-
-		innerRectangle->setXPosition(x + xShift + borderWidth);
-		borderRectangle->setXPosition(x + xShift);
-		SetActive(true);
-
-		refreshCommandList();
-	}
-
 	void CodeEditor::draw(m3d::RenderContext t_context)
 	{
-		if(borderRectangle != nullptr)
+		if (borderRectangle != nullptr)
+		{
+			borderRectangle->setXPosition(x + xShift);
 			borderRectangle->draw(t_context);
+		}
 
 		if (innerRectangle != nullptr)
+		{
+			innerRectangle->setXPosition(x + xShift + borderWidth);
 			innerRectangle->draw(t_context);
+		}
 
 		//from 0 - CELLHEIGHT draw first box as top box
 		//int topIndex = scrollY / CELL_HEIGHT - 1;
@@ -143,6 +128,26 @@ namespace m3dCI
 		SelectCommand(commandToRemoveIndex == (int)commands.size()?commandToRemoveIndex - 1:commandToRemoveIndex-1);
 	}
 
+	void CodeEditor::replaceCommand(CommandObject* current, CommandObject* newCommand)
+	{
+		int index = -1;
+		for (unsigned int i = 0; i < commands.size(); i++)
+			if (commands[i] == current)
+				index = i;
+
+		if (index == -1)
+			return;
+
+		if (currentSelectedCommand == commands[index])
+		{
+			currentSelectedCommand = newCommand;
+			currentSelectedCommand->setSelected(true);
+		}
+
+		delete(commands[index]);
+		commands[index] = newCommand;
+	}
+
 	void CodeEditor::ClearCommands()
 	{
 		for (int i = (int)commands.size() - 1; i >= 0; i--)
@@ -157,9 +162,9 @@ namespace m3dCI
 		return px >= x && px <= x + w && py >= y && py < y + h;
 	}
 
-	void CodeEditor::SelectCommand(int px, int py)
+	void CodeEditor::InternalSelectCommand(int px, int py)
 	{
-		if (!active || !isPointInside(px, py))
+		if (!isPointInside(px, py))
 			return;
 
 		int commandIndexToSelect = (py + scrollY) / CELL_HEIGHT;
@@ -172,13 +177,21 @@ namespace m3dCI
 
 	void CodeEditor::SelectCommand(int index)
 	{
-		if (!active)
-			return;
-
 		if (index == -1 || index >= (int)commands.size())
+		{
+			if (currentSelectedCommand != nullptr)
+				currentSelectedCommand->setSelected(false);
+
 			currentSelectedCommand = nullptr;
+		}
 		else
+		{
+			if (currentSelectedCommand != nullptr)
+				currentSelectedCommand->setSelected(false);
+
 			currentSelectedCommand = commands[index];
+			currentSelectedCommand->setSelected(true);
+		}
 
 		refreshCommandList();
 	}
@@ -210,16 +223,6 @@ namespace m3dCI
 		return index;
 	}
 
-	void CodeEditor::SetActive(bool state)
-	{
-		active = state;
-	}
-
-	bool CodeEditor::GetActive()
-	{
-		return active;
-	}
-
 	bool CodeEditor::IsBlankCommandSelected()
 	{
 		int index = GetSelectedCommandIndex();
@@ -230,11 +233,11 @@ namespace m3dCI
 		return GetSelectedCommandIndex() == (int)commands.size() - 1;
 	}
 
-	void CodeEditor::DoDrag(m3d::Vector2f dragVector)
+	void CodeEditor::InternalDoDrag(int u, int v)
 	{
-		double change = dragVector.v - thisScrollChange;
+		double change = v - thisScrollChange;
 
-		thisScrollChange = dragVector.v;
+		thisScrollChange = v;
 		scrollY -= change;
 
 		int maxScroll = (commands.size() - (commands.size() > LEAST_CELLS_ON_SCREEN?LEAST_CELLS_ON_SCREEN:commands.size())) * CELL_HEIGHT;
@@ -252,7 +255,7 @@ namespace m3dCI
 		refreshCommandList();
 	}
 
-	void CodeEditor::DragComplete()
+	void CodeEditor::InternalDragComplete()
 	{
 		thisScrollChange = 0;
 	}

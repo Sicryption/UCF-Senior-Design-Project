@@ -37,4 +37,10 @@ namespace m3dCI
 		commandTextObject->setPosition(x + 2, y);//+2 for buffer from left edge
 		backgroundRectangle->setPosition(x, y);
 	}
+
+	void commandListerItem::setText(std::string command)
+	{
+		std::transform(command.begin(), command.end(), command.begin(), ::toupper);
+		commandTextObject->setText(command);
+	}
 }

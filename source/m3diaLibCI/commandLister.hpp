@@ -4,9 +4,8 @@
 #include "text.hpp"
 #include "button.hpp"
 #include "commandListerItem.hpp"
-#include "../commands/commands.h"
 #include "../resources.h"
-#include "../MenuHandler.hpp"
+#include "../Menu/MenuItems/SpriteMenuItem.hpp"
 
 #include <citro2d.h>
 #include <string>
@@ -29,67 +28,122 @@
 #define VAR_STATEMENTS 3
 #define CONTROL_STATEMENTS 4
 
-using namespace std;
+class Minigame;
+class CommandObject;
 
-#define t(x) MenuHandler::AddCommand(x)
-#define func(a) []() { t(a); }
-#define PAIR(name, command) { name, []() { t(command); }}
-#define NULLPAIR PAIR("", nullptr)
-#define COLORPAIR(name, r, g, b) PAIR(name, new ColorCommand(name, m3d::Color(r,g,b,255)))
+using namespace std;
 
 namespace m3dCI 
 {
+    /**
+     @brief A selection menu tasked with displaying all selectable Commands and giving the CodeEditor a respective CommandObject
+	 Based off of m3d::Drawable
+     */
     class CommandLister : public m3d::Drawable
 	{
 		private:
-			pair<string, function<void()>> listOfCommandsByTab[NUM_TABS][NUM_COMMANDS_PER_TAB] =
-			{
-				{ PAIR("Circle", new CircleCommand()), PAIR("Rectangle", new RectangleCommand()), PAIR("Triangle", nullptr), PAIR("Text", new TextCommand("Empty")), PAIR("Select", new SelectCommand()), PAIR("Delete", new DeleteCommand), NULLPAIR, NULLPAIR },
-				{ COLORPAIR("Red", 255, 0, 0), COLORPAIR("Orange", 255, 127, 0), COLORPAIR("Yellow", 255, 255, 0), COLORPAIR("Green", 0, 255, 0), COLORPAIR("Blue", 0, 0, 255), COLORPAIR("Indigo", 75, 0, 130), COLORPAIR("Violet", 148, 0, 211), COLORPAIR("Black", 0, 0, 0) },
-				{ PAIR("Up", new UpCommand()), PAIR("Down", new DownCommand()), PAIR("Left", new LeftCommand()), PAIR("Right", new RightCommand()), PAIR("Scale", new ScaleCommand("1","1")), PAIR("Scale_X", new ScaleCommand("1", "-1")), PAIR("Scale_Y", new ScaleCommand("-1", "1")) },
-				{ PAIR("Var", new VarCommand()), PAIR("Get_X", new GetXCommand()), PAIR("Get_Y", new GetYCommand()), PAIR("Get_Angle", new GetAngleCommand()), PAIR("Set_Angle", new SetAngleCommand()), PAIR("Get_Scale_X", nullptr), PAIR("Get_Scale_Y", nullptr) },
-				{ PAIR("If", new IfCommand()), PAIR("Loop", nullptr), PAIR("While", new WhileCommand()), PAIR("End", new EndCommand()), PAIR("Label", new LabelCommand()), PAIR("goto", new GotoCommand()), NULLPAIR, NULLPAIR }
-			};
+			Minigame* minigame;
+
+			pair<string, function<void()>> listOfCommandsByTab[NUM_TABS][NUM_COMMANDS_PER_TAB];
 
 			m3d::Rectangle *backgroundRectangle = nullptr;
-			std::vector<m3dCI::Sprite*> tabs;
+			std::vector<SpriteMenuItem*> tabs;
 			std::vector<std::vector<commandListerItem*>> commands;
 
 			int currentlySelectedTab = -1;
 			commandListerItem* currentSelectedCommand = nullptr;
 
-			bool active = false;
 			int x, y, w, h;
 
+			/**
+				@brief Get the String for a Sprites Tab location
+				@param index Index of the Tab
+				@param selected Boolean if it should grab the Tab_Selected Sprite
+				@returns String for a Sprites Tab location
+			**/
 			std::string getTabSpriteStringID(int index, bool selected);
+			
+			/**
+				@brief Get the sprite for a Tab 
+				@param index Index of the Tab
+				@param selected Boolean if it should grab the Tab_Selected Sprite
+				@returns Sprite for the Tab
+			**/
 			m3dCI::Sprite* getTabSprite(int index, bool selected);
 
-			int getCurrentlySelectedTab();
-
+			/**
+				@brief Create all the CommandObjects when a Tab is switched to
+				@param index Tab to switch to
+			**/
 			void CreateTabCommandObjects(int index);
 
+			/**
+				@brief Switch between Tabs
+				@param tabIndex Tab to switch to
+			**/
 			void SelectTab(int tabIndex);
+		protected:
+			/**
+				@brief Get the selected tab index
+				@returns the Selected Tab Index
+			**/
+			int getCurrentlySelectedTab();
+			
+			/**
+				@brief Determine which Tab to select based off a Touch
+				@param px X coordinate clicked
+				@param py Y coordinate clicked
+			**/
 			void SelectTab(int px, int py);
+			
+			/**
+				@brief Determine which CommandObject to select based off a Touch
+				@param px X coordinate clicked
+				@param py Y coordinate clicked
+			**/
 			void SelectCommandObject(int px, int py);
-		public:
-			//Create the CodeEditor.
-			/*
-			 *  @param px X Coordinate
-			 *  @param py Y Coordinate
-			 *  @param pw Width of Code Editor
-			 *  @param ph Height of Code Editor
-			 *  @param p_borderWidth Width of Border
-			 *  @returns a Code Editor drawable object
-			*/
-			CommandLister();
 
-			//Destructor: Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
+		public:
+			/** @brief Create the CommandLister.
+			 *  @param minigame Minigame object to add the new Object to.
+				NOTE: Storing the Minigame inside the object is a poor way of doing it. 
+				Should be changed to being handled inside a MenuItem
+			**/
+			CommandLister(Minigame* minigame);
+
+			/**
+				@brief Deconstructor for CommandLister.
+				Responsible for deleting all needed children.
+			**/
 			virtual ~CommandLister();
 
-			void SelectPoint(int px, int py);
-
+			/**
+				@brief Draw the CommandLister
+				@param t_context The context to draw in
+			**/
 			void draw(m3d::RenderContext t_context);
 
-			void SetActive(bool state);
+			/**
+				@brief Provide Option for Minigames to Override which CommandListerItems exist inside the menu.
+				@param commandListObject The object which will replace the existing one
+				@param tab The ID of the tab
+				@parma id The index of the commandListerItem
+			**/
+			void OverrideCommandListObject(pair<string, function<void()>> commandListObject, int tab, int id);
+
+			/**
+				@brief Provide Option for Minigames to Override which CommandListerItems exist inside the menu.
+				Overrides an entire Tab. Missing Entries will be filled by blanks.
+				@param commandListObject A list of CommandListObjects to replace
+				@param tab The ID of the tab
+			**/
+			void OverrideTabCommandListObjects(std::vector<pair<string, function<void()>>> commandListObjects, int tab);
+
+			/**
+				@brief Sets a tab enabled state
+				@param tabIndex Tab to select
+				@param state State to leave the tab in
+			**/
+			void SetTabState(int tabIndex, bool state);
 	};
 }

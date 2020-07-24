@@ -1,4 +1,4 @@
-#include "../gameObject.hpp"
+#include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
 
@@ -7,11 +7,12 @@ class TestObject : public GameObject
 
 private:
     m3d::Texture *texture;
-    m3d::Sprite *sprite;
+    m3dCI::Sprite *sprite;
 
 public:
     TestObject()
     {
+        name = "test";
         x = 50;
         y = 200;
         xScale = 2;
@@ -29,7 +30,7 @@ public:
     {
 
         texture = ResourceManager::getTexture("gfx/error.png");
-        sprite = new m3d::Sprite();
+        sprite = new m3dCI::Sprite();
         sprite->setTexture(*texture);
         sprite->setCenter(10,10);
         sprite->setScale(xScale,yScale);
@@ -88,4 +89,9 @@ public:
     void destroy(){ this->~TestObject(); }
     void moveTo(double x,double y){};
     void Rotate(double deg){};
+
+	BoundingBox getAABB()
+	{
+		return sprite->getBoundingBox();
+	}
 };

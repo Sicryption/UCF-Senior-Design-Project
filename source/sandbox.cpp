@@ -1,153 +1,182 @@
 #include "userAPI.hpp"
 #include "util.hpp"
-#include "sandbox.h"
+#include "sandbox.hpp"
 
-/*
-    Comparison oparations for the memBlock object.
-    all comparisons are dependent on == and <
-*/
-
-/// The array of lua accessible user API functions, paired with their lua global name
+/**
+ *  @brief enabled UserAPI functions
+ * 
+ *  The array of Lua accessible user API functions, paired with their Lua global name.
+ *  Used to initialize the LuaSandbox.
+ *  @note These functions are added as variable functionsand can be easily overwritten by assigning a new value to the global name.
+ */
 std::pair<std::string, lua_CFunction> enabledFunctions[] = {
     std::make_pair( "println" , UserAPI::print_line),
     std::make_pair( "print" , UserAPI::print),
-    std::make_pair( "rectangle" , UserAPI::make_rectangle),
-    std::make_pair( "circle" , UserAPI::make_circle),
-    std::make_pair( "triangle" , UserAPI::make_rectangle),
+    std::make_pair( "make_rectangle" , UserAPI::make_rectangle),
+    std::make_pair( "make_circle" , UserAPI::make_circle),
+    std::make_pair( "make_text" , UserAPI::make_text),
+    std::make_pair( "make_naught" , UserAPI::make_naught),
+    std::make_pair( "make_cross" , UserAPI::make_cross),
     std::make_pair( "move" , UserAPI::move_object),
     std::make_pair( "position" , UserAPI::set_position),
+    std::make_pair( "set_x" , UserAPI::set_x_position),
+    std::make_pair( "set_y" , UserAPI::set_y_position),
     std::make_pair( "get_x" , UserAPI::get_x_position),
     std::make_pair( "get_y" , UserAPI::get_y_position),
     std::make_pair( "rotate" , UserAPI::rotate),
     std::make_pair( "set_angle" , UserAPI::set_angle),
     std::make_pair( "get_angle" , UserAPI::get_angle),
     std::make_pair( "set_scale" , UserAPI::set_scale),
+    std::make_pair( "get_x_scale", UserAPI::get_x_scale),
+    std::make_pair( "get_y_scale", UserAPI::get_y_scale),
     std::make_pair( "set_color" , UserAPI::set_color),
-    std::make_pair( "delete" , UserAPI::delete_object)
-
-
-
+    //std::make_pair( "select_object" , UserAPI::select_object),
+    std::make_pair( "delete_object" , UserAPI::delete_object)
 };
 
-/*
-    Operator overloading for memBlock.
-*/
+void LuaSandbox::initialize(std::function<void()> before = 0, std::function<void()> after = 0)
+{
+    memSize = 0;
+    memCapacity = SANDBOX_MEM_CAPACITY;
 
-bool operator ==  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
-{
-    return (a.head == b.head) && (a.size == b.size);
+    if(before != 0)
+        m_execBefore = before;
+    if(after != 0)
+        m_execAfter = after;    
+
+    m3d::Lock lock_sandbox(m_mutex_sandbox);
+	m_luaState = lua_newstate(allocator,nullptr);
+    luaopen_base(m_luaState);
+    luaopen_table(m_luaState);
+    bindAPI();
+    if(!executeFile("lua/init_scene.lua"))
+    {
+        Util::PrintLine("Error: failed to init \'lua/init_scene.lua\'");
+    }
+    lock_sandbox.~Lock();
+
+    m_thread = new m3d::Thread( [this](m3d::Parameter p){sandboxRuntime(p);}, 
+                                &m_threadState, false, false, THREAD_STACK);
+    m_thread->start();
 }
-bool operator !=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
-{
-    return !(a == b);
+
+LuaSandbox::LuaSandbox(std::function<void()> before, std::function<void()> after)
+{    
+    initialize(before, after);
 }
-bool operator <   (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+
+LuaSandbox::~LuaSandbox()
 {
-    return a.head < b.head;
+    close();
 }
-bool operator >   (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
+
+void LuaSandbox::sandboxRuntime(m3d::Parameter param)
 {
-    return b < a;
-}
-bool operator <=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
-{
-    return !(a>b);
-}
-bool operator >=  (LuaSandbox::memBlock a, LuaSandbox::memBlock b)
-{
-    return !(a<b);
+	#ifdef DEBUG_SANDBOX
+    Util::PrintLine("thread: start");
+    #endif
+	int* state = param.get<int*>();
+	if (state == NULL)
+	{
+		Util::PrintLine("Error: threadstate not defined, sandbox thread closing.");
+		return;
+	}
+    
+    
+
+    #ifdef DEBUG_SANDBOX
+    Util::PrintLine("thread: sandbox initialized");
+    #endif
+	
+	while (true)
+	{
+		int s = getThreadState();
+		if (s == THREAD_CLOSE)
+		{   //  close Thread
+			break;
+		}
+		else if (s == THREAD_HALT)
+		{
+			continue;
+		}else if(s == THREAD_SKIP)
+        {
+            setThreadState(THREAD_RUNNING);
+            m3d::Lock lock_state(m_mutex_threadState);
+            m_luaQueue.pop();            
+        }
+        else if(s == THREAD_CLEAR)
+        {
+            clearQueue();
+            setThreadState(THREAD_RUNNING);
+        }
+
+
+		if (m_luaQueue.size() > 0)
+		{
+			m_execBefore();
+            
+            m3d::Lock lock_queue(m_mutex_lua);  // Lock lua queue access
+			std::string t_lua(m_luaQueue.front());
+            m_luaQueue.pop();            
+            lock_queue.~Lock(); // Unlock lua queue access
+
+            #ifdef DEBUG_SANDBOX
+			Util::PrintLine("thread: read \'"+t_lua.substr(0,30)+"\'");
+            #endif
+
+            // Lock lua state access
+			m3d::Lock lock_sandbox(m_mutex_sandbox);
+            if(luaL_dostring(m_luaState,t_lua.c_str()) > 0)
+            {
+                #ifdef DEBUG_SANDBOX
+                Util::PrintLine("lua:execution failed on \'" + t_lua.substr(0,30) + "\'");
+                #endif
+            } 
+            #ifdef DEBUG_SANDBOX
+            else
+            { 
+                Util::PrintLine("lua: success on \'" + t_lua.substr(0,30) + "\'");
+            }
+            #endif
+			
+            // Unlock lua state access
+            lock_sandbox.~Lock();
+
+			m_execAfter();
+		}
+
+		m3d::Thread::sleep();
+	}
+
+    //setThreadState(THREAD_RUNNING);
+    #ifdef DEBUG_SANDBOX
+    Util::PrintLine("thread: exit");
+    #endif
 }
 
 void* LuaSandbox::allocator(void *ud, void *ptr, size_t osize, size_t nsize)
 {
-    memBlock * mem = NULL;
-
-    // Free
-    if(nsize == 0)
-    {
-        // search for the memory block
-        for (unsigned int i = 0; i < blockList.size(); i++)
-        {
-            // block is found
-            if(blockList.at(i)->head == ptr)
-            {
-                // erase block
-                blockList.erase(blockList.begin() + i);
-                break;
-            }
-        }
-
+    (void)ud;  (void)osize;  /* not used */
+    if (nsize == 0) {
+        free(ptr);
         return NULL;
     }
-
-    //  Allocate
-    if( osize == 0)
-    {//  No space allocated, create a new memory block
-        mem = new memBlock(malloc(nsize),nsize);
-    } else 
-    {// Adjust an existing memory block
-        // sum 
-        size_t memTotal = getTotalMemoryUsed();
-
-        if( memTotal < (nsize - osize) && 
-            memTotal + (nsize - osize) < SANDBOX_MEM_CAPACITY)
-        {
-            mem = searchBlockList(ptr);
-            if(mem == NULL){
-                mem = new memBlock(ptr,nsize);
-            }
-            mem->head = realloc(ptr,nsize);
-            mem->size = nsize;
-        }
-        
-    }
-
-    return mem;
+    else
+        return realloc(ptr, nsize);
 }
 
-LuaSandbox::memBlock* LuaSandbox::searchBlockList(void* ptr)
+bool LuaSandbox::executeString(std::string text)
 {
-    //  If ptr is null skip the search and return null
-    if(ptr == NULL){return NULL;}
-
-    // for each block test if  head == ptr
-    for (unsigned int i = 0; i <blockList.size(); ++i)
-    {
-        LuaSandbox::memBlock* m = blockList.at(i);
-        if(m->head == ptr)
-        {
-            return m;
-        }
-    }
-    return NULL;
+    #ifdef DEBUG_SANDBOX
+    Util::PrintLine("executing: " + text.substr(0,20) + "...");
+    #endif
+    const char* temp = text.c_str();    
+    m3d::Lock lock_sandbox(m_mutex_sandbox);
+    return luaL_dostring(m_luaState,temp);
 }
 
-size_t LuaSandbox::getTotalMemoryUsed()
+bool LuaSandbox::executeFile(std::string path)
 {
-    size_t size = 0;
-    for (unsigned int i = 0; i <blockList.size(); ++i)
-    {
-        size += blockList.at(i)->size;
-    }
-    return size;
-}
-
-
-void LuaSandbox::executeString(std::string text)
-{
-//  TODO: Needs a more thorough test
-    // Temporary implementation, unprotected
-    const char* temp = text.c_str();
-    //Util::getInstance()->PrintLine(temp);
-    luaL_dostring(state,temp);
-    return;
-}
-
-void LuaSandbox::executeFile(std::string path)
-{
-    //  TODO: Needs a more thorough test
-    // Temporary implementation, unprotected
-    
     size_t length;
     char* buffer;
     std::string fullPath = "romfs:/";
@@ -157,7 +186,7 @@ void LuaSandbox::executeFile(std::string path)
     if(fp == NULL)
     {
         std::cerr << "Error: couldnt open file at '" << fullPath << "'" << std::endl;
-        return;
+        return 0;
     }
 
     fseek(fp,0L, SEEK_END);
@@ -169,76 +198,133 @@ void LuaSandbox::executeFile(std::string path)
 
     fclose(fp);
     
-    luaL_dostring(state,buffer);
-    return;
+    return executeString(buffer);
 }
 
-double LuaSandbox::tryGetDouble(std::string id)
+int LuaSandbox::executeStringQueued(std::string text)
+{
+    #ifdef DEBUG_SANDBOX
+    Util::PrintLine("queuing: " + text.substr(0,20) + "...");
+    #endif
+
+    m3d::Lock lock_code(m_mutex_lua);
+    m_luaQueue.push(text);
+    return m_luaQueue.size();
+    
+}
+
+int LuaSandbox::executeFileQueued(std::string path)
+{
+    size_t length;
+    char* buffer;
+    std::string fullPath = "romfs:/";
+    fullPath = fullPath.append(path);
+    
+    FILE* fp = fopen(fullPath.c_str(), "r");
+    if(fp == NULL)
+    {
+        std::cerr << "Error: couldnt open file at '" << fullPath << "'" << std::endl;
+        return -1;
+    }
+
+    fseek(fp,0L, SEEK_END);
+    size_t size = ftell(fp);
+    rewind(fp);
+
+    buffer = (char*)calloc(size, sizeof(char));
+    fread(buffer,sizeof(char),size,fp);
+    fclose(fp);
+
+    return executeStringQueued(buffer);
+}
+
+void LuaSandbox::setThreadState(int state)
+{
+    if(m_thread->isRunning())
+    {
+        m3d::Lock lock(m_mutex_threadState);
+        m_threadState = state;
+        executeString("_EXEC_STATE=" + std::to_string(state));
+    }else
+    {
+        m_threadState = THREAD_CLOSE;
+        executeString("_EXEC_STATE=" + std::to_string(THREAD_CLOSE));
+    }
+}
+
+int LuaSandbox::getThreadState()
+{
+    if(m_thread->isRunning())
+    {
+        m3d::Lock lock(m_mutex_threadState);
+        return m_threadState;
+    }else{ return THREAD_CLOSE; }
+}
+
+bool LuaSandbox::tryGetDouble(std::string id, double* ptr)
 {
     //  convert sting to const char*
     const char* n = id.c_str();
 
     //  push value unto the stack
-    int ltype = lua_getglobal(state,n);
+    int ltype = lua_getglobal(m_luaState,n);
 
     //  convert value on the stack to a double 
-    double value = lua_tonumber(state,-1);
+    double value = lua_tonumber(m_luaState,-1);
     
     // value no longer needed, remove from the stack
-    lua_remove(state,1);
+    lua_remove(m_luaState,1);
 
     // throw an error if the type is wrong
     if(ltype != LUA_TNUMBER){
-        throw ;
+        return false;
     }
-    
-    return value;
+    *ptr = value;
+    return true;
 }
 
-// TODO: test 
-bool LuaSandbox::tryGetBool(std::string id)
+bool LuaSandbox::tryGetBool(std::string id, bool* ptr)
 {
     //  convert sting to const char*
     const char* n = id.c_str();
 
     //  push value unto the stack
-    int ltype = lua_getglobal(state,n);
+    int ltype = lua_getglobal(m_luaState,n);
 
     //  convert value on the stack to a double 
-    bool value = lua_toboolean(state,-1);
+    bool value = lua_toboolean(m_luaState,-1);
     
     // value no longer needed, remove from the stack
-    lua_remove(state,1);
+    lua_remove(m_luaState,1);
 
     // throw an error if the type is wrong
-    if(ltype != LUA_TBOOLEAN){
-        throw ;
+    if(ltype != LUA_TNUMBER){
+        return false;
     }
-    
-    return value;
+    *ptr = value;
+    return true;
 }
 
-// TODO: test 
-std::string LuaSandbox::tryGetString(std::string id)
+bool LuaSandbox::tryGetString(std::string id, std::string* ptr)
 {
     //  convert sting to const char*
     const char* n = id.c_str();
 
     //  push value unto the stack
-    int ltype = lua_getglobal(state,n);
+    int ltype = lua_getglobal(m_luaState,n);
 
     //  convert value on the stack to a double 
-    std::string value = std::string( lua_tostring(state,-1));
+    std::string value = lua_tostring(m_luaState,-1);
     
     // value no longer needed, remove from the stack
-    lua_remove(state,1);
+    lua_remove(m_luaState,1);
 
     // throw an error if the type is wrong
-    if(ltype != LUA_TBOOLEAN){
-        throw ;
+    if(ltype != LUA_TNUMBER){
+        return false;
     }
-    
-    return value;
+    *ptr = value;
+    return true;
 }
 
 void LuaSandbox::bindAPI()
@@ -246,14 +332,45 @@ void LuaSandbox::bindAPI()
     
     for(std::pair<std::string, lua_CFunction> func : enabledFunctions)
     {
-        lua_pushcfunction(state, func.second);
-        lua_setglobal(state, func.first.c_str());
+        lua_pushcfunction(m_luaState, func.second);
+        lua_setglobal(m_luaState, func.first.c_str());
     }
     return;
 }
 
 void LuaSandbox::close()
 {
-    lua_close(state);
-    return;
+    if(m_thread->isRunning())
+    {
+        setThreadState(THREAD_CLOSE);   
+        m_thread->join();
+    }
+    lua_close(m_luaState);
+}
+
+void LuaSandbox::resetSandbox()
+{
+    close();
+    initialize();
+}
+
+int LuaSandbox::getQueueSize()
+{
+    m3d::Lock lock_queue(m_mutex_lua);
+    return m_luaQueue.size();
+}
+
+void LuaSandbox::clearQueue()
+{
+    m3d::Lock lock_queue(m_mutex_lua);
+    while(!m_luaQueue.empty())
+    {
+        #ifdef DEBUG_SANDBOX
+        Util::Print("pop ");
+        #endif
+        m_luaQueue.pop();
+    }
+    #ifdef DEBUG_SANDBOX
+    Util::PrintLine("");
+    #endif
 }

@@ -33,7 +33,7 @@ include $(DEVKITARM)/3ds_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source	source/lua	source/m3diaLibCI	source/menus	source/UserAPI	source/gameObjects	 source/commands
+SOURCES		:=	source	source/lua	source/m3diaLibCI	source/UserAPI	source/gameObjects	 source/commands	source/scenes	source/Menu	source/Menu/MenuItems
 DATA		:=	assets/data
 INCLUDES	:=	include
 GRAPHICS	:=	assets/gfx
@@ -54,7 +54,7 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \
 			$(ARCH) 
 
-CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS -DLUA_32BITS -DLUA_C89_NUMBERS
+CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS -DLUA_32BITS -DLUA_C89_NUMBERS -DDEBUG
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -std=gnu++11 
 # removed flag -fno-exceptions

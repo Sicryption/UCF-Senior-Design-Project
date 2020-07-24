@@ -81,14 +81,11 @@ m3dCI::Button::Button(int px, int py, int pr, m3d::Color p_innerColor, m3d::Colo
 //Default Destructor. Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
 m3dCI::Button::~Button()
 {
-	//The following commented out object don't have deletion support. They *should* be grabbed by the garbage collector. 
-	//Ideally, we would change these objects to support a default virtual deconstructor
-	/*delete(innerRectangle);
+	delete(innerRectangle);
 	delete(outerRectangle);
 	delete(innerCircle);
-	delete(outerCircle);*/
-	if(disabledColor != nullptr)
-		delete(disabledColor);
+	delete(outerCircle);
+	delete(disabledColor);
 	delete(sprite);
 	delete(text);
 }
@@ -208,20 +205,7 @@ void m3dCI::Button::SetTextColor(m3d::Color color)
 	if (text != nullptr)
 		text->setColor(color);
 }
-
-void m3dCI::Button::SetEnabledState(bool state)
-{
-	if(buttonType == ButtonType::Rectangle)
-		innerRectangle->setColor(state ? innerColor : *disabledColor);
-
-	enabled = state;
-}
-
-bool m3dCI::Button::GetEnabledState()
-{
-	return enabled;
-}
-			
+		
 /*
 
 	The following functions are all child functions of Rectangle/Circle objects which are used here.
@@ -308,12 +292,7 @@ m3d::BoundingBox m3dCI::Button::getBoundingBox ()
 	else if (buttonType == Circle && outerCircle != nullptr)
 		return outerCircle->getBoundingBox();
 	else if (buttonType == SpriteObject && sprite != nullptr)
-	{
-		int p_w = sprite->m_sprite.params.pos.w;
-		int p_h = sprite->m_sprite.params.pos.h;
-
-		return m3d::BoundingBox(x,y, p_w, p_h);
-	}
+		return sprite->getBoundingBox();
 		
 	return m3d::BoundingBox(0,0,0,0);
 }

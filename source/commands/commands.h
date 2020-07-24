@@ -1,8 +1,13 @@
+/**
+ *  @file commands.h
+ *  @brief includes for CommandObject and its children
+ */
 #include "../commands/commandObject.hpp"
 #include "../commands/selectCommand.hpp"
 #include "../commands/ifCommand.hpp"
 #include "../commands/elseCommand.hpp"
 #include "../commands/whileCommand.hpp"
+#include "../commands/loopCommand.hpp"
 #include "../commands/endCommand.hpp"
 #include "../commands/labelCommand.hpp"
 #include "../commands/gotoCommand.hpp"

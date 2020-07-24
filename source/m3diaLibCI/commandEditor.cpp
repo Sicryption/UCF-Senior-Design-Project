@@ -1,9 +1,9 @@
 #include "commandEditor.hpp"
 
-#define XStart 15
-#define YStart 6
-#define CELL_WIDTH 274
-#define CELL_HEIGHT 57
+#include "../commands/commands.h"
+
+#define X_NAME_SHIFT 10
+#define Y_NAME_SHIFT 19
 
 namespace m3dCI
 {
@@ -17,7 +17,7 @@ namespace m3dCI
 		background = new m3dCI::Sprite(*ResourceManager::getSprite("commandEditPopup.png"));
 
 		name = new m3dCI::Text(command->getName());
-		name->setPosition(XStart, YStart + 19);
+		name->setPosition(XStart + X_NAME_SHIFT, YStart + Y_NAME_SHIFT);
 
 		name->setColor(COM_TEXT_COLOR);
 		name->setFontWeight(1.0f);
@@ -26,14 +26,12 @@ namespace m3dCI
 		for (int i = 0; i < numParams; i++)
 		{
 			params[i] = new m3dCI::Text(command->getParamNames()[i] + ": " + command->getParams()[i]);
-			params[i]->setPosition(XStart, YStart + 19 + (CELL_HEIGHT * (i + 1)));
+			params[i]->setPosition(XStart + X_NAME_SHIFT, YStart + Y_NAME_SHIFT + (CELL_HEIGHT * (i + 1)));
 
 			params[i]->setColor(COM_TEXT_COLOR);
 			params[i]->setFontWeight(1.0f);
 			params[i]->setFontSize(1.0f);
 		}
-
-		Util::PrintLine("Created");
 	}
 
 	CommandEditor::~CommandEditor()
@@ -57,40 +55,5 @@ namespace m3dCI
 		for (int i = 0; i < MAX_PARAMS; i++)
 			if (params[i] != nullptr)
 				params[i]->draw(t_context);
-	}
-
-	void CommandEditor::HandleClick(int x, int y)
-	{
-		if (x >= XStart && x <= XStart + CELL_WIDTH && y >= YStart && y <= YStart + (CELL_HEIGHT * (command->getParamNames().size() + 1)))
-		{
-			int selected = (y - YStart) / CELL_HEIGHT;
-
-			if (selected > 0)
-			{
-				m3d::SoftwareKeyboard sk;
-
-				sk.darkenTop(false);
-				sk.allowBlank(false);
-				sk.allowEmpty(false);
-				sk.allowHome(false);
-				sk.setInitialText(command->getParams()[selected - 1]);
-				sk.display();
-
-				if (sk.getLastButton() != m3d::SoftwareKeyboard::Button::Right)
-				{
-					Util::PrintLine("Keyboard Canceled");
-					return;
-				}
-				else
-				{
-					command->setParam(selected - 1, sk.getLastInput());
-					params[selected - 1]->setText(command->getParamNames()[selected - 1] + ": " + sk.getLastInput());
-				}
-			}
-			else
-			{
-
-			}
-		}
 	}
 }
