@@ -28,16 +28,16 @@ class MinigameSelectScene : public Scene
 		enum MINIGAME_LIST
 		{
 			MAZE = 0,
-			PONG = 1,
-			TIC_TAC_TOE = 2
+			TIC_TAC_TOE = 1,
+			PONG = 2,
 		};
 		
 		///@brief List of MinigameDescriptors which make up the Boxes on screen.
 		MinigameDescriptor minigames[MINIGAME_COUNT] =
 		{
-			MinigameDescriptor("Maze", "Navigate through a maze.\n\n\n\nAims to teach: Object Movement", "mazeSmall.png", "mazeLarge.png"),
+			MinigameDescriptor("Maze", "Navigate a player through a\nmaze.\n\n\nAims to teach: Object Movement", "mazeSmall.png", "mazeLarge.png"),
+			MinigameDescriptor("Tic-Tac-Toe", "Get three O's in a row!\n\n\n\nAims to teach: Object Creation", "TTTSmall.png", "TTTLarge.png"),
 			MinigameDescriptor("Pong", "Don't let the ball bounce\ninto your base!\n\n\nAims to teach: Conditionals", "pongSmall.png", "pongLarge.png"),
-			MinigameDescriptor("Tic-Tac-Toe", "Get three X's in a row!\n\n\n\nAims to teach: Object Creation", "TTTSmall.png", "TTTLarge.png"),
 			MinigameDescriptor(),
 			MinigameDescriptor(),
 			MinigameDescriptor()
