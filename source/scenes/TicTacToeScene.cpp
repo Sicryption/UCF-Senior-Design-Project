@@ -253,6 +253,11 @@ void TicTacToeScene::updateBoard()
     }
     
     
+
+    if(isTied())
+    {
+        currentState = TTTState::Lose;
+    }
 }
 
 void TicTacToeScene::SubmitTTTCode(std::vector<CommandObject*> luaCode)
@@ -320,11 +325,28 @@ void TicTacToeScene::loadLoseScr() { Minigame::loadLoseScr(); };
 void TicTacToeScene::requestUI() { Minigame::requestUI(); };
 void TicTacToeScene::closeGame() { Minigame::closeGame(); };
 
+bool isTied()
+{
+    bool tie = false;
+    for (int i = 0; i < TTT_NUM_CELLS; i++)
+    {
+        if(m_board[i] != BoardState::VACANT)
+        {
+            tie =false;
+            break;
+        }
+    }
+    
+    return tie;
+}
+
 void TicTacToeScene::runEnemyAI()
 {
     int n;
     do{
         n =  rand() % (TTT_NUM_CELLS);
+        if(isTied())
+            return;
     }while(m_board[n] != BoardState::VACANT);
     
     int row = (n % TTT_NUM_ROWS) + 1;

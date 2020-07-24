@@ -85,6 +85,7 @@ class TicTacToeScene : public Minigame
 
         void runEnemyAI();
         void updateBoard();
+        bool isTied();
         void onExecutionEnd();
 
 };
