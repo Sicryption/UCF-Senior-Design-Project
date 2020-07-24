@@ -29,7 +29,7 @@ class TicTacToeScene : public Minigame
     };
 
     private: 
-        SpriteMenuItem *wallpaper, *popup, *wPopup, *lPopup;
+        SpriteMenuItem *wallpaper, *field, *popup, *wPopup, *lPopup;
         m3d::Color *colorRec, *colorText;
         RectangleMenuItem *topLeftTest, *topMidTest, *topRightTest;
         RectangleMenuItem *midLeftTest, *midMidTest, *midRightTest;
