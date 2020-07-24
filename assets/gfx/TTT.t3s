@@ -1,5 +1,6 @@
 --atlas -f rgba8888 -z auto
 TTT_BG.png
+TTT_Field.png
 TTT_O.png
 TTT_X.png
 TTT_Tutorial1.png

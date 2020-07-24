@@ -56,6 +56,9 @@ void TicTacToeScene::initialize() {
      
     wallpaper= new SpriteMenuItem(*(ResourceManager::getSprite("TTT_BG.png")));
     menu->AddItem(wallpaper);
+    
+    field= new SpriteMenuItem(*(ResourceManager::getSprite("TTT_Field.png")));
+    menu->AddItem(field);
 
 	wallpaper->setCenter(0,0);
 	wallpaper->setScale(1,1);
@@ -87,6 +90,7 @@ void TicTacToeScene::draw() {
     m3d::Screen *screen = GameManager::getScreen();
 
     screen->drawTop(*wallpaper);
+    screen->drawTop(*field);
 
     if(currentState == TTTState::TutorialMessage)
     {
@@ -188,6 +192,9 @@ void TicTacToeScene::updateBoard()
     {
         m3d::BoundingBox *d = m_detectors[i];
         GameObject* g = nullptr;
+
+        if(m_board[i] != BoardState::VACANT)
+            continue;
 
         for (auto objPair : m_hashmap)
 		{
