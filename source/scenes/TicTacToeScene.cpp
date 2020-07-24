@@ -70,6 +70,12 @@ void TicTacToeScene::initialize() {
     popup = tutorial[tutCount];
     popup->setPosition(80,20);
 
+    wPopup = new SpriteMenuItem(*(ResourceManager::getSprite("win_popup.png")));
+    wPopup->setPosition(80,20);
+
+    lPopup = new SpriteMenuItem(*(ResourceManager::getSprite("lose_popup.png")));
+    lPopup->setPosition(80,20);
+
 	currentState = TTTState::TutorialMessage;
 }
 
@@ -82,6 +88,15 @@ void TicTacToeScene::draw() {
     if(currentState == TTTState::TutorialMessage)
     {
         screen->drawTop(*popup,m3d::RenderContext::Mode::Flat,2);
+    }
+
+    if(currentState == TTTState::Win)
+    {
+        screen->drawTop(*wPopup,m3d::RenderContext::Mode::Flat,2);
+    }
+    if(currentState == TTTState::Lose)
+    {
+        screen->drawTop(*lPopup,m3d::RenderContext::Mode::Flat,2);
     }
     Minigame::draw();
     
@@ -166,8 +181,34 @@ void TicTacToeScene::update()
             currentState = TTTState::Requesting; 
             break; 
         case Win:
+            AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
+			submitButton->SetActive(false);
+
+            if (Input::btnReleased(m3d::buttons::B))
+            {
+                SceneManager::setTransition(new MinigameSelectScene);
+            }
+            if (Input::btnReleased(m3d::buttons::A))
+            {
+                SceneManager::setTransition(new TicTacToeScene());
+            }
             break;
         case Lose:
+            AddButton->SetActive(false);
+			RemoveButton->SetActive(false);
+			EditButton->SetActive(false);
+			submitButton->SetActive(false);
+
+            if (Input::btnReleased(m3d::buttons::B))
+            {
+                SceneManager::setTransition(new MinigameSelectScene);
+            }
+            if (Input::btnReleased(m3d::buttons::A))
+            {
+                SceneManager::SetTransition(new TicTacToeScene());
+            }
             break;
         default:
             break;
