@@ -17,7 +17,6 @@ void MazeScene::initialize(){
 	Minigame::initialize();
 
 //loads and gets maze texture
-	//texture = new m3dCI::Sprite(*(ResourceManager::getSprite("wall.png")));
     //sprite* spr = new m3d::Sprite();
 
 //initialize playable character
@@ -33,16 +32,11 @@ void MazeScene::initialize(){
 	colorText = new m3d::Color(0,0,0);
 	mazeState = 1;
 
-//initializes text and bottom screen background
-	winScreen = new RectangleMenuItem(0,0,320,240,*colorRec);
-	menu->AddItem(winScreen);
-	
 	wallpapers[0] = new SpriteMenuItem(*(ResourceManager::getSprite("maze1.png")));
 	menu->AddItem(wallpapers[0]);
 	wallpapers[1] = new SpriteMenuItem(*(ResourceManager::getSprite("maze2.png")));
 	menu->AddItem(wallpapers[1]);
 	wallpapers[2] = new SpriteMenuItem(*(ResourceManager::getSprite("maze3.png")));
-	menu->AddItem(wallpapers[2]);
 	current = wallpapers[0];
 	//  Initialize popup BG
     wPopup = new SpriteMenuItem(*(ResourceManager::getSprite("win_popup.png")));
@@ -88,18 +82,18 @@ void MazeScene::transistion(){
 	{
 		timer = 15.00;
 		std::vector<CommandObject*> startingCommands =
-					{
-						new SelectCommand("runner",true,true),
-						new RightCommand("18"),
-						new DownCommand("5"),
-						new LeftCommand("18"),
-						new DownCommand("5"),
-						new RightCommand("18"),
-						new DownCommand("5"),
-						new LeftCommand("18"),
-						new DownCommand("5"),
-						new RightCommand("18")
-					};
+		{
+			new SelectCommand("runner",true,true),
+			new RightCommand("18"),
+			new DownCommand("5"),
+			new LeftCommand("18"),
+			new DownCommand("5"),
+			new RightCommand("18"),
+			new DownCommand("5"),
+			new LeftCommand("18"),
+			new DownCommand("5"),
+			new RightCommand("18")
+		};
 		SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
 		current = wallpapers[0];
 		runner->setposition(20,20,wallHolder);
@@ -315,8 +309,6 @@ void MazeScene::update()
 				SceneManager::setTransition(new MinigameSelectScene());
 			break;
 	}
-
-	Util::PrintLine(std::to_string(currentState));
 };
 
 void MazeScene::SubmitMazeCode(std::vector<CommandObject*> luaCode)

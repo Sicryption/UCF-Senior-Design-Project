@@ -18,26 +18,26 @@ void TicTacToeScene::initialize() {
 	colorText = new m3d::Color(0,0,0);
 
     winPrompt = new TextMenuItem("You Win!",*colorText);
-	menu->AddItem(winPrompt);
 	winPrompt->setPosition(90,30);
 	winPrompt->setFontSize(.5);
 	winPrompt->setFontWeight(.5);
 	winPrompt->setPosition(160,120);
+	menu->AddItem(winPrompt);
 
     prompt = new TextMenuItem(" Use move commands to traverse \n the maze. In order to add a move \n command select Add, then go to\n the tab with the arrows. There\n you can select up, down, left \n or right as a direction to\n move in the maze. You can then\n change the amount of spaces you\n want to move by selecting it and\n clicking edit. Be sure to enter all\n commands you will need to get to\n the end of the maze before running.",*colorText);
-	menu->AddItem(prompt);
 	prompt->setPosition(90,30);
 	prompt->setFontSize(.5);
 	prompt->setFontWeight(.5);
+	menu->AddItem(prompt);
+
 	wallpaper = new SpriteMenuItem(*(ResourceManager::getSprite("tictactoe1.png")));
+	wallpaper->setCenter(0, 0);
+	wallpaper->setScale(1, 1);
 	menu->AddItem(wallpaper);
 
     popup = new SpriteMenuItem(*(ResourceManager::getSprite("menu_popup.png")));
+	popup->setPosition(80, 20);
 	menu->AddItem(popup);
-	popup->setPosition(80,20);
-
-	wallpaper->setCenter(0,0);
-	wallpaper->setScale(1,1);
 
 	currentState = TTTState::TutorialMessage;
 }

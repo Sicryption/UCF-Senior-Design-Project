@@ -346,7 +346,6 @@ void LuaSandbox::close()
         m_thread->join();
     }
     lua_close(m_luaState);
-    
 }
 
 void LuaSandbox::resetSandbox()

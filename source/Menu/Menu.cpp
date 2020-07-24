@@ -89,6 +89,12 @@ bool Menu::ContainsItem(MenuItem* item)
 
 void Menu::RemoveItem(MenuItem* item)
 {
-	if (item != nullptr)
-		menuItems.erase(std::remove(menuItems.begin(), menuItems.end(), item), menuItems.end());
+	for (unsigned int i = 0; i < menuItems.size(); i++)
+		if (menuItems[i] == item)
+		{
+			delete(item);
+			item = nullptr;
+			menuItems[i] = nullptr;
+			return;
+		}
 }
