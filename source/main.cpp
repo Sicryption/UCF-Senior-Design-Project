@@ -4,6 +4,7 @@
 #include <sstream>
 #include <thread>
 #include <chrono>
+#include <random>
 
 #include <3ds.h>
 #include <m3dia.hpp>
@@ -26,7 +27,7 @@ int main(int argc, char* argv[])
 	//  Create default Applet and Screen variables
 	Applet app;
 	Screen scr;
-
+    srand(time(0));
 	//  Create default Singleton instances of Utility class and ObjectManager class
 	GameManager::Initialize(&app, &scr);
 	Util *util = Util::createInstance(&scr, &app);

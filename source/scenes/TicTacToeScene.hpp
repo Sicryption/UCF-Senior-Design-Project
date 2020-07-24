@@ -1,13 +1,16 @@
 #pragma once
+#include <random>
+#include "../gameObjects/objects.h"
 #include "../gameManager.hpp"
 #include "../sceneManager.hpp"
 #include "../resources.h"
 #include "../scenes/scene.hpp"
 #include "../scenes/MainMenuScene.hpp"
+#include "../scenes/TTT_config.h"
 
 #define TTT_NUM_ROWS 3
 #define TTT_NUM_COLS TTT_NUM_ROWS
-#define TTT_NUM_CELLS TTT_NUM_ROWS * 3
+#define TTT_NUM_CELLS (TTT_NUM_ROWS * 3)
 #define TTT_CELL_SIZE 60
 #define TTT_DETECTOR_SIZE 40
 #define TTT_X 220
@@ -44,6 +47,7 @@ class TicTacToeScene : public Minigame
             TutorialMessage,
             Requesting,
             Execute,
+            PlayerTurn,
             EnemyTurn,
             Win,
             Lose

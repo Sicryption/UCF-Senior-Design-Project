@@ -181,7 +181,7 @@ int UserAPI::make_naught(lua_State* L)
     int t_id = currScene->addObject(new TTT_Token(false,x,y)); 
     if(t_id == 0)
     {
-        Util::PrintLine("Error: could not create Circle Object in Scene \'" + currScene->getSceneName() + "\'");
+        Util::PrintLine("Error: could not create Naught Object in Scene \'" + currScene->getSceneName() + "\'");
         return 0;
     }
     

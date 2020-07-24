@@ -1,3 +1,4 @@
+#pragma once
 #include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
