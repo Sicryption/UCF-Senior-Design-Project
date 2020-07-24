@@ -550,9 +550,9 @@ int UserAPI::delete_object(lua_State* L)
         return 0;
     }
     currScene->removeObject(t_id);
+
 	delete(currObj);
 	currObj = nullptr;
-    //currObj->destroy();
     m3d::Thread::sleep(STEP_TIME);
     return 0;
 }
