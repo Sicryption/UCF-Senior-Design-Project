@@ -197,7 +197,7 @@ void Minigame::FinishTransitionToDisplayState()
 	EditButton->SetActive(false);
 	closeButton->SetActive(false);
 
-	if (commandEditor)
+	if (commandEditor != nullptr)
 		commandEditor->SetActive(false);
 	commandLister->SetActive(false);
 	codeEditor->SetActive(false);
@@ -267,6 +267,7 @@ void Minigame::EditButton_OnClick()
 		menu->RemoveItem(commandEditor);
 
 	commandEditor = new CommandEditorMenuItem(codeEditor->getSelectedObject());
+	commandEditor->SetActive(false);
 	commandEditor->SetEditFunction
 	(
 		[&]()
