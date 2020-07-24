@@ -80,7 +80,7 @@ class VarCommand : public CommandObject
 public:
     VarCommand(std::string t_name = "text", std::string t_value = "nil", bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
-        m_name="var";
+        m_name="variable";
 		setParam(0, t_name);
         setParam(1,t_value);
         m_background = m3dCI::Sprite( *ResourceManager::getSprite("command_background_var.png"));
@@ -112,7 +112,7 @@ public:
 
     ~TTT_O_Command();
 
-    std::vector<std::string> getParamNames() {return {"coloumn", "row"};}
+    std::vector<std::string> getParamNames() {return {"col", "row"};}
 
     std::string convertToLua()
     {

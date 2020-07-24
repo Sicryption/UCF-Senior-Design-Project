@@ -160,10 +160,10 @@ void TicTacToeScene::update()
 			EditButton->SetActive(false);            
             break;
         case EnemyTurn:
+            currentState = TTTState::PlayerTurn; 
             runEnemyAI();
             updateBoard();
-            SceneManager::RequestUserCode( {}, [&](std::vector<CommandObject*> list){ this->SubmitTTTCode(list);} );
-            currentState = TTTState::PlayerTurn; 
+            //SceneManager::RequestUserCode( {}, [&](std::vector<CommandObject*> list){ this->SubmitTTTCode(list);} );
             break; 
         case Win:
             AddButton->SetActive(false);
@@ -192,7 +192,7 @@ void TicTacToeScene::update()
             }
             if (Input::btnReleased(m3d::buttons::A))
             {
-                SceneManager::SetTransition(new TicTacToeScene());
+                SceneManager::setTransition(new TicTacToeScene());
             }
             break;
         default:
@@ -337,7 +337,7 @@ void TicTacToeScene::runEnemyAI()
 
 void TicTacToeScene::onExecutionEnd()
 {
-    updateBoard();
     this->isExecuting = false;
     this->currentState = TTTState::EnemyTurn;
+    updateBoard();
 }
