@@ -54,6 +54,8 @@ class MinigameSelectScene : public Scene
 		SpriteMenuItem *selectedMinigameLargeSprite = nullptr;
 		TextMenuItem *MinigameSelectTopText = nullptr, *MinigameDescription = nullptr, *MinigameName = nullptr;
 		ButtonMenuItem* minigameOptions[MINIGAME_COUNT];
+		RectangleMenuItem* minigameDescriptorFrame[4];
+		RectangleMenuItem* minigameDesciptorBackground;
 
 	public:
 	

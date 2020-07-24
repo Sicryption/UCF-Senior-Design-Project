@@ -104,6 +104,11 @@ namespace m3dCI
 		for (unsigned int i = 0; i < commands.size(); i++)
 			for(unsigned int j = 0; j < commands[i].size(); j++)
 				delete(commands[i][j]);
+
+		for (unsigned int i = 0; i < tabs.size(); i++)
+			delete(tabs[i]);
+
+		delete(backgroundRectangle);
 	}
 
 	void CommandLister::CreateTabCommandObjects(int index)

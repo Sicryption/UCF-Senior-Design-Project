@@ -142,14 +142,12 @@ int UserAPI::make_text(lua_State* L)
     lua_Number y = lua_tonumber(L,-2);
     std::string text = lua_tostring(L,-1);
 
-    Util::PrintLine("test 1");
     Scene *currScene = SceneManager::getScene();
     if(currScene == nullptr)
     {
         Util::PrintLine("Error: no current scene");
         return 0;
     }
-    Util::PrintLine("test 2");
     //int t_id = currScene->addObject( new TextObject("TEXT",0,0) ); 
     int t_id = currScene->addObject(new RectangleObject(0,0)); 
     if(t_id < 0)
@@ -158,7 +156,6 @@ int UserAPI::make_text(lua_State* L)
         return 0;
     }
     
-    Util::PrintLine("test 3");
     lua_pushinteger(L,t_id);
     lua_setglobal(L,"current_object");
     lua_pushinteger(L,t_id);
@@ -554,7 +551,9 @@ int UserAPI::delete_object(lua_State* L)
         return 0;
     }
     currScene->removeObject(t_id);
-    //currObj->destroy();
+
+	delete(currObj);
+	currObj = nullptr;
     m3d::Thread::sleep(STEP_TIME);
     return 0;
 }

@@ -50,11 +50,18 @@ class Minigame : public Scene
 private:
 	std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
 
-	bool showCommandLister = false,
-		showCommandEditor = false,
-		editCommandFromCommandEditor = false;
-
     SpriteMenuItem* m_gridOverlay = nullptr;
+
+	enum DisplayState
+	{
+		CodeEditor,
+		CommandLister,
+		CommandEditor,
+		CommandEditorCommandLister,
+		null
+	};
+
+	DisplayState dState = CodeEditor, nextState = null;
 
 protected:
 	/**
@@ -69,7 +76,8 @@ protected:
 	CommandEditorMenuItem* commandEditor = nullptr;
 
 	bool isExecuting = false,
-		showGridLines = true;
+		showGridLines = true,
+		blockButtons = false;
 
 	/**
 		@brief CommandLister is responsible for showing all objects which can be added to the CodeEditor.
@@ -104,6 +112,16 @@ protected:
 	 *  onExecutionEnd is called right after the sandbox executes a chunk.
 	 */
 	virtual void onExecutionEnd();
+
+	/**
+	 *  @brief Set the next transition to go to
+	 */
+	void SetTransitionToDisplayState(DisplayState state);
+
+	/**
+	 *  @brief Complete the transition
+	 */
+	void FinishTransitionToDisplayState();
 
 public:
 

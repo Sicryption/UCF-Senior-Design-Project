@@ -73,9 +73,11 @@ void TicTacToeScene::initialize() {
 
     wPopup = new SpriteMenuItem(*(ResourceManager::getSprite("win_popup.png")));
     wPopup->setPosition(80,20);
+	menu->AddItem(wPopup);
 
     lPopup = new SpriteMenuItem(*(ResourceManager::getSprite("lose_popup.png")));
     lPopup->setPosition(80,20);
+	menu->AddItem(lPopup);
 
 	currentState = TTTState::TutorialMessage;
 }
@@ -113,13 +115,9 @@ void TicTacToeScene::update()
     switch (currentState)
     {
         case TutorialMessage:
+			blockButtons = true;
 
-            AddButton->SetActive(false);
-            RemoveButton->SetActive(false);
-            EditButton->SetActive(false);
-            submitButton->SetActive(false);
-
-            if (m3d::buttons::buttonPressed(m3d::buttons::A))
+			if (m3d::buttons::buttonPressed(m3d::buttons::A))
             {
                 if (tutCount < 3)
                 {
@@ -137,63 +135,47 @@ void TicTacToeScene::update()
             {
                 tutCount = 0;
 
-                currentState = TTTState::Requesting;
-                SceneManager::RequestUserCode( {
-                                                    new TTT_O_Command("1","1")
-                                                }, [&](std::vector<CommandObject*> list){ this->SubmitTTTCode(list);} 
-                                            );
-                codeEditor->SetActive(true);
+                currentState = TTTState::PlayerTurn;
+				blockButtons = false;
             }
 
             break;
         case Requesting: // Resting state
-            
+			if (Input::btnReleased(m3d::buttons::B))
+				SceneManager::setTransition(new MinigameSelectScene());
             break;
         case PlayerTurn:
             currentState = TTTState::Requesting;
-            SceneManager::RequestUserCode( {}, [&](std::vector<CommandObject*> list){ this->SubmitTTTCode(list);} );            
+			SceneManager::RequestUserCode(
+				{
+					new TTT_O_Command("1","1")
+				},
+				[&](std::vector<CommandObject*> list) { this->SubmitTTTCode(list); } );
             break;
         case Execute:
-            submitButton->SetActive(false);
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);            
+			blockButtons = true;
             break;
         case EnemyTurn:
             currentState = TTTState::PlayerTurn; 
             runEnemyAI();
             updateBoard();
-            //SceneManager::RequestUserCode( {}, [&](std::vector<CommandObject*> list){ this->SubmitTTTCode(list);} );
+			blockButtons = false;
             break; 
         case Win:
-            AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
-			submitButton->SetActive(false);
+			blockButtons = true;
 
             if (Input::btnReleased(m3d::buttons::B))
-            {
-                SceneManager::setTransition(new MinigameSelectScene);
-            }
+                SceneManager::setTransition(new MinigameSelectScene());
             if (Input::btnReleased(m3d::buttons::A))
-            {
                 SceneManager::setTransition(new TicTacToeScene());
-            }
             break;
         case Lose:
-            AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
-			submitButton->SetActive(false);
+			blockButtons = true;
 
             if (Input::btnReleased(m3d::buttons::B))
-            {
-                SceneManager::setTransition(new MinigameSelectScene);
-            }
+                SceneManager::setTransition(new MinigameSelectScene());
             if (Input::btnReleased(m3d::buttons::A))
-            {
                 SceneManager::setTransition(new TicTacToeScene());
-            }
             break;
         default:
             break;
@@ -233,20 +215,15 @@ void TicTacToeScene::updateBoard()
     if(checkWinCond(BoardState::PLAYER))
     {
         currentState = TTTState::Win;
-        submitButton->SetActive(false);
-        AddButton->SetActive(false);
-        RemoveButton->SetActive(false);
-        EditButton->SetActive(false); 
+		blockButtons = true;
         #ifdef DEBUG_MINIGAME
         Util::PrintLine("You Win!");
         #endif
-    } else if(checkWinCond(BoardState::ENEMY))
+    } 
+	else if(checkWinCond(BoardState::ENEMY))
     {
         currentState = TTTState::Lose;
-        submitButton->SetActive(false);
-        AddButton->SetActive(false);
-        RemoveButton->SetActive(false);
-        EditButton->SetActive(false);
+		blockButtons = true;
         #ifdef DEBUG_MINIGAME
         Util::PrintLine("You Lose!"); 
         #endif
@@ -325,7 +302,7 @@ void TicTacToeScene::loadLoseScr() { Minigame::loadLoseScr(); };
 void TicTacToeScene::requestUI() { Minigame::requestUI(); };
 void TicTacToeScene::closeGame() { Minigame::closeGame(); };
 
-bool isTied()
+bool TicTacToeScene::isTied()
 {
     bool tie = false;
     for (int i = 0; i < TTT_NUM_CELLS; i++)
@@ -360,6 +337,9 @@ void TicTacToeScene::runEnemyAI()
 void TicTacToeScene::onExecutionEnd()
 {
     this->isExecuting = false;
-    this->currentState = TTTState::EnemyTurn;
+
     updateBoard();
+
+	if(currentState != TTTState::Win && currentState != TTTState::Lose)
+		this->currentState = TTTState::EnemyTurn;
 }
