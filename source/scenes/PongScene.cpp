@@ -112,9 +112,6 @@ void PongScene::initialize(){
 	setObjectName("enemy", enemyID);
 	RightPaddleNullSafeCallFunction(initialize)();
 
-
-	codeEditor->SetActive(false);
-
 	currentState = PongState::TutorialMessage;
 }
 
@@ -202,11 +199,7 @@ void PongScene::update()
 	switch(currentState)
 	{
 		case PongState::TutorialMessage:
-
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
-			submitButton->SetActive(false);
+			blockButtons = true;
 
 			// player reads the tutorial 
 			if (buttons::buttonPressed(buttons::A)) 
@@ -238,19 +231,16 @@ void PongScene::update()
 				SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitPongCode(commands); });
 
 				currentState = PongState::Requesting;
-
-				codeEditor->SetActive(true);
 			}
 		break;
 		case PongState::Requesting:
+			blockButtons = false;
+
 			if (Input::btnReleased(m3d::buttons::B))
 				SceneManager::setTransition(new MinigameSelectScene());
 		break;
 		case PongState::Win:
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
-			submitButton->SetActive(false);
+			blockButtons = true;
 
 			if (Input::btnReleased(m3d::buttons::B))
 				SceneManager::setTransition(new MinigameSelectScene());
@@ -258,10 +248,7 @@ void PongScene::update()
 				reset();
 		break;
 		case PongState::Lose:
-			AddButton->SetActive(false);
-			RemoveButton->SetActive(false);
-			EditButton->SetActive(false);
-			submitButton->SetActive(false);
+			blockButtons = true;
 
 			if (Input::btnReleased(m3d::buttons::B)) // return to minigame select screen
 				SceneManager::setTransition(new MinigameSelectScene());

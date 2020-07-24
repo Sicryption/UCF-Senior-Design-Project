@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 #define PADDLE_EPSILON 10
-#define PADDLE_STRAY 50
+#define PADDLE_STRAY 5
 
 class PongPaddle : public GameObject
 {
@@ -98,7 +98,7 @@ public:
 			// calculate displacement between enemy paddle and ball 
             int yCenter = (y + (PongRec->getHeight() / 2));
             int ballCenter = (ball->getYPosition() + (ball->getHeight() / 2));            
-            target_y = ballCenter + (PADDLE_STRAY * (chanceToFail/30.0));
+            target_y = ballCenter + (PADDLE_STRAY * (chanceToFail/4.0));
 			
             int diff = yCenter - target_y;
 

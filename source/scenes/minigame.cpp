@@ -15,6 +15,7 @@ Minigame::Minigame()
 	int margin = 5;
 
 	codeEditor = new CodeEditorMenuItem(margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), 1);
+	codeEditor->SetActive(false);
 	menu->AddItem(codeEditor);
 
 	int buttonWidth = BOTTOMSCREEN_WIDTH * 0.25 - (margin * 2);
@@ -23,21 +24,26 @@ Minigame::Minigame()
 	AddButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	AddButton->SetText("ADD");
 	AddButton->SetOnRelease([this](int x, int y) { this->AddButton_OnClick(); });
+	AddButton->SetActive(false);
 
 	EditButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	EditButton->SetText("EDIT");
 	EditButton->SetOnRelease([this](int x, int y) { this->EditButton_OnClick(); });
+	EditButton->SetActive(false);
 
 	RemoveButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight * 2, buttonWidth, buttonHeight, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	RemoveButton->SetText("DEL");
 	RemoveButton->SetOnRelease([this](int x, int y) { this->DeleteButton_OnClick(); });
+	RemoveButton->SetActive(false);
 
 	closeButton = new ButtonMenuItem(48 + BOTTOMSCREEN_WIDTH * 0.5, 0, new m3dCI::Sprite(*ResourceManager::getSprite("tabClose.png")));
 	closeButton->SetOnRelease([this](int x, int y) { this->CloseButton_OnClick(); });
+	closeButton->SetActive(false);
 
 	submitButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight * 3, buttonWidth, buttonWidth, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	submitButton->SetText("Run");
 	submitButton->SetOnRelease([this](int x, int y) { this->SubmitButton_OnClick(); });
+	submitButton->SetActive(false);
 
 	menu->AddItem(submitButton);
 	menu->AddItem(closeButton);
@@ -46,6 +52,7 @@ Minigame::Minigame()
 	menu->AddItem(AddButton);
 
 	commandLister = new CommandListerMenuItem(this);
+	commandLister->SetActive(false);
 	menu->AddItem(commandLister);
 
 	SetTransitionToDisplayState(DisplayState::CodeEditor);

@@ -86,15 +86,12 @@ void MazeScene::transistion(){
 		std::vector<CommandObject*> startingCommands =
 		{
 			new SelectCommand("runner",true,true),
-			new RightCommand("18"),
-			new DownCommand("5"),
-			new LeftCommand("18"),
-			new DownCommand("5"),
-			new RightCommand("18"),
-			new DownCommand("5"),
-			new LeftCommand("18"),
-			new DownCommand("5"),
-			new RightCommand("18")
+			new LoopCommand("3"),
+			new RightCommand("17"),
+			new DownCommand("3"),
+			new LeftCommand("17"),
+			new DownCommand("3"),
+			new EndCommand()
 		};
 		SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
 		current = wallpapers[0];
@@ -106,31 +103,11 @@ void MazeScene::transistion(){
 		std::vector<CommandObject*> startingCommands =
 		{
 			new SelectCommand("runner",true,true),
-			new RightCommand("5"),
+			new RightCommand("8"),
+			new LoopCommand("10"),
 			new UpCommand("1"),
 			new RightCommand("1"),
-			new UpCommand("1"),
-			new RightCommand("1"),
-			new UpCommand("1"),
-			new RightCommand("1"),
-			new UpCommand("1"),
-			new RightCommand("1"),
-			new UpCommand("1"),
-			new RightCommand("1"),
-			new UpCommand("1"),
-			new RightCommand("1"),
-			new UpCommand("1"),
-			new RightCommand("1"),
-			new UpCommand("1"),
-			new RightCommand("1"),
-			new UpCommand("1"),
-			new RightCommand("1"),
-			new UpCommand("1"),
-			new RightCommand("1"),
-			new UpCommand("1"),
-			new RightCommand("1"),
-			new UpCommand("1"),
-			new RightCommand("1"),
+			new EndCommand()
 		};
 		SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
 		current = wallpapers[1];
@@ -142,15 +119,15 @@ void MazeScene::transistion(){
 		std::vector<CommandObject*> startingCommands =
 		{
 			new SelectCommand("runner",true,true),
-			new LeftCommand("18"),
-			new UpCommand("18"),
-			new RightCommand("18"),
-			new DownCommand("18"),
-			new LeftCommand("18"),
-			new UpCommand("18"),
-			new RightCommand("18"),
-			new DownCommand("18"),
-			new LeftCommand("18"),
+			new LeftCommand("17"),
+			new UpCommand("9"),
+			new RightCommand("17"),
+			new DownCommand("7"),
+			new LeftCommand("15"),
+			new UpCommand("5"),
+			new RightCommand("13"),
+			new DownCommand("3"),
+			new LeftCommand("11"),
 		};
 		SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
 		current = wallpapers[2];
@@ -220,23 +197,8 @@ void MazeScene::update()
 			if (buttons::buttonPressed(buttons::A) || buttons::buttonDown(buttons::Start)){
 				if(tutCount >= 5 || buttons::buttonDown(buttons::Start))
 				{
-					currentState = MazeState::Requesting;
+					currentState = MazeState::Transistion;
 
-					std::vector<CommandObject*> startingCommands =
-					{
-						new SelectCommand("runner",true,true),
-						new RightCommand("18"),
-						new DownCommand("5"),
-						new LeftCommand("18"),
-						new DownCommand("5"),
-						new RightCommand("18"),
-						new DownCommand("5"),
-						new LeftCommand("18"),
-						new DownCommand("5"),
-						new RightCommand("18")
-					};
-
-					SceneManager::RequestUserCode(startingCommands, [&](std::vector<CommandObject*> commands) { SubmitMazeCode(commands); });
 					tutCount = 0;
 					break;
 				}

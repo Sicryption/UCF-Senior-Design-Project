@@ -3,6 +3,7 @@
 #include "../gameManager.hpp"
 #include "../resources.h"
 
+#include <random>
 
 class PongBall : public GameObject
 {
@@ -27,8 +28,9 @@ public:
         yScale = 1;
         angle = 0;
 		speed = 3;
-		dirX = -1;
-		dirY = 1; 
+
+		dirX = rand() % 2 == 0 ? -1 : 1;
+		dirY = rand() % 2 == 0 ? -1 : 1;
     }
 
 	/**
@@ -69,6 +71,10 @@ public:
 	{
 		x = TOPSCREEN_WIDTH / 2 - sprite->GetWidth() / 2;
 		y = TOPSCREEN_HEIGHT / 2 - sprite->GetHeight() / 2;
+
+
+		dirX = rand() % 2 == 0 ? -1 : 1;
+		dirY = rand() % 2 == 0 ? -1 : 1;
 	}
 
 	/**

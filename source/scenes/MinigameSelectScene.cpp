@@ -94,7 +94,10 @@ MinigameSelectScene::MinigameSelectScene()
 				else if(i == MINIGAME_LIST::TIC_TAC_TOE)
 					SceneManager::setTransition(new TicTacToeScene());
 				else
-					SceneManager::setTransition(new Minigame());
+				{
+					// We decided to not let it transition.
+					//SceneManager::setTransition(new Minigame());
+				}
 			}
 			else
 			{
@@ -148,13 +151,13 @@ void MinigameSelectScene::update()
 {
 	menu->OnUpdate();
 
-	if (Input::btnReleased(m3d::buttons::DPadRight))
+	if (Input::btnReleased(m3d::buttons::DPadRight) || Input::btnReleased(m3d::buttons::CPadRight))
 		SelectMinigame(selectedMinigame == -1 ? 0 : selectedMinigame + 1);
-	else if (Input::btnReleased(m3d::buttons::DPadLeft))
+	else if (Input::btnReleased(m3d::buttons::DPadLeft) || Input::btnReleased(m3d::buttons::CPadLeft))
 		SelectMinigame(selectedMinigame == -1 ? 0 : selectedMinigame - 1);
-	else if (Input::btnReleased(m3d::buttons::DPadDown))
+	else if (Input::btnReleased(m3d::buttons::DPadDown) || Input::btnReleased(m3d::buttons::CPadDown))
 		SelectMinigame(selectedMinigame == -1 ? 0 : selectedMinigame + 3);
-	else if (Input::btnReleased(m3d::buttons::DPadUp))
+	else if (Input::btnReleased(m3d::buttons::DPadUp) || Input::btnReleased(m3d::buttons::CPadUp))
 		SelectMinigame(selectedMinigame == -1 ? 0 : selectedMinigame - 3);
 
 	if (Input::btnReleased(m3d::buttons::B))
