@@ -30,6 +30,14 @@ public:
     }
 
 	/**
+	* @brief Delete the balls sprite
+	*/
+	~PongBall()
+	{
+		delete(sprite);
+	}
+
+	/**
 	* @brief Set the ball's sprite's position and scale. 
 	*/
     void initialize()

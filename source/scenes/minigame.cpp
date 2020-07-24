@@ -16,7 +16,6 @@ Minigame::Minigame()
 
 	codeEditor = new CodeEditorMenuItem(margin, (BOTTOMSCREEN_WIDTH * 0.75) - (margin * 2), 1);
 	menu->AddItem(codeEditor);
-	codeEditor->SetActive(true);
 
 	int buttonWidth = BOTTOMSCREEN_WIDTH * 0.25 - (margin * 2);
 	int buttonHeight = (BOTTOMSCREEN_HEIGHT - buttonWidth - (margin * 2)) / 3;
@@ -35,7 +34,6 @@ Minigame::Minigame()
 
 	closeButton = new ButtonMenuItem(48 + BOTTOMSCREEN_WIDTH * 0.5, 0, new m3dCI::Sprite(*ResourceManager::getSprite("tabClose.png")));
 	closeButton->SetOnRelease([this](int x, int y) { this->CloseButton_OnClick(); });
-	closeButton->SetActive(false);
 
 	submitButton = new ButtonMenuItem(BOTTOMSCREEN_WIDTH * 0.75 + margin, margin + buttonHeight * 3, buttonWidth, buttonWidth, m3d::Color(255, 255, 255), m3d::Color(0, 0, 0), 1);
 	submitButton->SetText("Run");
@@ -48,13 +46,19 @@ Minigame::Minigame()
 	menu->AddItem(AddButton);
 
 	commandLister = new CommandListerMenuItem(this);
-	commandLister->SetActive(false);
 	menu->AddItem(commandLister);
+
+	SetTransitionToDisplayState(DisplayState::CodeEditor);
 }
 
 Minigame::~Minigame()
 {
-	m_sandbox->close();
+	delete(m_sandbox);
+
+	if(commandEditor != nullptr)
+		menu->RemoveItem(commandEditor);
+
+	delete(m_gridOverlay);
 }
 
 void Minigame::initialize()
@@ -65,6 +69,9 @@ void Minigame::initialize()
 
 void Minigame::update()
 {
+	if (nextState != DisplayState::null)
+		FinishTransitionToDisplayState();
+
     #ifdef DEBUG_MINIGAME
 	if (buttons::buttonPressed(buttons::X))
 	{
@@ -85,86 +92,153 @@ void Minigame::update()
 
 	}
     #endif
-    
-	m3d::Screen * scr = GameManager::getScreen();
-	
-	if (commandEditor != nullptr && showCommandEditor)
-	{
-		scr->drawBottom(*commandEditor);
-
-		if (commandEditor->getComplete())
-		{
-			AddButton->SetActive(true);
-		}
-
-		if (closeButton != nullptr)
-		{
-			closeButton->setPosition(BOTTOMSCREEN_WIDTH - 37, 0);
-			scr->drawBottom(*closeButton);
-		}
-	}
 
 	if (codeEditor != nullptr)
 	{
-		if (showCommandLister)
-			scr->drawTop(*codeEditor);
-		else if (!showCommandEditor && !editCommandFromCommandEditor)
+		AddButton->SetActive(isExecuting || blockButtons ? false : codeEditor->canAdd());
+		EditButton->SetActive(isExecuting || blockButtons ? false : codeEditor->canEdit());
+		RemoveButton->SetActive(isExecuting || blockButtons ? false : codeEditor->canRemove());
+		submitButton->SetActive(isExecuting || blockButtons ? false : true);
+	}
+
+	switch (dState)
+	{
+	case DisplayState::CodeEditor:
+		if (codeEditor != nullptr)
 		{
-			scr->drawBottom(*codeEditor);
-
-			AddButton->SetActive(isExecuting?false:codeEditor->canAdd());
-			EditButton->SetActive(isExecuting ? false : codeEditor->canEdit());
-			RemoveButton->SetActive(isExecuting ? false : codeEditor->canRemove());
-			submitButton->SetActive(isExecuting ? false : true);
-
 			if (Input::btnPressed(m3d::buttons::CPadUp) || Input::btnPressed(m3d::buttons::DPadUp))
 				codeEditor->SelectAbove();
 			else if (Input::btnPressed(m3d::buttons::CPadDown) || Input::btnPressed(m3d::buttons::DPadDown))
 				codeEditor->SelectBelow();
 		}
-	}
-
-	if (commandLister != nullptr && showCommandLister)
-	{
-		scr->drawBottom(*commandLister);
-
+		break;
+	case DisplayState::CommandLister:
 		if (closeButton != nullptr)
-		{
 			closeButton->setPosition(48 + BOTTOMSCREEN_WIDTH * 0.5, 0);
-			scr->drawBottom(*closeButton);
-		}
-	}
-
-	if (!showCommandEditor)
-	{
-		if (AddButton != nullptr)
-			scr->drawBottom(*AddButton);
-
-		if (EditButton != nullptr)
-			scr->drawBottom(*EditButton);
-
-		if (RemoveButton != nullptr)
-			scr->drawBottom(*RemoveButton);
-
-		if (submitButton != nullptr)
-			scr->drawBottom(*submitButton);
+		break;
+	case DisplayState::CommandEditorCommandLister:
+		if (closeButton != nullptr)
+			closeButton->setPosition(48 + BOTTOMSCREEN_WIDTH * 0.5, 0);
+		break;
+	case DisplayState::CommandEditor:
+		if (closeButton != nullptr)
+			closeButton->setPosition(BOTTOMSCREEN_WIDTH - 37, 0);
+		break;
 	}
 
 	menu->OnUpdate();
 }
 
+void Minigame::draw()
+{
+	m3d::Screen * scr = GameManager::getScreen();
+
+	Scene::draw();
+
+	if (m_gridOverlay != nullptr && showGridLines)
+		GameManager::getScreen()->drawTop(*m_gridOverlay, m3d::RenderContext::Mode::Flat, 1);
+
+	switch (dState)
+	{
+	case DisplayState::CodeEditor:
+		if (codeEditor != nullptr)
+			scr->drawBottom(*codeEditor);
+		if (AddButton != nullptr)
+			scr->drawBottom(*AddButton);
+		if (EditButton != nullptr)
+			scr->drawBottom(*EditButton);
+		if (RemoveButton != nullptr)
+			scr->drawBottom(*RemoveButton);
+		if (submitButton != nullptr)
+			scr->drawBottom(*submitButton);
+		break;
+	case DisplayState::CommandLister:
+		if (AddButton != nullptr)
+			scr->drawBottom(*AddButton);
+		if (EditButton != nullptr)
+			scr->drawBottom(*EditButton);
+		if (RemoveButton != nullptr)
+			scr->drawBottom(*RemoveButton);
+		if (submitButton != nullptr)
+			scr->drawBottom(*submitButton);
+	case DisplayState::CommandEditorCommandLister:
+		if (commandLister != nullptr)
+			scr->drawBottom(*commandLister);
+		if (closeButton != nullptr)
+			scr->drawBottom(*closeButton);
+		if (AddButton != nullptr)
+			scr->drawBottom(*AddButton);
+		if (EditButton != nullptr)
+			scr->drawBottom(*EditButton);
+		if (RemoveButton != nullptr)
+			scr->drawBottom(*RemoveButton);
+		if (submitButton != nullptr)
+			scr->drawBottom(*submitButton);
+		break;
+	case DisplayState::CommandEditor:
+		if (commandEditor != nullptr)
+			scr->drawBottom(*commandEditor);
+		if (closeButton != nullptr)
+			scr->drawBottom(*closeButton);
+		break;
+	}
+}
+
+void Minigame::SetTransitionToDisplayState(DisplayState state)
+{
+	if(nextState == DisplayState::null)
+		nextState = state;
+}
+
+void Minigame::FinishTransitionToDisplayState()
+{
+	AddButton->SetActive(false);
+	RemoveButton->SetActive(false);
+	EditButton->SetActive(false);
+	closeButton->SetActive(false);
+
+	if (commandEditor)
+		commandEditor->SetActive(false);
+	commandLister->SetActive(false);
+	codeEditor->SetActive(false);
+
+	blockButtons = true;
+
+	switch (nextState)
+	{
+	case DisplayState::CodeEditor:
+		codeEditor->SetActive(true);
+
+		AddButton->SetActive(isExecuting || blockButtons ? false : codeEditor->canAdd());
+		EditButton->SetActive(isExecuting || blockButtons ? false : codeEditor->canEdit());
+		RemoveButton->SetActive(isExecuting || blockButtons ? false : codeEditor->canRemove());
+		submitButton->SetActive(isExecuting || blockButtons ? false : true);
+
+		blockButtons = false;
+		break;
+	case DisplayState::CommandLister:
+		//codeEditor->ShiftToTop();
+
+		commandLister->SetActive(true);
+		closeButton->SetActive(true);
+		break;
+	case DisplayState::CommandEditorCommandLister:
+		commandLister->SetActive(true);
+		closeButton->SetActive(true);
+		break;
+	case DisplayState::CommandEditor:
+		commandEditor->SetActive(true);
+		closeButton->SetActive(true);
+		break;
+	}
+
+	dState = nextState;
+	nextState = DisplayState::null;
+}
+
 void Minigame::AddButton_OnClick()
 {
-	showCommandLister = true;
-	commandLister->SetActive(true);
-	codeEditor->SetActive(false);
-	AddButton->SetActive(false);
-	EditButton->SetActive(false);
-	RemoveButton->SetActive(false);
-	closeButton->SetActive(true);
-	submitButton->SetActive(false);
-
-	codeEditor->ShiftToTop();
+	SetTransitionToDisplayState(DisplayState::CommandLister);
 }
 
 void Minigame::SubmitButton_OnClick()
@@ -182,8 +256,6 @@ void Minigame::SubmitButton_OnClick()
         Util::PrintLine("warning: thread closed");
     }
     #endif
-
-	submitButton->SetActive(false);
 }
 
 void Minigame::EditButton_OnClick()
@@ -191,29 +263,21 @@ void Minigame::EditButton_OnClick()
 	if (codeEditor == nullptr || codeEditor->getSelectedObject() == nullptr)
 		return;
 
+	if (commandEditor != nullptr)
+		menu->RemoveItem(commandEditor);
+
 	commandEditor = new CommandEditorMenuItem(codeEditor->getSelectedObject());
 	commandEditor->SetEditFunction
 	(
 		[&]()
 		{
-		editCommandFromCommandEditor = true;
-
-		CloseButton_OnClick();
-		AddButton_OnClick();
+			SetTransitionToDisplayState(DisplayState::CommandEditorCommandLister);
 		}
 	);
 
 	menu->AddItem(commandEditor);
 
-	commandLister->SetActive(false);
-	codeEditor->SetActive(false);
-	AddButton->SetActive(false);
-	EditButton->SetActive(false);
-	RemoveButton->SetActive(false);
-	closeButton->SetActive(true);
-	submitButton->SetActive(false);
-
-	showCommandEditor = true;
+	SetTransitionToDisplayState(DisplayState::CommandEditor);
 }
 
 void Minigame::DeleteButton_OnClick()
@@ -224,47 +288,13 @@ void Minigame::DeleteButton_OnClick()
 void Minigame::CloseButton_OnClick()
 {
 	m3d::Screen * scr = GameManager::getScreen();
-	if (showCommandEditor)
-	{
-		showCommandEditor = false;
-		showCommandLister = false;
 
-		menu->RemoveItem(commandEditor);
-
-		codeEditor->SetActive(true);
-		commandLister->SetActive(false);
-
-		AddButton->SetActive(false);
-		EditButton->SetActive(true);
-		RemoveButton->SetActive(true);
-		submitButton->SetActive(true);
-
-		commandEditor->ForceComplete();
-	}
-	else
-	{
-		showCommandLister = false;
-
-		commandLister->SetActive(false);
-
-		if (editCommandFromCommandEditor)
-		{
-			editCommandFromCommandEditor = false;
-			codeEditor->SetActive(true);
-			EditButton_OnClick();
-		}
-		else
-		{
-			codeEditor->SetActive(true);
-			AddButton->SetActive(true);
-			EditButton->SetActive(true);
-			RemoveButton->SetActive(true);
-			submitButton->SetActive(true);
-
-		}
-
-		codeEditor->ShiftToBottom();
-	}
+	if (dState == DisplayState::CommandEditor)
+		SetTransitionToDisplayState(DisplayState::CodeEditor);
+	else if (dState == DisplayState::CommandEditorCommandLister)
+		SetTransitionToDisplayState(DisplayState::CommandEditor);
+	else if (dState == DisplayState::CommandLister)
+		SetTransitionToDisplayState(DisplayState::CodeEditor);
 }
 
 void Minigame::AddStartCommands(std::vector<CommandObject*> commands)
@@ -277,28 +307,15 @@ void Minigame::AddCommand(CommandObject* command)
 {
 	m3d::Screen * scr = GameManager::getScreen();
 
-	if (editCommandFromCommandEditor)
+	if (dState == DisplayState::CommandEditorCommandLister)
 		codeEditor->replaceCommand(codeEditor->getSelectedObject(), command);
-	else
+	else if (dState == DisplayState::CommandLister)
 		codeEditor->addCommand(command);
-
-	commandLister->SetActive(false);
-	codeEditor->SetActive(true);
-	codeEditor->ShiftToBottom();
-	AddButton->SetActive(true);
-	EditButton->SetActive(true);
-	RemoveButton->SetActive(true);
-	closeButton->SetActive(false);
-	submitButton->SetActive(true);
-
-	if (editCommandFromCommandEditor)
-	{
-		editCommandFromCommandEditor = false;
-		EditButton_OnClick();
-	}
-
-
-	showCommandLister = false;
+	
+	if (dState == DisplayState::CommandEditorCommandLister)
+		SetTransitionToDisplayState(DisplayState::CommandEditor);
+	else
+		SetTransitionToDisplayState(DisplayState::CodeEditor);
 }
 
 void Minigame::ClearCommands()
@@ -320,14 +337,3 @@ void Minigame::onExecutionEnd()
 {
 	isExecuting = false;
 }
-
-void Minigame::draw()
-{
-    Scene::draw();
-    
-    if(m_gridOverlay != nullptr && showGridLines)
-    {
-        GameManager::getScreen()->drawTop(*m_gridOverlay, m3d::RenderContext::Mode::Flat, 1);
-    }
-};
-

@@ -32,8 +32,6 @@ namespace m3dCI
 			params[i]->setFontWeight(1.0f);
 			params[i]->setFontSize(1.0f);
 		}
-
-		Util::PrintLine("Created");
 	}
 
 	CommandEditor::~CommandEditor()

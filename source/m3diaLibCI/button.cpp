@@ -81,14 +81,11 @@ m3dCI::Button::Button(int px, int py, int pr, m3d::Color p_innerColor, m3d::Colo
 //Default Destructor. Objects that must be deleted when this object is deleted. Delete(nullptr) is fail-safe.
 m3dCI::Button::~Button()
 {
-	//The following commented out object don't have deletion support. They *should* be grabbed by the garbage collector. 
-	//Ideally, we would change these objects to support a default virtual deconstructor
-	/*delete(innerRectangle);
+	delete(innerRectangle);
 	delete(outerRectangle);
 	delete(innerCircle);
-	delete(outerCircle);*/
-	if(disabledColor != nullptr)
-		delete(disabledColor);
+	delete(outerCircle);
+	delete(disabledColor);
 	delete(sprite);
 	delete(text);
 }

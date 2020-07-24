@@ -18,6 +18,7 @@ namespace m3dCI {
 	Text::~Text()
 	{
 		C2D_TextBufClear(m_textBuffer);
+		C2D_TextBufDelete(m_textBuffer);
 	}
 
     void Text::setText(const std::string& t_text) {
