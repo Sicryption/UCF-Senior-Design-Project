@@ -8,9 +8,6 @@
 #define NULLPAIR PAIR("", nullptr)
 #define COLORPAIR(name, r, g, b) PAIR(name, new ColorCommand(name, m3d::Color(r,g,b,255)))
 
-#ifdef DEBUG
-#define DEBUG_TTT
-#endif
 
 TicTacToeScene::TicTacToeScene() 
 {
@@ -182,7 +179,7 @@ void TicTacToeScene::updateBoard()
 		}
     }
 
-    #ifdef DEBUG_TTT 
+    #ifdef DEBUG_MINIGAME 
     for (int i = 0; i < TTT_NUM_CELLS; i++)
     {
         if(i%3 == 0)
@@ -199,7 +196,9 @@ void TicTacToeScene::updateBoard()
         AddButton->SetActive(false);
         RemoveButton->SetActive(false);
         EditButton->SetActive(false); 
+        #ifdef DEBUG_MINIGAME
         Util::PrintLine("You Win!");
+        #endif
     } else if(checkWinCond(BoardState::ENEMY))
     {
         currentState = TTTState::Lose;
@@ -207,7 +206,9 @@ void TicTacToeScene::updateBoard()
         AddButton->SetActive(false);
         RemoveButton->SetActive(false);
         EditButton->SetActive(false);
+        #ifdef DEBUG_MINIGAME
         Util::PrintLine("You Lose!"); 
+        #endif
     }
     
     
@@ -228,10 +229,6 @@ void TicTacToeScene::SubmitTTTCode(std::vector<CommandObject*> luaCode)
     m_sandbox->executeString(fn.str()); // if this returns false theres an error in the usercode
     m_sandbox->executeStringQueued("userCode()\n");
 
-    #ifdef DEBUG_MINIGAME
-    Util::PrintLine("Maze: done");
-    #endif
-
 	currentState = TTTState::Execute;
 }
 
@@ -242,15 +239,20 @@ bool TicTacToeScene::checkWinCond(TicTacToeScene::BoardState id)
 {
     //  Diagonals
     if  ( 
-            (m_board[0] == id || m_board[4] == id || m_board[8] == id ) || 
-            (m_board[2] == id || m_board[4] == id || m_board[6] == id ) 
-        ){ return true;}
+            (m_board[0] == id && m_board[4] == id && m_board[8] == id ) || 
+            (m_board[2] == id && m_board[4] == id && m_board[6] == id ) 
+        )
+        { 
+            return true;
+        }
 
     //  Horizontal
     for (int i = 0; i < TTT_NUM_COLS; i++)
     {
         int shift = i * TTT_NUM_ROWS;
-        if ( m_board[ (shift+0) % TTT_NUM_CELLS ] == id && m_board[ (shift+1) % TTT_NUM_CELLS ] == id && m_board[ (shift+2) % TTT_NUM_CELLS ] == id )
+        if (m_board[ (shift+0) % TTT_NUM_CELLS ] == id && 
+            m_board[ (shift+1) % TTT_NUM_CELLS ] == id && 
+            m_board[ (shift+2) % TTT_NUM_CELLS ] == id )
         {
             return true;
         } 
@@ -259,8 +261,10 @@ bool TicTacToeScene::checkWinCond(TicTacToeScene::BoardState id)
     //  Vertical
     for (int i = 0; i < TTT_NUM_ROWS; i++)
     {
-        int shift = i * TTT_NUM_COLS;
-        if ( m_board[ (shift+0) % TTT_NUM_CELLS ] == id && m_board[ (shift+3) % TTT_NUM_CELLS ] == id && m_board[ (shift+6) % TTT_NUM_CELLS ] == id )
+        int shift = i;
+        if (m_board[ (shift+0) % TTT_NUM_CELLS ] == id && 
+            m_board[ (shift+3) % TTT_NUM_CELLS ] == id && 
+            m_board[ (shift+6) % TTT_NUM_CELLS ] == id )
         {
             return true;
         } 
@@ -285,7 +289,9 @@ void TicTacToeScene::runEnemyAI()
     int row = (n % TTT_NUM_ROWS) + 1;
     int col = (n / TTT_NUM_ROWS) + 1;
     addObject(new TTT_Token(true,row,col));
+    #ifdef DEBUG_MINIGAME 
     Util::PrintLine("Enemy rand:" + std::to_string(n) + " ,row:" + std::to_string(row) + ",col:" + std::to_string(col) );
+    #endif
 }
 
 void TicTacToeScene::onExecutionEnd()
