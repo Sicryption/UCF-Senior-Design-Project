@@ -24,7 +24,7 @@ public:
         xScale = 1;
         yScale = 1;
         angle = 0;
-		speed = 2;
+		speed = 3;
 		dirX = -1;
 		dirY = 1; 
     }

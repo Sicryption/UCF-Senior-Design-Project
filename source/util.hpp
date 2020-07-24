@@ -11,6 +11,17 @@
 using namespace m3d;
 
 /**
+ * @brief sign function
+ * 
+ * Solution taken from <a href="https://stackoverflow.com/questions/1903954/is-there-a-standard-sign-function-signum-sgn-in-c-c">stack
+ * overflow</a>
+ * @returns positive (1), negative (-1), or zero (0) depending on the value of the parameter.
+ */
+template <typename T> int sign(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
+/**
  *  @class Util "util.hpp"
  *  @brief A utility singleton class 
  *  

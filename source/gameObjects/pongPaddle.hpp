@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define PADDLE_EPSILON 10
+#define PADDLE_STRAY 50
+
 class PongPaddle : public GameObject
 {
 	/**
@@ -89,14 +92,27 @@ public:
 		PongBall* ball = static_cast<PongBall*>(SceneManager::getScene()->findObject(ballid));
 		if (ball != nullptr)
 		{
+            //target_x = ball->getPosition().u;
+
 			// calculate displacement between enemy paddle and ball 
-			int diff = (y + (PongRec->getHeight() / 2)) - (ball->getYPosition() + (ball->getHeight() / 2));
+            int yCenter = (y + (PongRec->getHeight() / 2));
+            int ballCenter = (ball->getYPosition() + (ball->getHeight() / 2));            
+            target_y = ballCenter + (PADDLE_STRAY * (chanceToFail/30.0));
+			
+            int diff = yCenter - target_y;
+
 
 			// enemy paddle moves towards the ball based on its displacement
-			if (diff > 0)
-				moveTo(0, purposelyFail ? velo: -velo);
-			else if (diff < 0)
-				moveTo(0, purposelyFail ? -velo : velo);
+			// if (diff > 0)
+			// 	moveTo(0, purposelyFail ? velo: -velo);
+			// else if (diff < 0)
+			// 	moveTo(0, purposelyFail ? -velo : velo);
+
+            if(abs(diff) > PADDLE_EPSILON)
+            {
+                moveTo(0, -sign(diff) * velo) ;
+            }
+            //sign(diff) * min( 1.0,  ( abs(yCenter - target_y) / (PADDLE_EPSILON*2) ) )
 		}
     }
 
