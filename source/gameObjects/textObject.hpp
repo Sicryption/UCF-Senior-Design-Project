@@ -1,3 +1,4 @@
+#pragma once
 #include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
@@ -26,6 +27,7 @@ public:
                      double t_xScale = DEFAULT_SIZE, double t_yScale = DEFAULT_SIZE, double t_angle = 0,
                      m3d::Color t_color = DEFAULT_COLOR)
     {
+        name = "text";
         x = t_x;
         y = t_y;
         xScale = t_xScale;

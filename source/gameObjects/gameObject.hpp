@@ -29,6 +29,7 @@
 class GameObject : public Updateable
 {
 protected:
+    std::string name;
     double x;   /// Screen relative x-position
     double y;   /// Screen relative y-position
     double target_x;    /// A target x-position, usable for lerped movement
@@ -46,7 +47,7 @@ protected:
     m3d::Color m_color;     /// Color used to draw the object
 
 public:
-
+    
     /**
      *  @brief Initializes the GameObject's logical members
      * 
@@ -74,6 +75,11 @@ public:
      *  Must be implemented by children. Handles cleaning up memory held by the object
      */
     virtual void destroy()=0;
+
+    virtual std::string getName()
+    {
+        return name;
+    }
 
     /**
      *  @brief Move the GameObject relative to its position

@@ -36,4 +36,10 @@ public:
 		@brief Function responsible for determining Intersection between the object and a specific XY Coordinate
 	**/
 	bool PointIntersection(int px, int py);
+
+	/**
+		@brief Sets the active state of this MenuItem
+		@param state Activity state
+	**/
+	void SetActive(bool state);
 };

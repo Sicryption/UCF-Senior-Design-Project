@@ -80,7 +80,7 @@ class VarCommand : public CommandObject
 public:
     VarCommand(std::string t_name = "text", std::string t_value = "nil", bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
-        m_name="var";
+        m_name="variable";
 		setParam(0, t_name);
         setParam(1,t_value);
         m_background = m3dCI::Sprite( *ResourceManager::getSprite("command_background_var.png"));
@@ -101,7 +101,7 @@ class TTT_O_Command : public CommandObject
 {
 
 public:
-    TTT_O_Command(std::string t_x = "0", std::string t_y = "0",bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    TTT_O_Command(std::string t_x = "1", std::string t_y = "1",bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="Naught";
 		setParam(0, t_x);
@@ -112,7 +112,7 @@ public:
 
     ~TTT_O_Command();
 
-    std::vector<std::string> getParamNames() {return {"coloumn", "row"};}
+    std::vector<std::string> getParamNames() {return {"col", "row"};}
 
     std::string convertToLua()
     {
@@ -125,18 +125,19 @@ class TTT_X_Command : public CommandObject
 {
 
 public:
-    TTT_X_Command(std::string t_x = "0", std::string t_y = "0",bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    TTT_X_Command(std::string t_x = "1", std::string t_y = "1",bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
     {
         m_name="Cross";
 		setParam(0, t_x);
 		setParam(1, t_y);
         m_background = m3dCI::Sprite( *ResourceManager::getSprite("command_background_instance.png"));
         m_background.setTint(COM_LOCK_TINT);
+        Util::PrintLine("test command");
     }
 
     ~TTT_X_Command();
 
-    std::vector<std::string> getParamNames() {return {"coloumn", "row"};}
+    std::vector<std::string> getParamNames() {return {"col", "row"};}
 
     std::string convertToLua()
     {

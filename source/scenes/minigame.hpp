@@ -50,8 +50,6 @@ class Minigame : public Scene
 private:
 	std::function<void(std::vector<CommandObject*>)> submitFunction = nullptr;
 
-	bool blockButtons = false;
-
     SpriteMenuItem* m_gridOverlay = nullptr;
 
 	enum DisplayState
@@ -78,7 +76,8 @@ protected:
 	CommandEditorMenuItem* commandEditor = nullptr;
 
 	bool isExecuting = false,
-		showGridLines = true;
+		showGridLines = true,
+		blockButtons = false;
 
 	/**
 		@brief CommandLister is responsible for showing all objects which can be added to the CodeEditor.

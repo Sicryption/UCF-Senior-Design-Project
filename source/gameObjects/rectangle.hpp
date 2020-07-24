@@ -1,6 +1,7 @@
 /**
  *  @file rectangle.hpp
  */
+#pragma once
 #include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
@@ -33,6 +34,7 @@ public:
                      double t_width = DEFAULT_SIZE, double t_height = DEFAULT_SIZE, double t_angle = 0,
                      m3d::Color t_color = DEFAULT_COLOR)
     {
+        name = "rectangle";
         x = t_x;
         y = t_y;
         width = t_width;

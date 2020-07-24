@@ -1,3 +1,4 @@
+#pragma once
 #include "../gameObjects/gameObject.hpp"
 #include "../gameManager.hpp"
 #include "../resources.h"
@@ -19,6 +20,7 @@ public:
 	*/
 	PongBall()
     {
+        name = "ball";
 		x = TOPSCREEN_WIDTH / 2;
         y = TOPSCREEN_HEIGHT / 2;
         xScale = 1;

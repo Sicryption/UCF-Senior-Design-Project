@@ -5,6 +5,7 @@
 #include "button.hpp"
 #include "commandListerItem.hpp"
 #include "../resources.h"
+#include "../Menu/MenuItems/SpriteMenuItem.hpp"
 
 #include <citro2d.h>
 #include <string>
@@ -46,7 +47,7 @@ namespace m3dCI
 			pair<string, function<void()>> listOfCommandsByTab[NUM_TABS][NUM_COMMANDS_PER_TAB];
 
 			m3d::Rectangle *backgroundRectangle = nullptr;
-			std::vector<m3dCI::Sprite*> tabs;
+			std::vector<SpriteMenuItem*> tabs;
 			std::vector<std::vector<commandListerItem*>> commands;
 
 			int currentlySelectedTab = -1;
@@ -137,5 +138,12 @@ namespace m3dCI
 				@param tab The ID of the tab
 			**/
 			void OverrideTabCommandListObjects(std::vector<pair<string, function<void()>>> commandListObjects, int tab);
+
+			/**
+				@brief Sets a tab enabled state
+				@param tabIndex Tab to select
+				@param state State to leave the tab in
+			**/
+			void SetTabState(int tabIndex, bool state);
 	};
 }
