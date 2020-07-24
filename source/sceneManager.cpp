@@ -9,12 +9,8 @@ Scene* SceneManager::getScene()
     return m_currentScene;
 }
 
-int numTransitions = 0;
-
 void SceneManager::finishTransition()
 {
-	numTransitions++;
-
 	m_nextScene->initialize();
 
 	if (m_currentScene != nullptr)
@@ -29,8 +25,6 @@ void SceneManager::finishTransition()
 	delete(m_currentScene);
 	m_currentScene = m_nextScene;
 	m_nextScene = nullptr;
-
-	Util::PrintLine("Transitions: " + std::to_string(numTransitions));
 }
 
 void  SceneManager::setTransition(Scene* t_next)
