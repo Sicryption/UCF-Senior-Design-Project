@@ -46,8 +46,8 @@ void LuaSandbox::initialize(std::function<void()> before = 0, std::function<void
 
     m3d::Lock lock_sandbox(m_mutex_sandbox);
 	m_luaState = lua_newstate(allocator,nullptr);
-    luaopen_base(m_luaState);
-    luaopen_table(m_luaState);
+    //luaopen_base(m_luaState);
+    //luaopen_table(m_luaState);
     bindAPI();
     if(!executeFile("lua/init_scene.lua"))
     {
