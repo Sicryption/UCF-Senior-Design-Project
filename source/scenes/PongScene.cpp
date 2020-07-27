@@ -35,8 +35,8 @@ PongScene::PongScene(bool showTutorial)
 			PAIR("Set_X", new SetXCommand("varName")),
 			PAIR("Set_Y", new SetYCommand("varName")),
 			PAIR("Scale", new ScaleCommand("1", "1")),
-			PAIR("Scale_X", new ScaleCommand("1", "-1")),
-			PAIR("Scale_Y", new ScaleCommand("-1", "1"))
+			PAIR("Scale_X", new Scale_X_Command()),
+			PAIR("Scale_Y", new Scale_Y_Command())
 		}, 2
 		);
 }

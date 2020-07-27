@@ -54,6 +54,7 @@ public:
 
 		sprite->setPosition(x, y);
         sprite->setRotation(angle);
+        sprite->setScale(xScale,yScale);
         screen->drawTop(*sprite);
     }
 

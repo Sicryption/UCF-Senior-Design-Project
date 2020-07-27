@@ -19,7 +19,51 @@ public:
 
     std::string convertToLua()
     {
-        return "scale_object(current_object," + m_params[0] + "," + m_params[1] + ")\n"; 
+        return "set_scale(current_object," + m_params[0] + "," + m_params[1] + ")\n"; 
+    }
+
+};
+
+class Scale_X_Command : public CommandObject
+{
+
+public:
+    // TODO: Design such that x or y = -1, maintains that scale.
+    Scale_X_Command(std::string t_x = "1", bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    {
+        m_name="scale x";
+		setParam(0, t_x);
+    }
+
+    ~Scale_X_Command();
+
+    std::vector<std::string> getParamNames() {return {"x scale"};}
+
+    std::string convertToLua()
+    {
+        return "set_scale(current_object," + m_params[0] + ", -1)\n"; 
+    }
+
+};
+
+class Scale_Y_Command : public CommandObject
+{
+
+public:
+    // TODO: Design such that x or y = -1, maintains that scale.
+    Scale_Y_Command(std::string t_y = "1", bool t_lockEdit=false,bool t_lockAdd=false): CommandObject(t_lockEdit, t_lockAdd)
+    {
+        m_name="scale y";
+		setParam(0, t_y);
+    }
+
+    ~Scale_Y_Command();
+
+    std::vector<std::string> getParamNames() {return {"y scale"};}
+
+    std::string convertToLua()
+    {
+        return "set_scale(current_object, -1," + m_params[0] + ")\n"; 
     }
 
 };
