@@ -69,6 +69,8 @@ void TicTacToeScene::initialize() {
     menu->AddItem(tutorial[1]);
     tutorial[2] = new SpriteMenuItem(*(ResourceManager::getSprite("TTT_Tutorial3.png")));
     menu->AddItem(tutorial[2]);
+    tutorial[3] = new SpriteMenuItem(*(ResourceManager::getSprite("TTT_Tutorial4.png")));
+    menu->AddItem(tutorial[3]);
     tutCount = 0;
 
     popup = tutorial[tutCount];
@@ -123,19 +125,19 @@ void TicTacToeScene::update()
 
 			if (m3d::buttons::buttonPressed(m3d::buttons::A))
             {
-                if (tutCount < 3)
+                if (tutCount < 4)
                 {
                     tutCount++;
                 }
 
-                if (tutCount < 3)
+                if (tutCount < 4)
                 {
                     popup = tutorial[tutCount];
                     popup->setPosition(80,20);
                 }    
             }
 
-            if (m3d::buttons::buttonDown(m3d::buttons::Start) || tutCount >= 3)
+            if (m3d::buttons::buttonDown(m3d::buttons::Start) || tutCount >= 4)
             {
                 tutCount = 0;
 
