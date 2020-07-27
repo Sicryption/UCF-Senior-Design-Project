@@ -321,7 +321,11 @@ void Minigame::AddCommand(CommandObject* command)
 		codeEditor->addCommand(command);
 	
 	if (dState == DisplayState::CommandEditorCommandLister)
+	{
 		SetTransitionToDisplayState(DisplayState::CommandEditor);
+		EditButton_OnClick();
+		//SetTransitionToDisplayState(DisplayState::CommandEditor);
+	}
 	else
 		SetTransitionToDisplayState(DisplayState::CodeEditor);
 }
