@@ -16,7 +16,7 @@
 #define TTT_X 220
 #define TTT_Y 40
 
-#define TTT_TUTORIAL_PAGES 5
+#define TTT_TUTORIAL_PAGES 4
 
 class TicTacToeScene : public Minigame 
 {
@@ -35,7 +35,7 @@ class TicTacToeScene : public Minigame
         RectangleMenuItem *midLeftTest, *midMidTest, *midRightTest;
         RectangleMenuItem *botLeftTest, *botMidTest, *botRightTest;
 
-        SpriteMenuItem *tutorial[3];
+        SpriteMenuItem *tutorial[TTT_TUTORIAL_PAGES];
         int tutCount;
 
         m3d::BoundingBox *m_detectors[TTT_NUM_CELLS];

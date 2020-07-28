@@ -134,8 +134,8 @@ public:
      */
     virtual void setScale(double t_x, double t_y)
     {
-        xScale = t_x;
-        yScale = t_y;
+        xScale = t_x < 0 ? xScale:t_x;
+        yScale = t_y < 0 ? yScale:t_y;
     }
 
     /**

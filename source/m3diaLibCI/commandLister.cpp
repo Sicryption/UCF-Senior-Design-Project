@@ -45,8 +45,8 @@ namespace m3dCI
                 PAIR("Left", new LeftCommand()), 
                 PAIR("Right", new RightCommand()), 
                 PAIR("Scale", new ScaleCommand("1","1")), 
-                PAIR("Scale_X", new ScaleCommand("1", "-1")), 
-                PAIR("Scale_Y", new ScaleCommand("-1", "1")) 
+                PAIR("Scale_X", new Scale_X_Command("1")), 
+                PAIR("Scale_Y", new Scale_Y_Command("1")) 
             },
 			{ 
                 PAIR("Var", new VarCommand("varName", "value")), 
